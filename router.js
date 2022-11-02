@@ -1,23 +1,14 @@
 const express = require('express')
+const cinemasController = require('./controllers/cinemasController.js')
+const screeningsController = require('./controllers/screeningsController.js')
 
 const router = express.Router()
 
-const getAllCinemas = (req, res) => {
-    res
-        .status(200)
-        .json({ message: "This is the cinemas endpoint." })
-}
-const getAllScreenings = (req, res) => {
-    res
-        .status(200)
-        .json({ message: "This is the screenings endpoint." })
-}
-
 router
     .route('/cinemas')
-    .get(getAllCinemas)
+    .get(cinemasController.getAllCinemas)
 router
     .route('/screenings')
-    .get(getAllScreenings)
+    .get(screeningsController.getAllScreenings)
 
 module.exports = router
