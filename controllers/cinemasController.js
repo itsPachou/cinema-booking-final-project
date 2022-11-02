@@ -1,9 +1,19 @@
+const fs = require('fs')
 
+const cinemas = JSON.parse(
+    fs.readFileSync(`${__dirname}\\..\\dev-data\\cinema-locations.json`)
+)
 
 function getAllCinemas(req, res) {
     res
         .status(200)
-        .json({ message: "This is the cinemas endpoint." })
+        .json({
+            status: "success",
+            results: cinemas.locations.length,
+            data: {
+                cinemas
+            }
+        })
 }
 
 module.exports = {
