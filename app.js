@@ -1,8 +1,10 @@
-const express = require('express')
-const router = require('./router.js')
+'use strict'
+
+import express from 'express'
+import router from './router.js'
 
 const app = express()
 
 app.use('/api/v1', router)
 
-module.exports = app
+export default app

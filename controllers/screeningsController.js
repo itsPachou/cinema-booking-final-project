@@ -1,4 +1,4 @@
-
+'use strict'
 
 function getAllScreenings(req, res) {
     res
@@ -6,6 +6,6 @@ function getAllScreenings(req, res) {
         .json({ message: "This is the screenings endpoint." })
 }
 
-module.exports = {
+export {
     getAllScreenings
 }

@@ -1,7 +1,9 @@
-const fs = require('fs')
+'use strict'
+
+import fs from 'fs'
 
 const cinemas = JSON.parse(
-    fs.readFileSync(`${__dirname}\\..\\dev-data\\cinema-locations.json`)
+    fs.readFileSync(new URL('../dev-data/cinema-locations.json', import.meta.url))
 )
 
 function getAllCinemas(req, res) {
@@ -16,6 +18,6 @@ function getAllCinemas(req, res) {
         })
 }
 
-module.exports = {
+export {
     getAllCinemas
 }
