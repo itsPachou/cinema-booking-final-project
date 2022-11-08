@@ -1,6 +1,8 @@
-const express = require('express')
-const cinemasController = require('./controllers/cinemasController.js')
-const screeningsController = require('./controllers/screeningsController.js')
+'use strict'
+
+import express from 'express'
+import * as cinemasController from './controllers/cinemasController.js'
+import * as screeningsController from './controllers/screeningsController.js'
 
 const router = express.Router()
 
@@ -11,4 +13,4 @@ router
     .route('/screenings')
     .get(screeningsController.getAllScreenings)
 
-module.exports = router
+export default router
