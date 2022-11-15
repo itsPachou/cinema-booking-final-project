@@ -28,3 +28,7 @@ jspm_packages/
 
 # VSCode settings
 .vscode/
+
+# Local images dir
+img/
+public/
