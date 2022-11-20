@@ -31,4 +31,5 @@ jspm_packages/
 
 # Local images dir
 img/
-public/
+
+temp.html
