@@ -3,7 +3,6 @@
 import express from 'express'
 import v1Router from './v1Router.js'
 import viewRouter from './viewRouter.js';
-import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const app = express()
