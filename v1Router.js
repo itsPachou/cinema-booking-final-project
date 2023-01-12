@@ -4,13 +4,13 @@ import express from 'express'
 import * as cinemasController from './controllers/cinemasController.js'
 import * as screeningsController from './controllers/screeningsController.js'
 
-const router = express.Router()
+const v1Router = express.Router()
 
-router
+v1Router
     .route('/cinemas')
     .get(cinemasController.getAllCinemas)
-router
+v1Router
     .route('/screenings')
     .get(screeningsController.getAllScreenings)
 
-export default router
+export default v1Router
