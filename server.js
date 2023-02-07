@@ -1,8 +1,7 @@
-'use strict'
-
+import dotenv from 'dotenv';
 import app from './app.js'
-import dotenv from 'dotenv'
-dotenv.config({ path: './config.env' })
+
+dotenv.config({ path: './config.env' });
 
 const db = process.env.DATABASE
 const pwd = process.env.DATABASE_PASSWORD

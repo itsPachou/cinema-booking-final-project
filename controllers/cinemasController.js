@@ -1,5 +1,3 @@
-'use strict'
-
 import fs from 'fs'
 
 const cinemas = JSON.parse(
@@ -7,17 +5,13 @@ const cinemas = JSON.parse(
 )
 
 function getAllCinemas(req, res) {
-    res
-        .status(200)
-        .json({
-            status: "success",
-            results: cinemas.cinemas.length,
-            data: {
-                cinemas
-            }
-        })
+    res.status(200).json({
+        status: 'success',
+        results: cinemas.cinemas.length,
+        data: {
+            cinemas,
+        },
+    })
 }
 
-export {
-    getAllCinemas
-}
+export { getAllCinemas }
