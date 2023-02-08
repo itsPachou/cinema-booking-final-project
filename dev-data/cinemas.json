@@ -1,22 +1,22 @@
 {
   "cinemas": [
     {
-      "location-name": "Leicester High Street",
+      "locationName": "Leicester High Street",
       "postcode": "LE1 4SD",
       "address": "7 High St, Leicester"
     },
     {
-      "location-name": "Leicester Oadby",
+      "locationName": "Leicester Oadby",
       "postcode": "LE2 4PE",
       "address": "Glen Rd, Oadby"
     },
     {
-      "location-name": "Birmingham New Street",
+      "locationName": "Birmingham New Street",
       "postcode": "B2 4NU",
       "address": "139 New St, Birmingham"
     },
     {
-      "location-name": "Coventry",
+      "locationName": "Coventry",
       "postcode": "CV1 3AZ",
       "address": "SkyDome, Croft Rd, Coventry"
     }
