@@ -14,6 +14,7 @@ const cinemaSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    location: [Number],
 })
 const Cinema = mongoose.model('Cinema', cinemaSchema)
 

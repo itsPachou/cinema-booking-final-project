@@ -20,6 +20,16 @@ const movieSchema = new mongoose.Schema({
     director: {
         type: String,
     },
+    classification: {
+        type: String,
+        enum: ['U', 'PG', '12A', '15', '18'],
+        required: true,
+    },
+    cast: [String],
+    language: {
+        type: String,
+        required: true,
+    },
 })
 const Movie = mongoose.model('Movie', movieSchema)
 
