@@ -1,0 +1,20 @@
+{
+  "movies": [
+    {
+      "_id": "63d2eb4bfd5e04afb24e4dcf",
+      "title": "Avatar: The Way of Water",
+      "runtime": 193,
+      "synopsis": "Second installment of the Avatar series",
+      "release-date": "16/12/2022",
+      "director": "James Cameron"
+    },
+    {
+      "_id": "63d2eb762226256d168b8c73",
+      "title": "Black Panther: Wakanda Forever",
+      "runtime": 161,
+      "synopsis": "Queen Ramonda, Shuri, M’Baku, Okoye, and the Dora Milaje, fight to protect their nation from intervening world powers in the wake of King T’Challa’s death.",
+      "release-date": "11/11/2022",
+      "director": "Ryan Coogler"
+    }
+  ]
+}

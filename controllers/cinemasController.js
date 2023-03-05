@@ -1,23 +1,40 @@
-'use strict'
+import Cinema from '../models/cinemaModel.js'
 
-import fs from 'fs'
+async function getAllCinemas(req, res) {
+    try {
+        const cinemas = await Cinema.find()
 
-const cinemas = JSON.parse(
-    fs.readFileSync(new URL('../dev-data/cinema-locations.json', import.meta.url))
-)
-
-function getAllCinemas(req, res) {
-    res
-        .status(200)
-        .json({
-            status: "success",
-            results: cinemas.locations.length,
+        res.status(200).json({
+            status: 'success',
+            results: cinemas.length,
             data: {
-                cinemas
-            }
+                cinemas,
+            },
         })
+    } catch (error) {
+        res.status(404).json({
+            status: 'fail',
+            message: error,
+        })
+    }
 }
 
-export {
-    getAllCinemas
+async function createCinema(req, res) {
+    try {
+        const newCinema = await Cinema.create(req.body)
+
+        res.status(201).json({
+            status: 'success',
+            data: {
+                cinema: newCinema,
+            },
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: 'fail',
+            message: error,
+        })
+    }
 }
+
+export { getAllCinemas, createCinema }

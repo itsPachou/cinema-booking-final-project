@@ -1,10 +1,7 @@
-'use strict'
-
 import express from 'express'
+import { fileURLToPath } from 'url'
 import v1Router from './v1Router.js'
-import viewRouter from './viewRouter.js';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import viewRouter from './viewRouter.js'
 
 const app = express()
 
