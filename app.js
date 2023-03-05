@@ -1,7 +1,7 @@
 import express from 'express'
 import { fileURLToPath } from 'url'
-import v1Router from './v1Router'
-import viewRouter from './viewRouter'
+import v1Router from './v1Router.js'
+import viewRouter from './viewRouter.js'
 
 const app = express()
 

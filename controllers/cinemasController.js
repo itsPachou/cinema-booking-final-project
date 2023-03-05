@@ -1,4 +1,4 @@
-import Cinema from '../models/cinemaModel'
+import Cinema from '../models/cinemaModel.js'
 
 async function getAllCinemas(req, res) {
     try {

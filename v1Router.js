@@ -1,6 +1,6 @@
 import express from 'express'
-import * as cinemasController from './controllers/cinemasController'
-import * as screeningsController from './controllers/screeningsController'
+import * as cinemasController from './controllers/cinemasController.js'
+import * as screeningsController from './controllers/screeningsController.js'
 
 const v1Router = express.Router()
 
