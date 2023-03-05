@@ -1,12 +1,22 @@
+/* eslint-disable import/first */
 import dotenv from 'dotenv'
-import mongoose from 'mongoose'
-import app from './app.js'
 
 dotenv.config({ path: './config.env' })
+import mongoose from 'mongoose'
+import { setDefaultResultOrder } from 'dns'
+import app from './app.js'
 
-const db = process.env.DATABASE
-const pwd = process.env.DATABASE_PASSWORD
-const DB = db.replace('<PASSWORD>', pwd)
+setDefaultResultOrder('ipv4first')
+
+let DB
+if (process.env.USE_LOCAL_DATABASE) {
+    DB = process.env.DATABASE_LOCAL
+    console.log('Using local DB...')
+} else {
+    const db = process.env.DATABASE
+    const pwd = process.env.DATABASE_PASSWORD
+    DB = db.replace('<PASSWORD>', pwd)
+}
 
 mongoose
     .connect(DB, {
@@ -19,5 +29,5 @@ mongoose
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
-    console.log(`Listing on port ${port}`)
+    console.log(`Listening on port ${port}`)
 })
