@@ -1,5 +1,5 @@
 import * as util from 'node:util'
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-import
 import jwt from 'jsonwebtoken'
 import User from '../models/userModel.js'
 
