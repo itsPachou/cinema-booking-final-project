@@ -8,11 +8,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
     },
     password: {
         type: String,
         required: true,
         select: false,
+    },
+    passwordConfirm: {
+        type: String,
+        required: true,
     },
     passwordChangedAt: Date,
     role: {
