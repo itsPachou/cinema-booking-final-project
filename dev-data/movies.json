@@ -1,20 +1,54 @@
 {
   "movies": [
     {
-      "_id": "63d2eb4bfd5e04afb24e4dcf",
       "title": "Avatar: The Way of Water",
       "runtime": 193,
       "synopsis": "Second installment of the Avatar series",
       "release-date": "16/12/2022",
-      "director": "James Cameron"
+      "director": "James Cameron",
+      "classification": "12A",
+      "language": "english",
+      "cast": ["Sam Worthington", "Zoe Saldaña", "Sigourney Weaver"]
     },
     {
-      "_id": "63d2eb762226256d168b8c73",
       "title": "Black Panther: Wakanda Forever",
       "runtime": 161,
       "synopsis": "Queen Ramonda, Shuri, M’Baku, Okoye, and the Dora Milaje, fight to protect their nation from intervening world powers in the wake of King T’Challa’s death.",
       "release-date": "11/11/2022",
-      "director": "Ryan Coogler"
+      "director": "Ryan Coogler",
+      "classification": "12",
+      "language": "english",
+      "cast": ["Letitia Wright", "Lupita Nyong'o", "Danai Gurira", "Angela Bassett"]
+    },
+    {
+      "title": "Puss In Boots: The Last Wish",
+      "runtime": 102,
+      "synopsis": "This year, everyone's favourite leche-loving, swashbuckling, fear-defying feline returns. For the first time in more than a decade, DreamWorks Animation presents a new adventure in the Shrek universe as daring outlaw Puss in Boots discovers that his passion for peril and disregard for safety have taken their toll.",
+      "release-date": "03/02/2023",
+      "director": "Joel Crawford",
+      "classification": "PG",
+      "language": "english",
+      "cast": ["Antonio Banderas", "Salma Hayek", "Olivia Colman"]
+    },
+    {
+      "title": "Creed III",
+      "runtime": 116,
+      "synopsis": "When a childhood friend and former boxing prodigy, Damian (Jonathan Majors), resurfaces after serving a long sentence in prison, he is eager to prove that he deserves his shot in the ring.",
+      "release-date": "03/03/2023",
+      "director": "Michael B. Jordan",
+      "classification": "12A",
+      "language": "english",
+      "cast": ["Michael B. Jordan"]
+    },
+    {
+      "title": "Knock At The Cabin",
+      "runtime": 102,
+      "synopsis": "This year, everyone's favourite leche-loving, swashbuckling, fear-defying feline returns. For the first time in more than a decade, DreamWorks Animation presents a new adventure in the Shrek universe as daring outlaw Puss in Boots discovers that his passion for peril and disregard for safety have taken their toll.",
+      "release-date": "03/02/2023",
+      "director": "M. Night Shyamalan",
+      "classification": "15",
+      "language": "english",
+      "cast": ["Dave Bautista"]
     }
   ]
 }

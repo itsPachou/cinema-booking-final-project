@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "email": "customer@gmail.com",
+      "password": "test1234",
+      "passwordConfirm": "test1234",
+      "role": "client",
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    {
+      "email": "employee@gmail.com",
+      "password": "test1234",
+      "passwordConfirm": "test1234",
+      "role": "employee",
+      "firstName": "David",
+      "lastName": "Worker"
+    },
+    {
+      "email": "admin@gmail.com",
+      "password": "test1234",
+      "passwordConfirm": "test1234",
+      "role": "admin",
+      "firstName": "Amanda",
+      "lastName": "Boss"
+    }
+  ]
+}
