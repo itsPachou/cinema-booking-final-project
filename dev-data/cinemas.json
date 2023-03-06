@@ -1,24 +1,64 @@
 {
   "cinemas": [
     {
-      "locationName": "Leicester High Street",
-      "postcode": "LE1 4SD",
-      "address": "7 High St, Leicester"
+      "locationName": "The Lumiere - Manchester",
+      "postcode": "M4 1EU",
+      "address": "123 High St, Manchester M4 1EU",
+      "location": [53.485169,-2.2449116]
     },
     {
-      "locationName": "Leicester Oadby",
-      "postcode": "LE2 4PE",
-      "address": "Glen Rd, Oadby"
+      "locationName": "The Cineplex - London",
+      "postcode": "W1D 2DZ",
+      "address": "45 Oxford St, London W1D 2DZ",
+      "location": [51.5161393,-0.1417598]
     },
     {
-      "locationName": "Birmingham New Street",
-      "postcode": "B2 4NU",
-      "address": "139 New St, Birmingham"
+      "locationName": "The Silver Screen - Newcastle",
+      "postcode": "NE1 5XU",
+      "address": "56 Westgate Rd, Newcastle upon Tyne NE1 5XU",
+      "location": [54.9701046,-1.6196285]
     },
     {
-      "locationName": "Coventry",
-      "postcode": "CV1 3AZ",
-      "address": "SkyDome, Croft Rd, Coventry"
+      "locationName": "The Palace Cinema - Manchester",
+      "postcode": "M2 7HW",
+      "address": "10 St. Ann's Square, Manchester M2 7HW",
+      "location": [53.4822764,-2.2549314]
+    },
+    {
+      "locationName": "The Strand - London",
+      "postcode": "WC2R 1HL",
+      "address": "123 Strand, London WC2R 1HL",
+      "location": [51.5115812,-0.1272565]
+    },
+    {
+      "locationName": "The Regent - Edinburgh",
+      "postcode": "EH1 1SR",
+      "address": "43-45 High St, Edinburgh EH1 1SR",
+      "location": [55.950725,-3.1936284]
+    },
+    {
+      "locationName": "The Majestic - Bristol",
+      "postcode": "BS8 1NF",
+      "address": "100 Queens Rd, Clifton, Bristol BS8 1NF",
+      "location": [51.458135,-2.6202164]
+    },
+    {
+      "locationName": "The Roxy - Birmingham",
+      "postcode": "B2 4UG",
+      "address": "99 Corporation St, Birmingham B2 4UG",
+      "location": [52.4790458,-1.8961067]
+    },
+    {
+      "locationName": "The Vue - Glasgow",
+      "postcode": "G1 3QX",
+      "address": "Union St, Glasgow G1 3QX",
+      "location": [55.8590466,-4.2580547]
+    },
+    {
+      "locationName": "The Odeon - Newcastle",
+      "postcode": "NE1 7DF",
+      "address": "70 Northumberland Street, Newcastle NE1 7DF",
+      "location": [54.9760667,-1.6214374]
     }
   ]
 }
