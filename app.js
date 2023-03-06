@@ -2,6 +2,8 @@ import express from 'express'
 import { fileURLToPath } from 'url'
 import v1Router from './v1Router.js'
 import viewRouter from './viewRouter.js'
+import AppError from './utils/appError.js'
+import globalErrorHandler from './controllers/errorController.js'
 
 const app = express()
 
@@ -15,20 +17,9 @@ app.use('/api/v1', v1Router)
 app.use('/', viewRouter)
 
 app.all('*', (req, res, next) => {
-    const err = new Error(`Cannot find ${req.originalUrl} on this server!`)
-    err.status = 'fail'
-    err.statusCode = 404
-    next(err)
+    next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404))
 })
 
-app.use((err, req, res, next) => {
-    err.statusCode = err.statusCode || 500
-    err.status = err.status || 'error'
-
-    res.status(err.statusCode).json({
-        status: err.status,
-        message: err.message,
-    })
-})
+app.use(globalErrorHandler)
 
 export default app
