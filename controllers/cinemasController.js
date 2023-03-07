@@ -1,99 +1,68 @@
 import Cinema from '../models/cinemaModel.js'
+import AppError from '../utils/appError.js'
+import catchAsync from '../utils/catchAsync.js'
 
-async function getAllCinemas(req, res) {
-    try {
-        const queryObj = { ...req.query }
-        const excludedFields = ['sort', 'limit', 'fields']
-        excludedFields.forEach((el) => delete queryObj[el])
-        const query = await Cinema.find(queryObj)
-        const cinemas = await query
+const getAllCinemas = catchAsync(async (req, res, next) => {
+    const queryObj = { ...req.query }
+    const excludedFields = ['sort', 'limit', 'fields']
+    excludedFields.forEach((el) => delete queryObj[el])
+    const query = await Cinema.find(queryObj)
+    const cinemas = await query
 
-        res.status(200).json({
-            status: 'success',
-            results: cinemas.length,
-            data: {
-                cinemas,
-            },
-        })
-    } catch (error) {
-        res.status(404).json({
-            status: 'fail',
-            message: error,
-        })
+    res.status(200).json({
+        status: 'success',
+        results: cinemas.length,
+        data: {
+            cinemas,
+        },
+    })
+})
+
+const getCinema = catchAsync(async (req, res, next) => {
+    const cinema = await Cinema.findById(req.params.id)
+    if (!cinema) {
+        return next(new AppError('No cinema found with that ID', 404))
     }
-}
+    res.status(200).json({
+        status: 'success',
+        data: {
+            cinema,
+        },
+    })
+})
 
-async function getCinema(req, res) {
-    try {
-        const cinema = await Cinema.findById(req.params.id)
+const createCinema = catchAsync(async (req, res, next) => {
+    const newCinema = await Cinema.create(req.body)
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                cinema,
-            },
-        })
-    } catch (error) {
-        res.status(404).json({
-            status: 'fail',
-            message: error,
-        })
-    }
-}
+    res.status(201).json({
+        status: 'success',
+        data: {
+            cinema: newCinema,
+        },
+    })
+})
 
-async function createCinema(req, res) {
-    try {
-        const newCinema = await Cinema.create(req.body)
+const updateCinema = catchAsync(async (req, res, next) => {
+    const cinema = await Cinema.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    })
 
-        res.status(201).json({
-            status: 'success',
-            data: {
-                cinema: newCinema,
-            },
-        })
-    } catch (error) {
-        res.status(400).json({
-            status: 'fail',
-            message: error,
-        })
-    }
-}
+    res.status(200).json({
+        status: 'success',
+        data: {
+            cinema,
+        },
+    })
+})
 
-async function updateCinema(req, res) {
-    try {
-        const cinema = await Cinema.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-        })
+const deleteCinema = catchAsync(async (req, res, next) => {
+    await Cinema.findByIdAndDelete(req.params.id)
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                cinema,
-            },
-        })
-    } catch (error) {
-        res.status(404).json({
-            status: 'fail',
-            message: error,
-        })
-    }
-}
-
-async function deleteCinema(req, res) {
-    try {
-        await Cinema.findByIdAndDelete(req.params.id)
-
-        res.status(204).json({
-            status: 'success',
-            data: null,
-        })
-    } catch (error) {
-        res.status(404).json({
-            status: 'fail',
-            message: error,
-        })
-    }
-}
+    res.status(204).json({
+        status: 'success',
+        data: null,
+    })
+})
 
 export { getAllCinemas, createCinema, deleteCinema, getCinema, updateCinema }
