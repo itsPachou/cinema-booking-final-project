@@ -21,7 +21,6 @@ app.use('/', viewRouter)
 app.all('*', (req, res, next) => {
     next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404))
 })
-
 app.use(globalErrorHandler)
 
 export default app
