@@ -48,6 +48,10 @@ const updateCinema = catchAsync(async (req, res, next) => {
         runValidators: true,
     })
 
+    if (!cinema) {
+        return next(new AppError('No cinema found with that ID', 404))
+    }
+
     res.status(200).json({
         status: 'success',
         data: {
@@ -57,7 +61,11 @@ const updateCinema = catchAsync(async (req, res, next) => {
 })
 
 const deleteCinema = catchAsync(async (req, res, next) => {
-    await Cinema.findByIdAndDelete(req.params.id)
+    const cinema = await Cinema.findByIdAndDelete(req.params.id)
+
+    if (!cinema) {
+        return next(new AppError('No cinema found with that ID', 404))
+    }
 
     res.status(204).json({
         status: 'success',
