@@ -1,0 +1,14 @@
+{
+  "rooms": [
+    {
+      "cinemaID": "",
+      "roomNumber": 1,
+      "isActive": true,
+      "dimensions": {
+        "width": 6,
+        "length": 4
+      },
+      "seatPositions": []
+    }
+  ]
+}
