@@ -10,7 +10,9 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon server.js"
+    "dev": "npx nodemon server.js",
+    "import-data": "node dev-data/import-dev-data.js --import",
+    "delete-data": "node dev-data/import-dev-data.js --delete"
   },
   "repository": {
     "type": "git",
