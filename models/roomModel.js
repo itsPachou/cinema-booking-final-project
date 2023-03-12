@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const roomSchema = new mongoose.Schema({
     cinemaID: {
-        type: String,
+        type: mongoose.ObjectId,
         required: true,
     },
     roomNumber: {
@@ -16,7 +16,6 @@ const roomSchema = new mongoose.Schema({
         required: true,
     },
     dimensions: {
-        required: true,
         width: {
             type: Number,
             required: true,
