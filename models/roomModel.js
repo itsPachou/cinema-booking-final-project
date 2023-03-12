@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 const roomSchema = new mongoose.Schema({
     cinemaID: {
         type: mongoose.ObjectId,
+        ref: 'Cinema',
         required: true,
     },
     roomNumber: {
