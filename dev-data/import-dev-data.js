@@ -2,11 +2,13 @@
 import * as fs from 'node:fs'
 import mongoose from 'mongoose'
 import * as dotenv from 'dotenv'
+import { setDefaultResultOrder } from 'dns'
 import User from '../models/userModel.js'
-import Movie from '../models/cinemaModel.js'
-import Cinema from '../models/movieModel.js'
+import Cinema from '../models/cinemaModel.js'
+import Movie from '../models/movieModel.js'
 import Room from '../models/roomModel.js'
 
+setDefaultResultOrder('ipv4first')
 dotenv.config({ path: './config.env' })
 
 let DB
@@ -26,15 +28,21 @@ mongoose.connect(DB).then(() => {
 const { users } = JSON.parse(
     fs.readFileSync(new URL('./users.json', import.meta.url), 'utf-8')
 )
+// console.log(users)
 const { movies } = JSON.parse(
     fs.readFileSync(new URL('./movies.json', import.meta.url), 'utf-8')
 )
+// console.log(movies)
+
 const { cinemas } = JSON.parse(
     fs.readFileSync(new URL('./cinemas.json', import.meta.url), 'utf-8')
 )
+// console.log(cinemas)
+
 const { rooms } = JSON.parse(
     fs.readFileSync(new URL('./rooms.json', import.meta.url), 'utf-8')
 )
+// console.log(rooms)
 
 const populateSeatPositionsInRooms = () => {
     rooms.forEach((el) => {
@@ -50,10 +58,10 @@ const populateSeatPositionsInRooms = () => {
 
 const populateRoomsWithCinemas = async () => {
     const cinema = await Cinema.find({
-        name: 'The Lumiere - Manchester',
+        locationName: 'The Lumiere - Manchester',
     }).exec()
     rooms.forEach((element) => {
-        element.cinemaID = cinema._id.toString()
+        element.cinemaID = cinema[0]._id
     })
 }
 
@@ -77,6 +85,7 @@ const deleteData = async () => {
         await User.deleteMany()
         await Movie.deleteMany()
         await Cinema.deleteMany()
+        await Room.deleteMany()
         console.log('Data deleted.')
         process.exit()
     } catch (error) {
