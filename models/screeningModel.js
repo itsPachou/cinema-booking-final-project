@@ -3,10 +3,12 @@ import mongoose from 'mongoose'
 const screeningSchema = new mongoose.Schema({
     cinemaID: {
         type: mongoose.ObjectId,
+        ref: 'Cinema',
         required: [true, 'A screening must have an associated cinema'],
     },
     movieID: {
         type: mongoose.ObjectId,
+        ref: 'Movie',
         required: [true, 'A screening must have an associated movie'],
     },
     date: {
@@ -28,6 +30,7 @@ const screeningSchema = new mongoose.Schema({
     },
     screeningRoomID: {
         type: mongoose.ObjectId,
+        ref: 'Room',
         required: true,
     },
     bookedSeats: [String],
