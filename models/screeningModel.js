@@ -2,11 +2,11 @@ import mongoose from 'mongoose'
 
 const screeningSchema = new mongoose.Schema({
     cinemaID: {
-        type: String,
+        type: mongoose.ObjectId,
         required: [true, 'A screening must have an associated cinema'],
     },
     movieID: {
-        type: String,
+        type: mongoose.ObjectId,
         required: [true, 'A screening must have an associated movie'],
     },
     date: {
@@ -27,7 +27,7 @@ const screeningSchema = new mongoose.Schema({
         default: 'none',
     },
     screeningRoomID: {
-        type: String,
+        type: mongoose.ObjectId,
         required: true,
     },
     bookedSeats: [String],
