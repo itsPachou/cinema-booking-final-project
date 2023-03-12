@@ -9,6 +9,26 @@
         "length": 4
       },
       "seatPositions": []
+    },
+    {
+      "cinemaID": "",
+      "roomNumber": 2,
+      "isActive": true,
+      "dimensions": {
+        "width": 6,
+        "length": 3
+      },
+      "seatPositions": []
+    },
+    {
+      "cinemaID": "",
+      "roomNumber": 3,
+      "isActive": true,
+      "dimensions": {
+        "width": 8,
+        "length": 6
+      },
+      "seatPositions": []
     }
   ]
 }
