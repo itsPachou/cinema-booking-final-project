@@ -1,5 +1,6 @@
 import express from 'express'
 import { fileURLToPath } from 'url'
+import cookieParser from 'cookie-parser'
 import viewRouter from './routers/viewRouter.js'
 import AppError from './utils/appError.js'
 import globalErrorHandler from './controllers/errorController.js'
@@ -11,6 +12,9 @@ const app = express()
 // Set pug as the templating engine
 app.set('view engine', 'pug')
 app.set(new URL('views', import.meta.url))
+
+app.use(express.json())
+app.use(cookieParser())
 
 app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))))
 

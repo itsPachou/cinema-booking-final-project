@@ -80,16 +80,20 @@ const login = catchAsync(async (req, res, next) => {
 
 const protect = catchAsync(async (req, res, next) => {
     let token
+    console.log(req.cookies)
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')
     ) {
+        console.log('BLEEEE')
         token = req.headers.authorization.split(' ')[1]
     } else if (req.cookies.jwt) {
+        console.log('MEHHH')
         token = req.cookies.jwt
     }
     if (!token) {
-        return res.redirect('/')
+        console.log('BANANAS')
+        return next(new AppError('Unauthorized to access this route', 401))
     }
 
     const decoded = await util.promisify(jwt.verify)(

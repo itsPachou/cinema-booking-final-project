@@ -37,7 +37,7 @@ section.section__cinema-list {
   margin: auto;
 }
 
-.cinema-list {
+#cinema-list {
   display: flex;
   flex-wrap: wrap;
 }
@@ -51,9 +51,9 @@ section.section__cinema-list {
   font-weight: 400;
 }
 
-.cinema-list a, 
-.cinema-list a:link,
-.cinema-list a:visited {
+#cinema-list a, 
+#cinema-list a:link,
+#cinema-list a:visited {
   flex: 1 1 400px;
   text-decoration: none !important;
   text-transform: uppercase;
@@ -69,7 +69,7 @@ section.section__cinema-list {
   transition: all 1s;
 }
 
-.cinema-list a:hover {
+#cinema-list a:hover {
   background-color: rgb(10, 17, 33);
   border-radius: 0;
 }
@@ -204,9 +204,9 @@ section.section__cinema-list {
 
 @media screen and (min-width: 600px) {
 
-  .cinema-list a, 
-  .cinema-list a:link,
-  .cinema-list a:visited {
+  #cinema-list a, 
+  #cinema-list a:link,
+  #cinema-list a:visited {
     margin: .4rem 2rem;
     font-size: 2.5rem;
   }
