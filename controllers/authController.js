@@ -44,6 +44,7 @@ const signup = catchAsync(async (req, res, next) => {
 
 const login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
+    console.log(email, password)
 
     if (!email || !password) {
         // const err = Error('Please provide username and password.')
@@ -55,6 +56,7 @@ const login = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findOne({ email }).select('+password')
+    console.log(user)
     if (!user || !(await user.validatePassword(password, user.password))) {
         // const err = Error('Incorrect username or password.')
         // err.status(401)

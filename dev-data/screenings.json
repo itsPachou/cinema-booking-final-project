@@ -1,0 +1,14 @@
+{
+  "screenings": [
+    {
+      "cinemaID": "640b938d26fe0f04f050acd8",
+      "movieID": "640b938d26fe0f04f050acce",
+      "date": "2023-03-14T18:00:00",
+      "screeningType": "2D",
+      "audioType": "original",
+      "audioLanguage": "English",
+      "screeningRoomID": "640b97115f37080f4006bbbb",
+      "bookedSeats": []
+    }
+  ]
+}
