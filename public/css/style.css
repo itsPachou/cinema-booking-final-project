@@ -14,7 +14,10 @@ html {
 }
 
 body {
-  height: 120vh;
+  /* height: 120vh; */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100svh;
   line-height: 1.6;
   font-weight: 400;
   font-family: 'Source Sans Pro', sans-serif;
@@ -156,17 +159,15 @@ section.section__cinema-list {
 }
 
 .footer {
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; */
   background-color: rgb(10, 17, 33);
   padding: 6rem 4rem 3rem 4rem;
   font-size: 1.4rem;
   display: flex;
   flex-direction: column;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
   justify-content: center;
   align-items: center;
 }
