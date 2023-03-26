@@ -44,23 +44,20 @@ const signup = catchAsync(async (req, res, next) => {
 
 const login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
+    console.log(email, password)
 
     if (!email || !password) {
-        // const err = Error('Please provide username and password.')
-        // err.status(400)
-        // err.statusText = 'Bad request.'
-        // return Promise.reject(err)
-        res.sendStatus(400)
-        return
+        return next(
+            new AppError('Bad request. Missing email or password.', 400)
+        )
     }
 
     const user = await User.findOne({ email }).select('+password')
+    console.log(user)
     if (!user || !(await user.validatePassword(password, user.password))) {
-        // const err = Error('Incorrect username or password.')
-        // err.status(401)
-        // err.statusText = 'Unauthorized'
-        // return Promise.reject(err)
-        return res.sendStatus(401)
+        return next(
+            new AppError('Unauthorized. Incorrect email or password.', 401)
+        )
     }
     const token = signToken(user._id)
 
@@ -89,7 +86,7 @@ const protect = catchAsync(async (req, res, next) => {
         token = req.cookies.jwt
     }
     if (!token) {
-        return res.redirect('/')
+        return next(new AppError('Unauthorized to access this route', 401))
     }
 
     const decoded = await util.promisify(jwt.verify)(

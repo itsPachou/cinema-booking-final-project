@@ -1,0 +1,2 @@
+# Ignore front-end JS files
+public/scripts/*
