@@ -3,8 +3,29 @@ header.header
         img(src='img/logo_header.png' alt='Cinema logo')
         p.logo-text CinemaGO
     
+    //-<nav>
+    //-     <div class="hamburger-menu">
+    //-       <button id="hamburger-btn" class="hamburger">
+    //-         <span class="line"></span>
+    //-         <span class="line"></span>
+    //-         <span class="line"></span>
+    //-       </button>
+    //-     </div>
+    //-     <ul id="menu" class="menu">
+    //-       <li><a href="#">Home</a></li>
+    //-       <li><a href="#">About</a></li>
+    //-       <li><a href="#">Services</a></li>
+    //-       <li><a href="#">Contact</a></li>
+    //-     </ul>
+    //-</nav>
     nav.nav
-        a.nav__el(href='/home') HOME
+        .hamburger-menu 
+            button#hamburger-btn.hamburger
+                span.hamburger-top-line 
+                span.hamburger-mid-line 
+                span.hamburger-bot-line 
+        .menu__box#menu 
+            a.nav__el.menu__item(href='/home') HOME
     .header__logo.wide-screen 
         img(src='img/logo_header.png' alt='Cinema logo')
         p.logo-text CinemaGO

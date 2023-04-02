@@ -69,12 +69,13 @@ section.section__cinema-list {
   padding: .5rem 2rem;
   border: 2px solid rgba(248,250,252,.2);
   border-radius: 1rem;
-  transition: all 1s;
+  transition: all .2s;
 }
 
 #cinema-list a:hover {
-  background-color: rgb(10, 17, 33);
-  border-radius: 0;
+  /* background-color: rgb(10, 17, 33);
+  border-radius: 0; */
+  filter: brightness(1.4)
 }
 
 .header {
@@ -137,9 +138,8 @@ section.section__cinema-list {
   text-transform: uppercase;
   font-size: 1.6rem;
   text-decoration: none;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
+  justify-content: center;
   font-weight: 300;
   background: none;
   border: none;
@@ -158,12 +158,88 @@ section.section__cinema-list {
     margin-right: 3rem;
 }
 
+
+.hamburger.is-active .hamburger-mid-line {
+	opacity: 0;
+}
+
+.hamburger.is-active .hamburger-top-line {
+	/* transform: translate(0px, 8px); */
+	transform: translate(0px, 9px) rotate(45deg);
+}
+
+.hamburger.is-active .hamburger-bot-line {
+	/* transform: translate(0px, -8px); */
+	transform: translate(0px, -8px) rotate(-45deg);
+}
+
+.menu__box.is-active {
+	left: 0 !important;
+}
+
+.hamburger-menu {
+  width: 30px;
+	height: 30px;
+}
+
+.hamburger {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 26px;
+  height: 26px;
+  margin: 0px auto;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu__btn {
+  display: inline-block;
+  position: relative;
+	width: 26px;
+	height: 26px;
+	cursor: pointer;
+	z-index: 100;
+}
+
+.menu__box {
+	display: flex;
+  flex-direction: column;
+  align-items: stretch;
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 300px;
+	height: 100vh;
+	margin: 0;
+	padding: 130px 0;
+	list-style: none;
+	background-color: #0a1121fa;
+	box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
+	transition-duration: .25s;
+	transition-property: left;
+}
+
+.menu__item {
+  padding: 1rem 0;
+}
+
+.hamburger>span.hamburger-top-line,
+.hamburger>span.hamburger-mid-line,
+.hamburger>span.hamburger-bot-line {
+	display: block;
+	width: 100%;
+	height: 2px;
+	background-color: #616161;
+	transition-duration: .5s;
+}
+
 .footer {
-  /* position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0; */
-  background-color: rgb(10, 17, 33);
+  background-color: #0a1121;
   padding: 6rem 4rem 3rem 4rem;
   font-size: 1.4rem;
   display: flex;
@@ -220,7 +296,7 @@ section.section__cinema-list {
     background-color: #0f172abf;
     position: sticky;
     top: 0;
-    padding: 0 5rem;
+    padding: 0 5rem 0 1rem;
     height: 8rem;
     z-index: 100;
     display: -webkit-box;
@@ -234,6 +310,10 @@ section.section__cinema-list {
     align-items: center;
     border-bottom: 1px solid rgba(248,250,252,.06);
     backdrop-filter: blur(8px);
+  }
+
+  .menu__box {
+    padding: 100px 0;
   }
 
   .footer {
