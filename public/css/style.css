@@ -52,6 +52,10 @@ section.section__cinema-list {
   text-align: center;
   font-size: 1.9rem;
   font-weight: 400;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed rgb(226 232 240);
+  line-height: 1.1;
+  padding-top: 1rem;
 }
 
 #cinema-list a, 
