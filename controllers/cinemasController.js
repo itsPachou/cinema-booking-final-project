@@ -1,40 +1,15 @@
 import Cinema from '../models/cinemaModel.js'
 import AppError from '../utils/appError.js'
 import catchAsync from '../utils/catchAsync.js'
+import APIFeatures from '../utils/apiFeatures.js'
 
 const getAllCinemas = catchAsync(async (req, res, next) => {
-    const queryObj = { ...req.query }
-    const excludedFields = ['sort', 'limit', 'fields', 'page']
-    excludedFields.forEach((el) => delete queryObj[el])
-
-    let queryStr = JSON.stringify(queryObj)
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
-
-    let query = Cinema.find(JSON.parse(queryStr))
-
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ')
-        query = query.sort(sortBy)
-    }
-    if (req.query.fields) {
-        const fields = req.query.fields.split(',').joing(' ')
-        query = query.select(fields)
-    } else {
-        query = query.select('-__v')
-    }
-
-    const page = req.query.page * 1 || 1
-    const limit = req.query.limit * 1 || 100
-    const skip = (page - 1) * limit
-    query = query.skip(skip).limit(limit)
-
-    if (req.query.page) {
-        const numCinemas = await Cinema.countDocuments()
-        if (skip >= numCinemas)
-            next(new AppError('This page does not exist', 400))
-    }
-
-    const cinemas = await query
+    const features = new APIFeatures(Cinema.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate()
+    const cinemas = await features.query
 
     res.status(200).json({
         status: 'success',
