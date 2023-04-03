@@ -3,3 +3,5 @@ section.section__cinema-list
     .container#cinema-list
         each cinema in cinemas
             a(href=`/cinema/${cinema._id}`)= cinema.locationName
+                .cinema-list-address= cinema.address
+                
