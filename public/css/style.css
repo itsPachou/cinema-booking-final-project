@@ -71,7 +71,7 @@ section.section__cinema-list {
   color: inherit;
   margin: .4rem 0;
   padding: .5rem 2rem;
-  border: 2px solid rgba(248,250,252,.2);
+  border: 1.7px solid rgba(248,250,252,.2);
   border-radius: 1rem;
   transition: all .2s;
 }
