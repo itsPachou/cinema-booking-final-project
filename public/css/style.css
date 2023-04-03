@@ -111,12 +111,9 @@ section.section__cinema-list {
 }
 
 .nav {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+  align-items: stretch;
+  height: 100%;
 }
 
 .header__logo, .footer__logo {
@@ -145,6 +142,7 @@ section.section__cinema-list {
   text-decoration: none;
   display: inline-flex;
   justify-content: center;
+  align-items: center;
   font-weight: 300;
   background: none;
   border: none;
@@ -170,12 +168,12 @@ section.section__cinema-list {
 
 .hamburger.is-active .hamburger-top-line {
 	/* transform: translate(0px, 8px); */
-	transform: translate(0px, 9px) rotate(45deg);
+	transform: translate(0px, 14px) rotate(45deg);
 }
 
 .hamburger.is-active .hamburger-bot-line {
 	/* transform: translate(0px, -8px); */
-	transform: translate(0px, -8px) rotate(-45deg);
+	transform: translate(0px, -15px) rotate(-45deg);
 }
 
 .menu__box.is-active {
@@ -183,8 +181,10 @@ section.section__cinema-list {
 }
 
 .hamburger-menu {
-  width: 30px;
-	height: 30px;
+  display: flex;
+  align-self: center;
+  width: 50px;
+	height: 50px;
 }
 
 .hamburger {
@@ -193,9 +193,9 @@ section.section__cinema-list {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 26px;
-  height: 26px;
-  margin: 0px auto;
+  width: 44px;
+  height: 44px;
+  margin: auto auto;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -238,7 +238,7 @@ section.section__cinema-list {
 .hamburger>span.hamburger-bot-line {
 	display: block;
 	width: 100%;
-	height: 2px;
+	height: 4px;
 	background-color: #616161;
 	transition-duration: .5s;
 }
