@@ -1,8 +1,4 @@
 extends base
 
 block content 
-    section.section__cinema-list
-        h2 Find Your Prefered Cinema Location
-        .container#cinema-list
-            each cinema in cinemas
-                a(href=`/cinema/${cinema._id}`)= cinema.locationName
+    include _sectionCinemaList
