@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import slugify from 'slugify'
 
 const cinemaSchema = new mongoose.Schema({
     locationName: {
@@ -15,7 +16,13 @@ const cinemaSchema = new mongoose.Schema({
         required: true,
     },
     location: [Number],
+    slug: String,
 })
+
+cinemaSchema.pre('save', function (next) {
+    this.slug = slugify(this.locationName, { lower: true })
+})
+
 const Cinema = mongoose.model('Cinema', cinemaSchema)
 
 export default Cinema

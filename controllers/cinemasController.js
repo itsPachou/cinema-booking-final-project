@@ -1,13 +1,15 @@
 import Cinema from '../models/cinemaModel.js'
 import AppError from '../utils/appError.js'
 import catchAsync from '../utils/catchAsync.js'
+import APIFeatures from '../utils/apiFeatures.js'
 
 const getAllCinemas = catchAsync(async (req, res, next) => {
-    const queryObj = { ...req.query }
-    const excludedFields = ['sort', 'limit', 'fields']
-    excludedFields.forEach((el) => delete queryObj[el])
-    const query = await Cinema.find(queryObj)
-    const cinemas = await query
+    const features = new APIFeatures(Cinema.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate()
+    const cinemas = await features.query
 
     res.status(200).json({
         status: 'success',
