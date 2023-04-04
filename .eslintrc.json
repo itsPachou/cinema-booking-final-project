@@ -20,6 +20,7 @@
     "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": "off",
+    "node/no-extraneous-import": "off",
     "import/extensions": [1, "ignorePackages"],
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
