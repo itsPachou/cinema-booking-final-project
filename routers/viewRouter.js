@@ -1,6 +1,7 @@
 import express from 'express'
 import catchAsync from '../utils/catchAsync.js'
 import Cinema from '../models/cinemaModel.js'
+import Screening from '../models/screeningModel.js'
 
 const viewRouter = express.Router()
 
@@ -28,6 +29,18 @@ viewRouter.route('/screenings').get(
         )
         res.status(200).render('screenings', {
             // cinemas,
+        })
+    })
+)
+viewRouter.route('/cinema/:id').get(
+    catchAsync(async (req, res, next) => {
+        const screenings = await Screening.find({ cinemaID: req.params.id })
+        res.set(
+            'Content-Security-Policy',
+            "default-src 'self';font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
+        )
+        res.status(200).render('screenings', {
+            screenings,
         })
     })
 )
