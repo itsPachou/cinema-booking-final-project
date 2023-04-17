@@ -19,5 +19,17 @@ viewRouter.route('/home').get(
         })
     })
 )
+viewRouter.route('/screenings').get(
+    catchAsync(async (req, res, next) => {
+        // const cinemas = await Cinema.find()
+        res.set(
+            'Content-Security-Policy',
+            "default-src 'self';font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
+        )
+        res.status(200).render('screenings', {
+            // cinemas,
+        })
+    })
+)
 
 export default viewRouter
