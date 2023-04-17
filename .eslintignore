@@ -1,2 +1,3 @@
 # Ignore front-end JS files
 public/scripts/*
+dev-data/*

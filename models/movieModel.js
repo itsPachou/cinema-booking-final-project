@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import slugify from 'slugify'
 
 const movieSchema = new mongoose.Schema({
     title: {
@@ -29,7 +30,14 @@ const movieSchema = new mongoose.Schema({
     language: {
         type: String,
         required: true,
+        lowercase: true,
     },
+    slug: String,
+})
+
+movieSchema.pre('save', function (next) {
+    this.slug = slugify(this.title, { lower: true, remove: /[*+~.()'"!:@]/g })
+    next()
 })
 
 const Movie = mongoose.model('Movie', movieSchema)
