@@ -52,7 +52,7 @@ img.movie-thumbnail {
 }
 
 .movie-img {
-  margin: 0 .5rem;
+  margin: .5rem .5rem;
   display: flex;
   justify-content: center;
 }
@@ -78,12 +78,9 @@ img.movie-thumbnail {
   }
 
   .movie-details {
-    flex-direction: column;
-    justify-content: end;
-  }
-
-  .movie-runtime, .movie-starring {
-    flex: none !important;
+    display: grid !important;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr auto auto;
   }
 }
 
@@ -92,8 +89,15 @@ img.movie-thumbnail {
   grid-template-columns: auto auto;
   column-gap: 1rem; */
   display: flex;
+  flex-wrap: wrap;
   font-size: 1.2rem;
   padding: 0 .5rem;
+}
+
+.movie-description {
+  flex: 100%;
+  font-size: 1.4rem;
+  color: #a5b4c9;
 }
 
 .movie-runtime, .movie-starring {
@@ -101,7 +105,7 @@ img.movie-thumbnail {
 }
 
 .movie-details h3, .screening-times-list h3 {
-  color:rgb(226 232 240);
+  color:#e2e8f0;
 }
 
 section.section__cinema-list, section.section__screening-list {
@@ -178,6 +182,10 @@ section.section__cinema-list, section.section__screening-list {
   font-size: 1.6rem;
   cursor: pointer;
   color: inherit;
+}
+
+.screening-tile-time {
+  color: #e2e8f0;
 }
 
 #cinema-list a, 
