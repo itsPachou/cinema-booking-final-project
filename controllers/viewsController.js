@@ -17,7 +17,7 @@ const getHomePage = catchAsync(async (req, res, next) => {
 
 const getCinemaPage = catchAsync(async (req, res, next) => {
     // const screenings = await Screening.find({ cinemaID: req.params.slug })
-    const cinema = await Cinema.find({ slug: req.params.slug })
+    const cinema = await Cinema.findOne({ slug: req.params.slug })
     const screenings = await Screening.find({ cinemaID: cinema._id })
     const movieIdArray = screenings.map((sc) => sc.movieID)
     const movies = await Movie.find({ _id: movieIdArray })
