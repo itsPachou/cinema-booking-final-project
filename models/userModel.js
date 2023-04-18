@@ -39,7 +39,10 @@ const userSchema = new mongoose.Schema({
     },
     bookings: [
         {
-            screeningID: String,
+            screeningID: {
+                type: mongoose.ObjectId,
+                ref: 'Screening',
+            },
             seats: [String],
         },
     ],
