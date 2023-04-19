@@ -3,40 +3,6 @@ extends base
 block content 
     section.section__screening-list 
         h2= `Selected Cinema: ${cinema.locationName}`
-        .container 
-            .movie-title 
-                p John Wick Chapter 4
-                img(src="/img/128px-BBFC_15_2019.png", alt="BBFC Classification 15 symbol").classification-symbol
-            .movie-img
-                img(src="/img/john_wick_poster.jpg", alt="movie poster").movie-thumbnail
-            .movie-details 
-                .movie-description
-                    | John Wick (Keanu Reeves) uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe and forces that turn old friends into foes.
-                .movie-runtime
-                    h3 Runtime 
-                    p 2hrs 49mins
-                .movie-starring 
-                    h3 Starring
-                    p Keanu Reeves, Donnie Yen, Bill Skarsgård
-            .screening-times-list 
-                h3.screening-date SUN 16 APRIL
-                .screening-tiles-container
-                    .screening-times-tile
-                        a(href='#')
-                            .screening-tile-time 1:05 PM
-                            .screening-tile-info 
-                                span 2D
-                                |  - ENG
-                    .screening-times-tile
-                        a(href='#')
-                            .screening-tile-time 1:05 PM
-                            .screening-tile-info 
-                                span 2D
-                                |  - ENG
-                    .screening-times-tile
-                        a(href='#')
-                            .screening-tile-time 1:05 PM
-                            .screening-tile-info 
-                                span 2D
-                                |  - ENG
-            
+        each movie in movies 
+            if groupedScreenings[movie._id]
+                include _containerMovieListing

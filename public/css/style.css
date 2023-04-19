@@ -37,6 +37,7 @@ body {
 .movie-title p {
   font-size: 2.5rem;
   color: rgb(226 232 240);
+  text-align: center;
 }
 
 .movie-title img.classification-symbol {
@@ -102,6 +103,10 @@ img.movie-thumbnail {
 
 .movie-runtime, .movie-starring {
   flex: 1 1 auto;
+}
+
+.movie-starring p {
+  word-break: normal;
 }
 
 .movie-details h3, .screening-times-list h3 {

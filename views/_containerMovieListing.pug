@@ -1,0 +1,15 @@
+.container 
+    .movie-title 
+        p= movie.title
+        img(src=`/img/128px-BBFC_${movie.classification}_2019.png`, alt=`BBFC Classification ${movie.classification} symbol`).classification-symbol
+    .movie-img
+        img(src=`${movie.thumbnail}`, alt="movie poster").movie-thumbnail
+    .movie-details 
+        .movie-description= movie.synopsis
+        .movie-runtime
+            h3 Runtime 
+            p= `${Math.floor(movie.runtime/60)}hrs ${movie.runtime%60<10 ? '0'+ movie.runtime%60 : movie.runtime%60}mins`
+        .movie-starring 
+            h3 Starring
+            p= movie.cast.join(', ')
+    include _screeningTimesTilesList
