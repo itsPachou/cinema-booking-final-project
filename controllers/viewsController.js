@@ -8,7 +8,7 @@ const getHomePage = catchAsync(async (req, res, next) => {
     const cinemas = await Cinema.find()
     res.set(
         'Content-Security-Policy',
-        "default-src 'self';font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
+        "default-src 'self';img-src *;font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
     )
     res.status(200).render('home', {
         cinemas,
@@ -24,7 +24,7 @@ const getCinemaPage = catchAsync(async (req, res, next) => {
     const groupedScreenings = groupByMovie(screenings)
     res.set(
         'Content-Security-Policy',
-        "default-src 'self';font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
+        "default-src 'self';img-src *;font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
     )
     res.status(200).render('cinema', {
         cinema,

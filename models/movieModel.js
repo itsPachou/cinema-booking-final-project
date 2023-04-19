@@ -32,6 +32,10 @@ const movieSchema = new mongoose.Schema({
         required: true,
         lowercase: true,
     },
+    thumbnail: {
+        type: String,
+        required: true,
+    },
     slug: String,
 })
 
