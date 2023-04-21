@@ -1,0 +1,11 @@
+.form-box
+    h2.heading-login-form Log into your account
+    form#loginForm
+        .form-group 
+            label.form-label(for='email') Email address 
+            input#email.form-input(type='email', placeholder='email@example.com', required)
+        .form-group 
+            label.form-label(for='password') Password
+            input#password.form-input(type='password', placeholder='••••••••', required, minlength='8')
+        .form-group 
+            button.btn-login Login

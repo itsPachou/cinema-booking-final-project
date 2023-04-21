@@ -14,9 +14,10 @@ header.header
         img(src='/img/logo_header.png' alt='Cinema logo')
         p.logo-text CinemaGO
     nav.nav
-        //- a.nav__el(href='#') My bookings
-        //- a.nav__el(href='#')
-        //-     img.nav__user-img(src='img/user.jpg' alt='User photo')
-        //-     span Kacper 
-        button.nav__el Log in
-        button.nav__el Sign up
+        if user
+            a.nav__el(href='#') Log out
+            a.nav__el(href='#')
+                span= `Hi, ${user.firstName}` 
+        else
+            a.nav__el(href='/login') Log in
+            a.nav__el(href='/signup') Sign up
