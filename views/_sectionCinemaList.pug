@@ -2,6 +2,6 @@ section.section__cinema-list
     h2 Find Your Prefered Cinema Location
     .container#cinema-list
         each cinema in cinemas
-            a(href=`/cinema/${cinema._id}`)= cinema.locationName
+            a(href=`/cinema/${cinema.slug}`)= cinema.locationName
                 .cinema-list-address= cinema.address
                 

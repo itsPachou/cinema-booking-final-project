@@ -21,6 +21,7 @@ const cinemaSchema = new mongoose.Schema({
 
 cinemaSchema.pre('save', function (next) {
     this.slug = slugify(this.locationName, { lower: true })
+    next()
 })
 
 const Cinema = mongoose.model('Cinema', cinemaSchema)

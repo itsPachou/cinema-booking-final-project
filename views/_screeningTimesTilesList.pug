@@ -1,0 +1,10 @@
+.screening-times-list 
+        h3.screening-date SUN 16 APRIL
+        .screening-tiles-container
+            each screening in groupedScreenings[movie._id]
+                .screening-times-tile
+                    a(href='#')
+                        .screening-tile-time= screening.date.toLocaleTimeString().split(':').slice(0,2).join(':') + (screening.date.toLocaleTimeString().split(' ').at(-1) === 'AM' ? ' AM' : ' PM')
+                        .screening-tile-info 
+                            span= screening.screeningType
+                            span= (screening.audioType==='original' ? '' : ` - ${screening.audioType.slice(0,3)}`) + (screening.audioLanguage==='none' ? ` - ${movie.language.slice(0,3)}` : ` - ${screening.audioLanguage.slice(0,3)}`)

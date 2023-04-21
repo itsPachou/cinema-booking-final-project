@@ -39,7 +39,10 @@ const userSchema = new mongoose.Schema({
     },
     bookings: [
         {
-            screeningID: String,
+            screeningID: {
+                type: mongoose.ObjectId,
+                ref: 'Screening',
+            },
             seats: [String],
         },
     ],
@@ -66,17 +69,18 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     }
 }
 
-const User = mongoose.model('User', userSchema)
-
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next()
     try {
-        const hashedPassword = await User.generateHash(this.password)
+        const hashedPassword = await bcrypt.hash(this.password, saltRounds)
         this.password = hashedPassword
+        this.passwordConfirm = undefined
         next()
     } catch (error) {
         return next(error)
     }
 })
+
+const User = mongoose.model('User', userSchema)
 
 export default User
