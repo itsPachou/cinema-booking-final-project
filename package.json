@@ -5,14 +5,15 @@
     "node": ">=10.0.0"
   },
   "description": "Web application for booking cinema tickets",
-  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon server.js",
     "import-data": "node dev-data/import-dev-data.js --import",
-    "delete-data": "node dev-data/import-dev-data.js --delete"
+    "delete-data": "node dev-data/import-dev-data.js --delete",
+    "build:js": "parcel build ./public/scripts/index.js --dist-dir ./public/scripts/bundled",
+    "watch:js": "parcel watch ./public/scripts/index.js --dist-dir ./public/scripts/bundled"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "nodemon": "^2.0.20",
+    "parcel": "^2.8.3",
     "prettier": "^2.8.3"
   },
   "dependencies": {
