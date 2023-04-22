@@ -6,10 +6,6 @@ import groupByMovie from '../utils/groupByMovie.js'
 
 const getHomePage = catchAsync(async (req, res, next) => {
     const cinemas = await Cinema.find()
-    res.set(
-        'Content-Security-Policy',
-        "default-src 'self';img-src *;font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
-    )
     res.status(200).render('home', {
         cinemas,
     })
@@ -22,10 +18,6 @@ const getCinemaPage = catchAsync(async (req, res, next) => {
     const movieIdArray = screenings.map((sc) => sc.movieID)
     const movies = await Movie.find({ _id: movieIdArray })
     const groupedScreenings = groupByMovie(screenings)
-    res.set(
-        'Content-Security-Policy',
-        "default-src 'self';img-src *;font-src fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
-    )
     res.status(200).render('cinema', {
         cinema,
         screenings,
