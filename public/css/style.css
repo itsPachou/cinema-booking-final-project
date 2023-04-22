@@ -527,7 +527,7 @@ section.section__cinema-list, section.section__screening-list {
   background-color: #20bf6b;
 }
 .alert-error {
-  background-color: #eb4d4b;
+  background-color: #a41a1a;
 }
 
 @media screen and (min-width: 600px) {
