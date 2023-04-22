@@ -1,6 +1,7 @@
 'use strict'
 
 import { loadJSON } from './backEndConnections.js'
+import { showAlert } from './alerts.js'
 
 const login = async (email, password) => {
     try {
@@ -14,13 +15,16 @@ const login = async (email, password) => {
                 body: JSON.stringify({ email, password }),
             }
         )
-        if (result.status === 'success' && location.pathname === '/login') {
-            window.setTimeout(() => {
-                location.assign('/home')
-            }, 1500)
+        if (result.status === 'success') {
+            showAlert('success', 'Logged in successfully!')
+            if (location.pathname === '/login') {
+                window.setTimeout(() => {
+                    location.assign('/home')
+                }, 1500)
+            }
         }
     } catch (error) {
-        console.log(error)
+        showAlert('error', error.message)
     }
 }
 

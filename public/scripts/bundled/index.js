@@ -577,6 +577,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
 var _backEndConnectionsJs = require("./backEndConnections.js");
+var _alertsJs = require("./alerts.js");
 "use strict";
 const login = async (email, password)=>{
     try {
@@ -590,15 +591,18 @@ const login = async (email, password)=>{
                 password
             })
         });
-        if (result.status === "success" && location.pathname === "/login") window.setTimeout(()=>{
-            location.assign("/home");
-        }, 1500);
+        if (result.status === "success") {
+            (0, _alertsJs.showAlert)("success", "Logged in successfully!");
+            if (location.pathname === "/login") window.setTimeout(()=>{
+                location.assign("/home");
+            }, 1500);
+        }
     } catch (error) {
-        console.log(error);
+        (0, _alertsJs.showAlert)("error", error.message);
     }
 };
 
-},{"./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"erlY1":[function(require,module,exports) {
+},{"./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./alerts.js":"TpGze"}],"erlY1":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadJSON", ()=>loadJSON);
@@ -643,6 +647,22 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{}],"TpGze":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hideAlert", ()=>hideAlert);
+parcelHelpers.export(exports, "showAlert", ()=>showAlert);
+const hideAlert = ()=>{
+    const el = document.querySelector(".alert");
+    if (el) el.parentElement.removeChild(el);
+};
+const showAlert = (type, msg)=>{
+    hideAlert();
+    const markup = `<div class="alert alert-${type}">${msg}</div>`;
+    document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+    window.setTimeout(hideAlert, 5000);
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map
