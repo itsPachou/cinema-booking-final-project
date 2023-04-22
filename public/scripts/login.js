@@ -14,7 +14,7 @@ const login = async (email, password) => {
                 body: JSON.stringify({ email, password }),
             }
         )
-        if (result.status === 'success') {
+        if (result.status === 'success' && location.pathname === '/login') {
             window.setTimeout(() => {
                 location.assign('/home')
             }, 1500)
@@ -24,9 +24,4 @@ const login = async (email, password) => {
     }
 }
 
-document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault()
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
-    login(email, password)
-})
+export { login }
