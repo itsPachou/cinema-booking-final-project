@@ -26,8 +26,8 @@ const getCinemaPage = catchAsync(async (req, res, next) => {
     })
 })
 
-const getLoginForm = (req, res) => {
+const getLoginPage = (req, res) => {
     res.status(200).render('login')
 }
 
-export { getHomePage, getCinemaPage, getLoginForm }
+export { getHomePage, getCinemaPage, getLoginPage }

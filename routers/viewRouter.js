@@ -11,7 +11,7 @@ viewRouter.route('/').get((req, res) => {
     res.redirect(308, '/home')
 })
 
-viewRouter.route('/login').get(viewsController.getLoginForm)
+viewRouter.route('/login').get(viewsController.getLoginPage)
 
 viewRouter.route('/home').get(viewsController.getHomePage)
 
