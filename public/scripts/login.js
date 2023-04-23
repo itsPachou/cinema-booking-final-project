@@ -28,4 +28,16 @@ const login = async (email, password) => {
     }
 }
 
-export { login }
+const logout = async () => {
+    try {
+        const result = await loadJSON(
+            'http://localhost:3000/api/v1/users/logout',
+            { method: 'GET' }
+        )
+        if (result.status === 'success') location.reload(true)
+    } catch (error) {
+        showAlert('error', 'Error logging out! Try again.')
+    }
+}
+
+export { login, logout }

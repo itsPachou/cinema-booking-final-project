@@ -559,23 +559,26 @@ function hmrAccept(bundle, id) {
 var _loginJs = require("./login.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
+const logoutBtn = document.getElementById("logoutBtn");
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const menu = document.getElementById("menu");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
 });
-if (loginForm) document.getElementById("loginForm").addEventListener("submit", (e)=>{
+if (loginForm) loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     (0, _loginJs.login)(email, password);
 });
+if (logoutBtn) logoutBtn.addEventListener("click", (0, _loginJs.logout));
 
 },{"./login.js":"eHNGO"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
+parcelHelpers.export(exports, "logout", ()=>logout);
 var _backEndConnectionsJs = require("./backEndConnections.js");
 var _alertsJs = require("./alerts.js");
 "use strict";
@@ -601,8 +604,18 @@ const login = async (email, password)=>{
         (0, _alertsJs.showAlert)("error", error.message);
     }
 };
+const logout = async ()=>{
+    try {
+        const result = await (0, _backEndConnectionsJs.loadJSON)("http://localhost:3000/api/v1/users/logout", {
+            method: "GET"
+        });
+        if (result.status === "success") location.reload(true);
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", "Error logging out! Try again.");
+    }
+};
 
-},{"./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./alerts.js":"TpGze"}],"erlY1":[function(require,module,exports) {
+},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"erlY1":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadJSON", ()=>loadJSON);

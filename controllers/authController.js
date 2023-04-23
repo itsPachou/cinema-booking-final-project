@@ -68,6 +68,16 @@ const login = catchAsync(async (req, res, next) => {
     })
 })
 
+const logout = (req, res) => {
+    res.cookie('jwt', 'loggedout', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+    })
+    res.status(200).json({
+        status: 'success',
+    })
+}
+
 const protect = catchAsync(async (req, res, next) => {
     let token
     if (
@@ -98,25 +108,29 @@ const protect = catchAsync(async (req, res, next) => {
     next()
 })
 
-const isLoggedIn = catchAsync(async (req, res, next) => {
-    if (req.cookies.jwt) {
-        const decoded = await util.promisify(jwt.verify)(
-            req.cookies.jwt,
-            process.env.JWT_SECRET
-        )
-        const freshUser = await User.findById(decoded.id)
-        if (!freshUser) {
-            return next()
-        }
-        if (freshUser.changedPasswordAfter(decoded.iat)) {
-            return next()
-        }
+const isLoggedIn = async (req, res, next) => {
+    try {
+        if (req.cookies.jwt) {
+            const decoded = await util.promisify(jwt.verify)(
+                req.cookies.jwt,
+                process.env.JWT_SECRET
+            )
+            const freshUser = await User.findById(decoded.id)
+            if (!freshUser) {
+                return next()
+            }
+            if (freshUser.changedPasswordAfter(decoded.iat)) {
+                return next()
+            }
 
-        res.locals.user = freshUser
+            res.locals.user = freshUser
+            return next()
+        }
+    } catch (error) {
         return next()
     }
     next()
-})
+}
 
 const restrictTo =
     (...roles) =>
@@ -132,4 +146,4 @@ const restrictTo =
         next()
     }
 
-export { signup, login, protect, restrictTo, isLoggedIn }
+export { signup, login, logout, protect, restrictTo, isLoggedIn }
