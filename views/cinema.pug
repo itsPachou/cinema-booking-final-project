@@ -3,6 +3,9 @@ extends base
 block content 
     section.section__screening-list 
         h2= `Selected Cinema: ${cinema.locationName}`
-        each movie in movies 
-            if groupedScreenings[movie._id]
-                include _containerMovieListing
+        if (movies.length === 0)
+            .no-movies-notice There are no movies available.
+        else
+            each movie in movies 
+                if groupedScreenings[movie._id]
+                    include _containerMovieListing

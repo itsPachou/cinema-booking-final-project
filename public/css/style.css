@@ -228,6 +228,12 @@ section.section__cinema-list, section.section__screening-list {
   padding-top: 1rem;
 }
 
+.no-movies-notice {
+  font-size: 3rem;
+  padding-top: 2rem;
+  text-align: center;
+}
+
 .section__screening-list .container {
   /* background-color: #0a1121fe; */
   background-color: #0a11217f;
@@ -528,6 +534,23 @@ section.section__cinema-list, section.section__screening-list {
 }
 .alert-error {
   background-color: #a41a1a;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5rem;
+}
+
+.error-heading {
+  font-size: 3.5rem;
+  color: #e2e8f0;
+  font-weight: 700;
+}
+
+.error-msg {
+  font-size: 2.5rem;
 }
 
 @media screen and (min-width: 600px) {
