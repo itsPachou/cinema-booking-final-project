@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import crypto from 'node:crypto'
 
 const saltRounds = 8
 
@@ -19,7 +20,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    passwordChangedAt: Date,
     role: {
         type: String,
         enum: ['client', 'employee', 'admin'],
@@ -46,6 +46,9 @@ const userSchema = new mongoose.Schema({
             seats: [String],
         },
     ],
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
 })
 
 userSchema.statics.generateHash = async function (password) {
@@ -80,6 +83,19 @@ userSchema.pre('save', async function (next) {
         return next(error)
     }
 })
+
+userSchema.methods.createPasswordResetToken = function () {
+    const resetToken = crypto.randomBytes(32).toString('hex')
+
+    this.passwordResetToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex')
+
+    this.passwordResetExpires = Date.now() + 10 * 60 * 1000
+
+    return resetToken
+}
 
 const User = mongoose.model('User', userSchema)
 
