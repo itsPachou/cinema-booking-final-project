@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema({
     passwordConfirm: {
         type: String,
         required: true,
+        validate: {
+            validator: function (el) {
+                return el === this.password
+            },
+            message: 'Passwords do not match!',
+        },
     },
     role: {
         type: String,
@@ -82,6 +88,12 @@ userSchema.pre('save', async function (next) {
     } catch (error) {
         return next(error)
     }
+})
+
+userSchema.pre('save', function (next) {
+    if (!this.isModified('password') || this.isNew) return next()
+    this.passwordChangedAt = Date.now() - 1000
+    next()
 })
 
 userSchema.methods.createPasswordResetToken = function () {

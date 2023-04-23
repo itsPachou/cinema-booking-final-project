@@ -1,4 +1,5 @@
 import * as util from 'node:util'
+import crypto from 'node:crypto'
 import jwt from 'jsonwebtoken'
 import User from '../models/userModel.js'
 import AppError from '../utils/appError.js'
@@ -189,7 +190,42 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     }
 })
 
-const resetPassword = catchAsync(async (req, res, next) => {})
+const resetPassword = catchAsync(async (req, res, next) => {
+    const hashedToken = crypto
+        .createHash('sha256')
+        .update(req.params.token)
+        .digest('hex')
+
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: Date.now() },
+    })
+
+    if (!user) {
+        return next(new AppError('Token is invalid or has expired.', 400))
+    }
+
+    user.password = req.body.password
+    user.passwordConfirm = req.body.passwordConfirm
+    user.passwordResetToken = undefined
+    user.passwordResetExpires = undefined
+    await user.save()
+
+    const token = signToken(user._id)
+
+    const cookieOptions = {
+        expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+        ), // setting cookie expiration to 30 days in miliseconds
+        httpOnly: true, // make it so the browser can only get, store, and send back the cookie
+    }
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true // only send cookie over HTTPS (only relevant once we go to production)
+    res.cookie('jwt', token, cookieOptions)
+    res.status(200).json({
+        status: 'success',
+        token,
+    })
+})
 
 export {
     signup,
