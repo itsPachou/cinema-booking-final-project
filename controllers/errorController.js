@@ -19,15 +19,23 @@ const handleValidationErrorDB = (err) => {
     return new AppError(message, 400)
 }
 
-const sendErrorDev = (err, res) => {
-    res.status(err.statusCode).json({
-        status: err.status,
-        message: err.message,
-        stack: err.stack,
-        error: err,
-    })
+const sendErrorDev = (err, req, res) => {
+    if (req.originalUrl.startsWith('/api')) {
+        res.status(err.statusCode).json({
+            status: err.status,
+            message: err.message,
+            stack: err.stack,
+            error: err,
+        })
+    } else {
+        res.status(err.statusCode).render('error', {
+            title: 'Something went wrong!',
+            msg: err.message,
+        })
+    }
 }
-const sendErrorProd = (err, res) => {
+
+const sendErrorProd = (err, req, res) => {
     if (err.isOperational) {
         res.status(err.statusCode).json({
             status: err.status,
@@ -48,12 +56,12 @@ export default (err, req, res, next) => {
     err.status = err.status || 'error'
 
     if (process.env.NODE_ENV === 'development') {
-        sendErrorDev(err, res)
+        sendErrorDev(err, req, res)
     } else if (process.env.NODE_ENV === 'production') {
         if (err.name === 'CastError') err = handleCastErrorDB(err)
         if (err.code === 11000) err = handleDuplicateFieldsDB(err)
         if (err.name === 'ValidationError') err = handleValidationErrorDB(err)
 
-        sendErrorProd(err, res)
+        sendErrorProd(err, req, res)
     }
 }
