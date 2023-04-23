@@ -9,10 +9,4 @@ async function loadJSON(url, options) {
     return jsonBody
 }
 
-const rootAPIUrl = window.location.origin.concat('/api/v1')
-
-async function loadCinemas() {
-    return loadJSON(`${rootAPIUrl}/cinemas`)
-}
-
-export { loadCinemas }
+export { loadJSON }

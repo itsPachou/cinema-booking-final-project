@@ -1,5 +1,4 @@
 import * as util from 'node:util'
-// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-import
 import jwt from 'jsonwebtoken'
 import User from '../models/userModel.js'
 import AppError from '../utils/appError.js'
@@ -44,20 +43,14 @@ const signup = catchAsync(async (req, res, next) => {
 
 const login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
-    console.log(email, password)
 
     if (!email || !password) {
-        return next(
-            new AppError('Bad request. Missing email or password.', 400)
-        )
+        return next(new AppError('Missing email or password.', 400))
     }
 
     const user = await User.findOne({ email }).select('+password')
-    console.log(user)
     if (!user || !(await user.validatePassword(password, user.password))) {
-        return next(
-            new AppError('Unauthorized. Incorrect email or password.', 401)
-        )
+        return next(new AppError('Incorrect email or password.', 401))
     }
     const token = signToken(user._id)
 
@@ -74,6 +67,16 @@ const login = catchAsync(async (req, res, next) => {
         token,
     })
 })
+
+const logout = (req, res) => {
+    res.cookie('jwt', 'loggedout', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+    })
+    res.status(200).json({
+        status: 'success',
+    })
+}
 
 const protect = catchAsync(async (req, res, next) => {
     let token
@@ -105,6 +108,30 @@ const protect = catchAsync(async (req, res, next) => {
     next()
 })
 
+const isLoggedIn = async (req, res, next) => {
+    try {
+        if (req.cookies.jwt) {
+            const decoded = await util.promisify(jwt.verify)(
+                req.cookies.jwt,
+                process.env.JWT_SECRET
+            )
+            const freshUser = await User.findById(decoded.id)
+            if (!freshUser) {
+                return next()
+            }
+            if (freshUser.changedPasswordAfter(decoded.iat)) {
+                return next()
+            }
+
+            res.locals.user = freshUser
+            return next()
+        }
+    } catch (error) {
+        return next()
+    }
+    next()
+}
+
 const restrictTo =
     (...roles) =>
     (req, res, next) => {
@@ -119,4 +146,4 @@ const restrictTo =
         next()
     }
 
-export { signup, login, protect, restrictTo }
+export { signup, login, logout, protect, restrictTo, isLoggedIn }

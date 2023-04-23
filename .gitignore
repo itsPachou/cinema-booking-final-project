@@ -33,3 +33,6 @@ jspm_packages/
 img/
 
 temp.html
+
+# Parcel cache
+.parcel-cache/
