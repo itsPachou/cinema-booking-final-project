@@ -19,6 +19,10 @@ userRouter
     .patch(authController.protect, usersController.updateMe)
 
 userRouter
+    .route('/deleteMe')
+    .delete(authController.protect, usersController.deleteMe)
+
+userRouter
     .route('/')
     .get(usersController.getAllUsers)
     .post(

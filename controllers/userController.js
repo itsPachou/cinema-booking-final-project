@@ -46,6 +46,17 @@ const updateMe = catchAsync(async (req, res, next) => {
     })
 })
 
+const deleteMe = catchAsync(async (req, res, next) => {
+    await User.findByIdAndUpdate(req.user._id, {
+        active: false,
+    })
+
+    res.status(204).json({
+        status: 'success',
+        data: null,
+    })
+})
+
 const getAllUsers = catchAsync(async (req, res, next) => {
     const features = new APIFeatures(User.find(), req.query)
         .filter()
@@ -118,4 +129,12 @@ const deleteUser = catchAsync(async (req, res, next) => {
     })
 })
 
-export { updateMe, getAllUsers, getUser, updateUser, deleteUser, createUser }
+export {
+    updateMe,
+    deleteMe,
+    getAllUsers,
+    getUser,
+    updateUser,
+    deleteUser,
+    createUser,
+}
