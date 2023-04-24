@@ -6,6 +6,7 @@ import movieRouter from './movieRouter.js'
 const cinemaRouter = express.Router()
 
 cinemaRouter.use('/:cinemaID/movies', movieRouter)
+cinemaRouter.use('/:cinemaID/rooms', movieRouter)
 
 cinemaRouter
     .route('/')
