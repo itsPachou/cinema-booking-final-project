@@ -32,6 +32,9 @@ const getScreening = catchAsync(async (req, res, next) => {
 })
 
 const createScreening = catchAsync(async (req, res, next) => {
+    if (!req.body.cinemaID) req.body.cinemaID = req.params.cinemaID
+    if (!req.body.movieID) req.body.movieID = req.params.movieID
+
     const newScreening = await Screening.create(req.body)
 
     res.status(201).json({
