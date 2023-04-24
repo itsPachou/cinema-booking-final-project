@@ -13,6 +13,7 @@ import globalErrorHandler from './controllers/errorController.js'
 import screeningRouter from './routers/screeningRouter.js'
 import cinemaRouter from './routers/cinemaRouter.js'
 import userRouter from './routers/userRouter.js'
+import movieRouter from './routers/movieRouter.js'
 
 const app = express()
 
@@ -60,8 +61,9 @@ app.use(cookieParser())
 
 app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))))
 
-app.use('/api/v1/screenings', screeningRouter)
 app.use('/api/v1/cinemas', cinemaRouter)
+app.use('/api/v1/movies', movieRouter)
+app.use('/api/v1/screenings', screeningRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/', viewRouter)
 

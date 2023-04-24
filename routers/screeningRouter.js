@@ -2,7 +2,7 @@ import express from 'express'
 import * as screeningsController from '../controllers/screeningsController.js'
 import * as authController from '../controllers/authController.js'
 
-const screeningRouter = express.Router()
+const screeningRouter = express.Router({ mergeParams: true })
 
 screeningRouter
     .route('/')

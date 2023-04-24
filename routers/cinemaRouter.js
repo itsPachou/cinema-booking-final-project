@@ -1,8 +1,11 @@
 import express from 'express'
 import * as cinemasController from '../controllers/cinemasController.js'
 import * as authController from '../controllers/authController.js'
+import movieRouter from './movieRouter.js'
 
 const cinemaRouter = express.Router()
+
+cinemaRouter.use('/:cinemaID/movies', movieRouter)
 
 cinemaRouter
     .route('/')
