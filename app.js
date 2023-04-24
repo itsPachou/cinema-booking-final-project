@@ -43,7 +43,18 @@ app.use(mongoSanitize())
 // sanitize the data against XSS
 app.use(xss())
 // prevent param pollution
-app.use(hpp())
+app.use(
+    hpp({
+        whitelist: [
+            'runtime',
+            'releaseDate',
+            'director',
+            'classification',
+            'language',
+            'slug',
+        ],
+    })
+)
 
 app.use(cookieParser())
 
