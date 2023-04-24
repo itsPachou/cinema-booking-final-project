@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import crypto from 'node:crypto'
 
 const saltRounds = 8
 
@@ -18,8 +19,13 @@ const userSchema = new mongoose.Schema({
     passwordConfirm: {
         type: String,
         required: true,
+        validate: {
+            validator: function (el) {
+                return el === this.password
+            },
+            message: 'Passwords do not match!',
+        },
     },
-    passwordChangedAt: Date,
     role: {
         type: String,
         enum: ['client', 'employee', 'admin'],
@@ -46,6 +52,14 @@ const userSchema = new mongoose.Schema({
             seats: [String],
         },
     ],
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+        type: Boolean,
+        default: true,
+        select: false,
+    },
 })
 
 userSchema.statics.generateHash = async function (password) {
@@ -80,6 +94,30 @@ userSchema.pre('save', async function (next) {
         return next(error)
     }
 })
+
+userSchema.pre('save', function (next) {
+    if (!this.isModified('password') || this.isNew) return next()
+    this.passwordChangedAt = Date.now() - 1000
+    next()
+})
+
+userSchema.pre(/^find/, function (next) {
+    this.find({ active: { $ne: false } })
+    next()
+})
+
+userSchema.methods.createPasswordResetToken = function () {
+    const resetToken = crypto.randomBytes(32).toString('hex')
+
+    this.passwordResetToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex')
+
+    this.passwordResetExpires = Date.now() + 10 * 60 * 1000
+
+    return resetToken
+}
 
 const User = mongoose.model('User', userSchema)
 
