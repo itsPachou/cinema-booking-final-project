@@ -34,6 +34,8 @@ const getRoom = catchAsync(async (req, res, next) => {
 })
 
 const createRoom = catchAsync(async (req, res, next) => {
+    if (!req.body.cinemaID) req.body.cinemaID = req.params.cinemaID
+
     const newRoom = await Room.create(req.body)
 
     res.status(201).json({
