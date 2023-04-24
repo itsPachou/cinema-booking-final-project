@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
 import xss from 'xss-clean'
+import hpp from 'hpp'
 
 import viewRouter from './routers/viewRouter.js'
 import AppError from './utils/appError.js'
@@ -41,6 +42,8 @@ app.use(express.json({ limit: '10kb' }))
 app.use(mongoSanitize())
 // sanitize the data against XSS
 app.use(xss())
+// prevent param pollution
+app.use(hpp())
 
 app.use(cookieParser())
 
