@@ -2,6 +2,8 @@ import express from 'express'
 import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import rateLimit from 'express-rate-limit'
+import helmet from 'helmet'
+
 import viewRouter from './routers/viewRouter.js'
 import AppError from './utils/appError.js'
 import globalErrorHandler from './controllers/errorController.js'
@@ -12,6 +14,14 @@ import userRouter from './routers/userRouter.js'
 const app = express()
 
 // Global middleware
+// set security http headers
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+    })
+)
+
 const limiter = rateLimit({
     max: 100,
     windowMs: 60 * 60 * 1000,
