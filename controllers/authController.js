@@ -11,19 +11,8 @@ const signToken = (id) =>
         expiresIn: process.env.JWT_EXPIRES_IN,
     })
 
-const signup = catchAsync(async (req, res, next) => {
-    const newUser = await User.create({
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phoneNumber: req.body.phoneNumber,
-    })
-
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-    })
+const createSendCookieAndToken = (user, statusCode, res) => {
+    const token = signToken(user._id)
 
     const cookieOptions = {
         expires: new Date(
@@ -34,13 +23,26 @@ const signup = catchAsync(async (req, res, next) => {
     if (process.env.NODE_ENV === 'production') cookieOptions.secure = true // only send cookie over HTTPS (only relevant once we go to production)
     res.cookie('jwt', token, cookieOptions)
 
-    res.status(201).json({
+    res.status(statusCode).json({
         status: 'success',
         token,
         data: {
-            user: newUser,
+            user,
         },
     })
+}
+
+const signup = catchAsync(async (req, res, next) => {
+    const newUser = await User.create({
+        email: req.body.email,
+        password: req.body.password,
+        passwordConfirm: req.body.passwordConfirm,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phoneNumber: req.body.phoneNumber,
+    })
+
+    createSendCookieAndToken(newUser, 201, res)
 })
 
 const login = catchAsync(async (req, res, next) => {
@@ -54,20 +56,8 @@ const login = catchAsync(async (req, res, next) => {
     if (!user || !(await user.validatePassword(password, user.password))) {
         return next(new AppError('Incorrect email or password.', 401))
     }
-    const token = signToken(user._id)
 
-    const cookieOptions = {
-        expires: new Date(
-            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-        ), // setting cookie expiration to 30 days in miliseconds
-        httpOnly: true, // make it so the browser can only get, store, and send back the cookie
-    }
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true // only send cookie over HTTPS (only relevant once we go to production)
-    res.cookie('jwt', token, cookieOptions)
-    res.status(200).json({
-        status: 'success',
-        token,
-    })
+    createSendCookieAndToken(user, 200, res)
 })
 
 const logout = (req, res) => {
@@ -211,20 +201,23 @@ const resetPassword = catchAsync(async (req, res, next) => {
     user.passwordResetExpires = undefined
     await user.save()
 
-    const token = signToken(user._id)
+    createSendCookieAndToken(user, 200, res)
+})
 
-    const cookieOptions = {
-        expires: new Date(
-            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-        ), // setting cookie expiration to 30 days in miliseconds
-        httpOnly: true, // make it so the browser can only get, store, and send back the cookie
+const updatePassword = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user.id).select('+password')
+
+    if (
+        !(await user.validatePassword(req.body.currentPassword, user.password))
+    ) {
+        return next(new AppError('Your current password is wrong.', 401))
     }
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true // only send cookie over HTTPS (only relevant once we go to production)
-    res.cookie('jwt', token, cookieOptions)
-    res.status(200).json({
-        status: 'success',
-        token,
-    })
+
+    user.password = req.body.newPassword
+    user.passwordConfirm = req.body.newPasswordConfirm
+    await user.save()
+
+    createSendCookieAndToken(user, 200, res)
 })
 
 export {
@@ -236,4 +229,5 @@ export {
     isLoggedIn,
     forgotPassword,
     resetPassword,
+    updatePassword,
 }
