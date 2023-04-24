@@ -1,6 +1,12 @@
 import express from 'express'
 import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
+import rateLimit from 'express-rate-limit'
+import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
+import xss from 'xss-clean'
+import hpp from 'hpp'
+
 import viewRouter from './routers/viewRouter.js'
 import AppError from './utils/appError.js'
 import globalErrorHandler from './controllers/errorController.js'
@@ -10,11 +16,46 @@ import userRouter from './routers/userRouter.js'
 
 const app = express()
 
+// Global middleware
+// set security http headers
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+    })
+)
+
+const limiter = rateLimit({
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again in an hour.',
+})
+// rate limit on the api endpoints
+app.use('/api', limiter)
+
 // Set pug as the templating engine
 app.set('view engine', 'pug')
 app.set(new URL('views', import.meta.url))
 
-app.use(express.json())
+app.use(express.json({ limit: '10kb' }))
+// sanitize the data against NoSQL query injection
+app.use(mongoSanitize())
+// sanitize the data against XSS
+app.use(xss())
+// prevent param pollution
+app.use(
+    hpp({
+        whitelist: [
+            'runtime',
+            'releaseDate',
+            'director',
+            'classification',
+            'language',
+            'slug',
+        ],
+    })
+)
+
 app.use(cookieParser())
 
 app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))))
