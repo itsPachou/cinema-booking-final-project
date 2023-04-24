@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
+import xss from 'xss-clean'
 
 import viewRouter from './routers/viewRouter.js'
 import AppError from './utils/appError.js'
@@ -35,6 +37,11 @@ app.set('view engine', 'pug')
 app.set(new URL('views', import.meta.url))
 
 app.use(express.json({ limit: '10kb' }))
+// sanitize the data against NoSQL query injection
+app.use(mongoSanitize())
+// sanitize the data against XSS
+app.use(xss())
+
 app.use(cookieParser())
 
 app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))))
