@@ -34,7 +34,7 @@ app.use('/api', limiter)
 app.set('view engine', 'pug')
 app.set(new URL('views', import.meta.url))
 
-app.use(express.json())
+app.use(express.json({ limit: '10kb' }))
 app.use(cookieParser())
 
 app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))))
