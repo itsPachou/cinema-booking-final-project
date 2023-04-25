@@ -4,8 +4,11 @@ import AppError from '../utils/appError.js'
 
 const getAllScreenings = catchAsync(async (req, res, next) => {
     const queryObj = { ...req.query }
-    const excludedFields = ['sort', 'limit', 'fields']
+    const excludedFields = ['sort', 'limit', 'fields', 'page']
     excludedFields.forEach((el) => delete queryObj[el])
+    if (req.params.cinemaID) queryObj.cinemaID = req.params.cinemaID
+    if (req.params.roomID) queryObj.screeningRoomID = req.params.roomID
+    if (req.params.movieID) queryObj.movieID = req.params.movieID
     const query = await Screening.find(queryObj)
     const screenings = await query
 
