@@ -34,16 +34,7 @@ const getCinema = catchAsync(async (req, res, next) => {
     })
 })
 
-const createCinema = catchAsync(async (req, res, next) => {
-    const newCinema = await Cinema.create(req.body)
-
-    res.status(201).json({
-        status: 'success',
-        data: {
-            cinema: newCinema,
-        },
-    })
-})
+const createCinema = factory.createOne(Cinema)
 
 const updateCinema = factory.updateOne(Cinema)
 

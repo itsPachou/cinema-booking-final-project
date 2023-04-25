@@ -10,6 +10,7 @@ screeningRouter
     .post(
         authController.protect,
         authController.restrictTo('admin'),
+        screeningsController.setCinemaMovieRoomId,
         screeningsController.createScreening
     )
 

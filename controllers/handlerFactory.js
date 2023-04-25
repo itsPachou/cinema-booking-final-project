@@ -34,4 +34,16 @@ const updateOne = (Model) =>
         })
     })
 
-export { deleteOne, updateOne }
+const createOne = (Model) =>
+    catchAsync(async (req, res, next) => {
+        const doc = await Model.create(req.body)
+
+        res.status(201).json({
+            status: 'success',
+            data: {
+                doc,
+            },
+        })
+    })
+
+export { deleteOne, updateOne, createOne }

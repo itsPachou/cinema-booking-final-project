@@ -13,6 +13,7 @@ roomRouter
     .post(
         authController.protect,
         authController.restrictTo('admin'),
+        roomsController.setCinemaId,
         roomsController.createRoom
     )
 

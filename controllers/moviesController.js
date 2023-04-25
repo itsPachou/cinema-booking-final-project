@@ -2,6 +2,7 @@ import catchAsync from '../utils/catchAsync.js'
 import APIFeatures from '../utils/apiFeatures.js'
 import AppError from '../utils/appError.js'
 import Movie from '../models/movieModel.js'
+import * as factory from './handlerFactory.js'
 
 const getAllMovies = catchAsync(async (req, res, next) => {
     const features = new APIFeatures(Movie.find(), req.query)
@@ -33,46 +34,10 @@ const getMovie = catchAsync(async (req, res, next) => {
     })
 })
 
-const createMovie = catchAsync(async (req, res, next) => {
-    const newMovie = await Movie.create(req.body)
+const createMovie = factory.createOne(Movie)
 
-    res.status(201).json({
-        status: 'success',
-        data: {
-            movie: newMovie,
-        },
-    })
-})
+const updateMovie = factory.updateOne(Movie)
 
-const updateMovie = catchAsync(async (req, res, next) => {
-    const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-    })
-
-    if (!movie) {
-        return next(new AppError('No movie found with that ID', 404))
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            movie,
-        },
-    })
-})
-
-const deleteMovie = catchAsync(async (req, res, next) => {
-    const movie = await Movie.findByIdAndDelete(req.params.id)
-
-    if (!movie) {
-        return next(new AppError('No movie found with that ID', 404))
-    }
-
-    res.status(204).json({
-        status: 'success',
-        data: null,
-    })
-})
+const deleteMovie = factory.deleteOne(Movie)
 
 export { getAllMovies, createMovie, deleteMovie, getMovie, updateMovie }
