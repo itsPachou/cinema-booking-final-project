@@ -1,8 +1,11 @@
 import express from 'express'
 import * as roomsController from '../controllers/roomsController.js'
 import * as authController from '../controllers/authController.js'
+import movieRouter from './movieRouter.js'
 
 const roomRouter = express.Router({ mergeParams: true })
+
+roomRouter.use('/:roomID/movies', movieRouter)
 
 roomRouter
     .route('/')
