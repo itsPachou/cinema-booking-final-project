@@ -36,6 +36,7 @@ const getRoom = catchAsync(async (req, res, next) => {
 
 const setCinemaId = (req, res, next) => {
     if (!req.body.cinemaID) req.body.cinemaID = req.params.cinemaID
+    next()
 }
 
 const createRoom = factory.creatOne(Room)

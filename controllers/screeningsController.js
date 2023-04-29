@@ -39,6 +39,7 @@ const setCinemaMovieRoomId = (req, res, next) => {
     if (!req.body.cinemaID) req.body.cinemaID = req.params.cinemaID
     if (!req.body.movieID) req.body.movieID = req.params.movieID
     if (!req.body.screeningRoomID) req.body.screeningRoomID = req.params.roomID
+    next()
 }
 
 const createScreening = factory.createOne(Screening)
