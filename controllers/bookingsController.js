@@ -3,6 +3,7 @@ import Booking from '../models/bookingModel.js'
 import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/appError.js'
 import Screening from '../models/screeningModel.js'
+import * as factory from './handlerFactory.js'
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -78,4 +79,17 @@ const createReservation = catchAsync(async (req, res, next) => {
     })
 })
 
-export { getCheckoutSession, setScreeningID, createReservation }
+const createBooking = factory.createOne(Booking)
+
+const updateBooking = factory.updateOne(Booking)
+
+const deleteBooking = factory.deleteOne(Booking)
+
+export {
+    getCheckoutSession,
+    setScreeningID,
+    createReservation,
+    createBooking,
+    updateBooking,
+    deleteBooking,
+}
