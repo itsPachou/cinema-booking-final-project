@@ -33,6 +33,10 @@ const getLoginPage = (req, res, next) => {
     res.status(200).render('login')
 }
 
+const getSignupPage = (req, res, next) => {
+    res.status(200).render('signup')
+}
+
 const getCheckoutLoginPage = catchAsync(async (req, res, next) => {
     res.locals.screeningID = req.params.screeningID
     if (res.locals.user) {
@@ -41,4 +45,10 @@ const getCheckoutLoginPage = catchAsync(async (req, res, next) => {
     res.status(200).render('checkoutLogin')
 })
 
-export { getHomePage, getCinemaPage, getLoginPage, getCheckoutLoginPage }
+export {
+    getHomePage,
+    getCinemaPage,
+    getLoginPage,
+    getCheckoutLoginPage,
+    getSignupPage,
+}

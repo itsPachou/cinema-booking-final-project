@@ -2,4 +2,7 @@ extends base
 
 block content 
     section.container.container__login-form
-      include _loginForm
+        include _loginForm
+    .checkout-login-or= '- OR -'
+    section.container.container__login-form
+        include _signupForm

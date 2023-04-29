@@ -559,6 +559,7 @@ function hmrAccept(bundle, id) {
 var _loginJs = require("./login.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
 const logoutBtn = document.getElementById("logoutBtn");
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const menu = document.getElementById("menu");
@@ -572,6 +573,16 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     const password = document.getElementById("password").value;
     (0, _loginJs.login)(email, password);
 });
+if (signupForm) signupForm.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const email = document.getElementById("emailSU").value;
+    const password = document.getElementById("passwordSU").value;
+    const passwordConfirm = document.getElementById("passwordConfirmSU").value;
+    const firstName = document.getElementById("firstNameSU").value;
+    const lastName = document.getElementById("lastNameSU").value;
+    const phoneNumber = document.getElementById("phoneNumberSU").value;
+    (0, _loginJs.signup)(email, password, passwordConfirm, firstName, lastName, phoneNumber !== "" ? phoneNumber : undefined);
+});
 if (logoutBtn) logoutBtn.addEventListener("click", (0, _loginJs.logout));
 
 },{"./login.js":"eHNGO"}],"eHNGO":[function(require,module,exports) {
@@ -579,6 +590,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
+parcelHelpers.export(exports, "signup", ()=>signup);
 var _backEndConnectionsJs = require("./backEndConnections.js");
 var _alertsJs = require("./alerts.js");
 "use strict";
@@ -615,6 +627,35 @@ const logout = async ()=>{
         if (result.status === "success") location.reload(true);
     } catch (error) {
         (0, _alertsJs.showAlert)("error", "Error logging out! Try again.");
+    }
+};
+const signup = async (email, password, passwordConfirm, firstName, lastName, phoneNumber)=>{
+    try {
+        const result = await (0, _backEndConnectionsJs.loadJSON)("http://localhost:3000/api/v1/users/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                passwordConfirm,
+                firstName,
+                lastName,
+                phoneNumber: phoneNumber
+            })
+        });
+        if (result.status === "success") {
+            (0, _alertsJs.showAlert)("success", "Signed up successfully!");
+            if (location.pathname === "/signup") window.setTimeout(()=>{
+                location.assign("/home");
+            }, 1500);
+            else if (location.pathname.startsWith("/checkoutLogin")) window.setTimeout(()=>{
+                location.assign(`/checkout/screenings/${res.locals.screeningID}`);
+            }, 1500);
+        }
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
     }
 };
 

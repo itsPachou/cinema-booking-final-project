@@ -127,6 +127,16 @@ section.section__cinema-list, section.section__screening-list {
   margin: auto;
 }
 
+.checkout-login-or {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.required-info {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
 .container__login-form {
   background-color: #0a1121;
   margin: 2rem auto;

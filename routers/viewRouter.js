@@ -13,6 +13,8 @@ viewRouter.route('/').get((req, res) => {
 
 viewRouter.route('/login').get(viewsController.getLoginPage)
 
+viewRouter.route('/signup').get(viewsController.getSignupPage)
+
 viewRouter.route('/home').get(viewsController.getHomePage)
 
 // viewRouter.route('/screenings').get(
