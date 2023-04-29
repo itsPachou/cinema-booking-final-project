@@ -2,6 +2,7 @@ import User from '../models/userModel.js'
 import AppError from '../utils/appError.js'
 import catchAsync from '../utils/catchAsync.js'
 import APIFeatures from '../utils/apiFeatures.js'
+import * as factory from './handlerFactory.js'
 
 const filterUserObj = (obj, ...allowedFields) => {
     const newObj = {}
@@ -87,47 +88,11 @@ const getUser = catchAsync(async (req, res, next) => {
     })
 })
 
-const createUser = catchAsync(async (req, res, next) => {
-    const newUser = await User.create(req.body)
+const createUser = factory.createOne(User)
 
-    res.status(201).json({
-        status: 'success',
-        data: {
-            user: newUser,
-        },
-    })
-})
+const updateUser = factory.updateOne(User)
 
-const updateUser = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-    })
-
-    if (!user) {
-        return next(new AppError('No user found with that ID', 404))
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user,
-        },
-    })
-})
-
-const deleteUser = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndDelete(req.params.id)
-
-    if (!user) {
-        return next(new AppError('No user found with that ID', 404))
-    }
-
-    res.status(204).json({
-        status: 'success',
-        data: null,
-    })
-})
+const deleteUser = factory.deleteOne(User)
 
 export {
     updateMe,
