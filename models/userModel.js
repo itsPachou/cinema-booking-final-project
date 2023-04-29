@@ -43,15 +43,6 @@ const userSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
     },
-    bookings: [
-        {
-            screeningID: {
-                type: mongoose.ObjectId,
-                ref: 'Screening',
-            },
-            seats: [String],
-        },
-    ],
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

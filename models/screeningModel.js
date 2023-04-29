@@ -33,7 +33,6 @@ const screeningSchema = new mongoose.Schema({
         ref: 'Room',
         required: true,
     },
-    bookedSeats: [String],
 })
 const Screening = mongoose.model('Screening', screeningSchema)
 
