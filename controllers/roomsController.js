@@ -39,7 +39,7 @@ const setCinemaId = (req, res, next) => {
     next()
 }
 
-const createRoom = factory.creatOne(Room)
+const createRoom = factory.createOne(Room)
 
 const updateRoom = factory.updateOne(Room)
 
