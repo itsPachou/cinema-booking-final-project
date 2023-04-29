@@ -29,8 +29,16 @@ const getCinemaPage = catchAsync(async (req, res, next) => {
     })
 })
 
-const getLoginPage = (req, res) => {
+const getLoginPage = (req, res, next) => {
     res.status(200).render('login')
 }
 
-export { getHomePage, getCinemaPage, getLoginPage }
+const getCheckoutLoginPage = catchAsync(async (req, res, next) => {
+    res.locals.screeningID = req.params.screeningID
+    if (res.locals.user) {
+        return res.redirect(`/checkout/screenings/${req.params.screeningID}`)
+    }
+    res.status(200).render('checkoutLogin')
+})
+
+export { getHomePage, getCinemaPage, getLoginPage, getCheckoutLoginPage }

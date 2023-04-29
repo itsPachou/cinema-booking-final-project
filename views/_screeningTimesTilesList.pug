@@ -3,7 +3,7 @@
         .screening-tiles-container
             each screening in groupedScreenings[movie._id]
                 .screening-times-tile
-                    a(href='#')
+                    a(href=`/checkoutLogin/screenings/${screening._id}`)
                         .screening-tile-time= screening.date.toLocaleTimeString().split(':').slice(0,2).join(':') + (screening.date.toLocaleTimeString().split(' ').at(-1) === 'AM' ? ' AM' : ' PM')
                         .screening-tile-info 
                             span= screening.screeningType

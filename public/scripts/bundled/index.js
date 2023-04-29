@@ -599,6 +599,9 @@ const login = async (email, password)=>{
             if (location.pathname === "/login") window.setTimeout(()=>{
                 location.assign("/home");
             }, 1500);
+            else if (location.pathname.startsWith("/checkoutLogin")) window.setTimeout(()=>{
+                location.assign(`/checkout/screenings/${res.locals.screeningID}`);
+            }, 1500);
         }
     } catch (error) {
         (0, _alertsJs.showAlert)("error", error.message);

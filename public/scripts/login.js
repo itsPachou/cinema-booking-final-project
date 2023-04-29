@@ -21,6 +21,12 @@ const login = async (email, password) => {
                 window.setTimeout(() => {
                     location.assign('/home')
                 }, 1500)
+            } else if (location.pathname.startsWith('/checkoutLogin')) {
+                window.setTimeout(() => {
+                    location.assign(
+                        `/checkout/screenings/${res.locals.screeningID}`
+                    )
+                }, 1500)
             }
         }
     } catch (error) {

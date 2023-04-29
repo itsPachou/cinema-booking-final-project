@@ -27,4 +27,12 @@ viewRouter.route('/home').get(viewsController.getHomePage)
 
 viewRouter.route('/cinema/:slug').get(viewsController.getCinemaPage)
 
+viewRouter
+    .route('/checkoutLogin/screenings/:screeningID')
+    .get(viewsController.getCheckoutLoginPage)
+
+viewRouter.route('/checkout/screenings/:screeningID').get((req, res) => {
+    res.status(200).render('placeholder')
+})
+
 export default viewRouter
