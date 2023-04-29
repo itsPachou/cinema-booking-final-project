@@ -1,8 +1,11 @@
 import express from 'express'
 import * as screeningsController from '../controllers/screeningsController.js'
 import * as authController from '../controllers/authController.js'
+import bookingRouter from './bookingRouter.js'
 
 const screeningRouter = express.Router({ mergeParams: true })
+
+screeningRouter.use('/:screeningID/reservation', bookingRouter)
 
 screeningRouter
     .route('/')
