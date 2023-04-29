@@ -33,8 +33,8 @@ viewRouter
     .route('/checkoutLogin/screenings/:screeningID')
     .get(viewsController.getCheckoutLoginPage)
 
-viewRouter.route('/checkout/screenings/:screeningID').get((req, res) => {
-    res.status(200).render('placeholder')
-})
+viewRouter
+    .route('/checkout/screenings/:screeningID')
+    .get(authController.protect, viewsController.getCheckoutPage)
 
 export default viewRouter

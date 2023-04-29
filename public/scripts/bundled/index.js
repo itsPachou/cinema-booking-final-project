@@ -557,12 +557,15 @@ function hmrAccept(bundle, id) {
 
 },{}],"3r7Gr":[function(require,module,exports) {
 var _loginJs = require("./login.js");
+var _checkoutJs = require("./checkout.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const logoutBtn = document.getElementById("logoutBtn");
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const menu = document.getElementById("menu");
+const ticketBtns = document.querySelectorAll(".ticket-btn");
+const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -584,8 +587,25 @@ if (signupForm) signupForm.addEventListener("submit", (e)=>{
     (0, _loginJs.signup)(email, password, passwordConfirm, firstName, lastName, phoneNumber !== "" ? phoneNumber : undefined);
 });
 if (logoutBtn) logoutBtn.addEventListener("click", (0, _loginJs.logout));
+if (ticketBtns) {
+    const ticketNumbers = Array.from(document.querySelectorAll(".ticket-number"));
+    ticketBtns.forEach((btn)=>{
+        console.log(btn.dataset);
+        btn.addEventListener("click", (e)=>{
+            (0, _checkoutJs.handleTicketButton)(btn.dataset.btnType, ticketNumbers.find((el)=>el.dataset.ticketType === btn.dataset.ticketType));
+        });
+    });
+}
+if (confirmTicketsBtn) confirmTicketsBtn.addEventListener("click", (e)=>{
+    const ticketsElements = Array.from(document.querySelectorAll(".ticket-number"));
+    const ticketsTotal = ticketsElements.reduce((accum, el)=>accum + el.innerText * 1, 0);
+    ticketsElements.forEach((el)=>{
+        sessionStorage.setItem(el.dataset.ticketType, el.innerText);
+    });
+    (0, _checkoutJs.confirmEditTickets)(ticketsTotal, e.target);
+});
 
-},{"./login.js":"eHNGO"}],"eHNGO":[function(require,module,exports) {
+},{"./login.js":"eHNGO","./checkout.js":"9b6wq"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
@@ -611,9 +631,12 @@ const login = async (email, password)=>{
             if (location.pathname === "/login") window.setTimeout(()=>{
                 location.assign("/home");
             }, 1500);
-            else if (location.pathname.startsWith("/checkoutLogin")) window.setTimeout(()=>{
-                location.assign(`/checkout/screenings/${res.locals.screeningID}`);
-            }, 1500);
+            else if (location.pathname.startsWith("/checkoutLogin")) {
+                console.log(location.pathname.split("/").at(-1));
+                window.setTimeout(()=>{
+                    location.assign(`/checkout/screenings/${location.pathname.split("/")[-1]}`);
+                }, 1500);
+            }
         }
     } catch (error) {
         (0, _alertsJs.showAlert)("error", error.message);
@@ -720,6 +743,31 @@ const showAlert = (type, msg)=>{
     window.setTimeout(hideAlert, 5000);
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"9b6wq":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "handleTicketButton", ()=>handleTicketButton);
+parcelHelpers.export(exports, "confirmEditTickets", ()=>confirmEditTickets);
+var _alertsJs = require("./alerts.js");
+"use strict";
+const handleTicketButton = (action, target)=>{
+    if (action === "plus") target.innerText = target.innerText * 1 + 1;
+    if (action === "minus") target.innerText = target.innerText * 1 > 0 ? target.innerText * 1 - 1 : 0;
+};
+const confirmEditTickets = (tickets, btn)=>{
+    console.log(btn);
+    if (tickets === 0) {
+        (0, _alertsJs.showAlert)("error", "Select a valid number of tickets.");
+        return;
+    }
+    document.querySelectorAll(".ticket-btn").forEach((btn)=>btn.disabled = !btn.disabled);
+    if (btn.innerText === "Edit") btn.innerText = "Confirm";
+    else {
+        sessionStorage.setItem("numOfTickets", tickets);
+        btn.innerText = "Edit";
+    }
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./alerts.js":"TpGze"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

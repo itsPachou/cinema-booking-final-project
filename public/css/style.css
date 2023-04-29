@@ -294,6 +294,87 @@ section.section__cinema-list, section.section__screening-list {
   color: #e2e8f0;
 }
 
+.checkout-heading {
+  color: #e2e8f0;
+  font-size: 4rem;
+  font-weight: 500;
+}
+
+.checkout-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  padding: 1rem 2rem;
+  background-color: #0a1121;
+  font-size: 1.6rem;
+}
+
+.checkout-subheading {
+  font-size: 2.5rem;
+  grid-column: 1/3;
+}
+
+.ticket-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ticket-name {
+  margin-right: 3rem;
+}
+
+.ticket-number {
+  padding: 0 1rem;
+  font-size: 2rem;
+  text-align: center;
+  font-weight: 700;
+  width: 50px;
+}
+
+.ticket-btn {
+  display: flex;
+  color: #94a3b8;
+  border-radius: 50%;
+  padding: 0.5rem;
+  font-weight: 700;
+  border: 1px solid #94a3b8;
+  background-color: #0a1121;
+  transition: all .2s;
+  opacity: 60%;
+}
+
+.ticket-btn:enabled:hover,
+.ticket-btn:enabled:active,
+.confirm-tickets-btn:hover,
+.confirm-tickets-btn:active {
+  opacity: 100%;
+}
+
+.ticket-btn:disabled {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+  border-color:rgba(195, 195, 195, 0.3);
+}
+
+.confirm-tickets-btn {
+  display: flex;
+  color: #94a3b8;
+  border-radius: 2rem;
+  padding: 1rem;
+  font-size: 1.8rem;
+  background-color: #0f172a;
+  border: 1px solid #94a3b8;
+  text-transform: uppercase;
+  opacity: 80%;
+  transition: opacity .2s;
+}
+
+.confirm-box {
+  grid-column: 1/3;
+  display: flex;
+  justify-content: end;
+}
+
 #cinema-list a, 
 #cinema-list a:link,
 #cinema-list a:visited {

@@ -1,12 +1,15 @@
 'use strict'
 
 import { login, logout, signup } from './login.js'
+import { confirmEditTickets, handleTicketButton } from './checkout.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
 const logoutBtn = document.getElementById('logoutBtn')
 const hamburgerBtn = document.getElementById('hamburger-btn')
 const menu = document.getElementById('menu')
+const ticketBtns = document.querySelectorAll('.ticket-btn')
+const confirmTicketsBtn = document.querySelector('.confirm-tickets-btn')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -47,4 +50,37 @@ if (signupForm) {
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', logout)
+}
+
+if (ticketBtns) {
+    const ticketNumbers = Array.from(
+        document.querySelectorAll('.ticket-number')
+    )
+    ticketBtns.forEach((btn) => {
+        console.log(btn.dataset)
+        btn.addEventListener('click', (e) => {
+            handleTicketButton(
+                btn.dataset.btnType,
+                ticketNumbers.find(
+                    (el) => el.dataset.ticketType === btn.dataset.ticketType
+                )
+            )
+        })
+    })
+}
+
+if (confirmTicketsBtn) {
+    confirmTicketsBtn.addEventListener('click', (e) => {
+        const ticketsElements = Array.from(
+            document.querySelectorAll('.ticket-number')
+        )
+        const ticketsTotal = ticketsElements.reduce(
+            (accum, el) => accum + el.innerText * 1,
+            0
+        )
+        ticketsElements.forEach((el) => {
+            sessionStorage.setItem(el.dataset.ticketType, el.innerText)
+        })
+        confirmEditTickets(ticketsTotal, e.target)
+    })
 }

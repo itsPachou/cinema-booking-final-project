@@ -22,9 +22,12 @@ const login = async (email, password) => {
                     location.assign('/home')
                 }, 1500)
             } else if (location.pathname.startsWith('/checkoutLogin')) {
+                console.log(location.pathname.split('/').at(-1))
                 window.setTimeout(() => {
                     location.assign(
-                        `/checkout/screenings/${res.locals.screeningID}`
+                        `/checkout/screenings/${
+                            location.pathname.split('/')[-1]
+                        }`
                     )
                 }, 1500)
             }
@@ -62,7 +65,14 @@ const signup = async (
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password, passwordConfirm, firstName, lastName, phoneNumber: phoneNumber }),
+                body: JSON.stringify({
+                    email,
+                    password,
+                    passwordConfirm,
+                    firstName,
+                    lastName,
+                    phoneNumber: phoneNumber,
+                }),
             }
         )
         if (result.status === 'success') {

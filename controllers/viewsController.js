@@ -45,10 +45,15 @@ const getCheckoutLoginPage = catchAsync(async (req, res, next) => {
     res.status(200).render('checkoutLogin')
 })
 
+const getCheckoutPage = catchAsync(async (req, res, next) => {
+    res.status(200).render('checkout')
+})
+
 export {
     getHomePage,
     getCinemaPage,
     getLoginPage,
     getCheckoutLoginPage,
     getSignupPage,
+    getCheckoutPage,
 }

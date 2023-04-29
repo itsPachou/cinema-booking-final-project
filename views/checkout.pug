@@ -1,0 +1,25 @@
+extends base
+
+block content 
+    .container 
+        h2.checkout-heading Checkout
+        .checkout-container
+            h3.checkout-subheading Select tickets: 
+            .ticket-item
+                span.ticket-name Standard - £8.00
+            .ticket-item
+                button.ticket-btn(data-ticket-type='standard' data-btn-type='minus')
+                    span.material-symbols-outlined remove
+                span.ticket-number(data-ticket-type='standard') 0
+                button.ticket-btn(data-ticket-type='standard' data-btn-type='plus')
+                    span.material-symbols-outlined add
+            .ticket-item
+                span.ticket-name Student - £6.00
+            .ticket-item
+                button.ticket-btn(data-ticket-type='student' data-btn-type='minus')
+                    span.material-symbols-outlined remove
+                span.ticket-number(data-ticket-type='student') 0
+                button.ticket-btn(data-ticket-type='student' data-btn-type='plus')
+                    span.material-symbols-outlined add
+            .confirm-box 
+                button.confirm-tickets-btn Confirm
