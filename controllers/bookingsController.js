@@ -53,8 +53,12 @@ const createReservation = catchAsync(async (req, res, next) => {
         'bookedSeats'
     )
 
+    const filteredBookedSeats = screening.bookedSeats.filter(
+        (el) => el.paid || el.createdAt + 5 * 60 * 1000 > Date.now()
+    )
+
     const availableCheck = req.body.tickets.every((seat) =>
-        isSeatAvailable(screening.bookedSeats, seat)
+        isSeatAvailable(filteredBookedSeats, seat)
     )
     if (!availableCheck) {
         return next(
