@@ -36,3 +36,6 @@ temp.html
 
 # Parcel cache
 .parcel-cache/
+
+# Environment file
+*.env
