@@ -1,7 +1,11 @@
 'use strict'
 
 import { login, logout, signup } from './login.js'
-import { confirmEditTickets, handleTicketButton } from './checkout.js'
+import {
+    confirmEditTickets,
+    handleTicketButton,
+    populateRoomLayout,
+} from './checkout.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -10,6 +14,7 @@ const hamburgerBtn = document.getElementById('hamburger-btn')
 const menu = document.getElementById('menu')
 const ticketBtns = document.querySelectorAll('.ticket-btn')
 const confirmTicketsBtn = document.querySelector('.confirm-tickets-btn')
+const seatSelectionDiv = document.querySelector('.seats-selection')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -83,4 +88,8 @@ if (confirmTicketsBtn) {
         })
         confirmEditTickets(ticketsTotal, e.target)
     })
+}
+
+if (seatSelectionDiv) {
+    populateRoomLayout(seatSelectionDiv.dataset.roomId, seatSelectionDiv)
 }

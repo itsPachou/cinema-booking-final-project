@@ -1,12 +1,25 @@
 async function loadJSON(url, options) {
-    const response = await fetch(url, options)
-    const jsonBody = await response.json()
-    if (!response.ok) {
-        const error = Error(jsonBody.message)
-        error.status = response.status
-        throw error
+    try {
+        const response = await fetch(url, options)
+        const jsonBody = await response.json()
+        if (!response.ok) {
+            const error = Error(jsonBody.message)
+            error.status = response.status
+            throw error
+        }
+        return jsonBody
+    } catch (error) {
+        console.log(error)
     }
-    return jsonBody
 }
 
-export { loadJSON }
+async function getRoom(id) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id}`)
+        return result.data.room
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export { loadJSON, getRoom }

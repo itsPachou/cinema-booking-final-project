@@ -46,7 +46,10 @@ const getCheckoutLoginPage = catchAsync(async (req, res, next) => {
 })
 
 const getCheckoutPage = catchAsync(async (req, res, next) => {
-    res.status(200).render('checkout')
+    const screening = await Screening.findById(req.params.screeningID)
+    res.status(200).render('checkout', {
+        screening,
+    })
 })
 
 export {

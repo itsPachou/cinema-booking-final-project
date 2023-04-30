@@ -566,6 +566,7 @@ const hamburgerBtn = document.getElementById("hamburger-btn");
 const menu = document.getElementById("menu");
 const ticketBtns = document.querySelectorAll(".ticket-btn");
 const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
+const seatSelectionDiv = document.querySelector(".seats-selection");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -604,6 +605,7 @@ if (confirmTicketsBtn) confirmTicketsBtn.addEventListener("click", (e)=>{
     });
     (0, _checkoutJs.confirmEditTickets)(ticketsTotal, e.target);
 });
+if (seatSelectionDiv) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
 
 },{"./login.js":"eHNGO","./checkout.js":"9b6wq"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -686,15 +688,28 @@ const signup = async (email, password, passwordConfirm, firstName, lastName, pho
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadJSON", ()=>loadJSON);
+parcelHelpers.export(exports, "getRoom", ()=>getRoom);
 async function loadJSON(url, options) {
-    const response = await fetch(url, options);
-    const jsonBody = await response.json();
-    if (!response.ok) {
-        const error = Error(jsonBody.message);
-        error.status = response.status;
-        throw error;
+    try {
+        const response = await fetch(url, options);
+        const jsonBody = await response.json();
+        if (!response.ok) {
+            const error = Error(jsonBody.message);
+            error.status = response.status;
+            throw error;
+        }
+        return jsonBody;
+    } catch (error) {
+        console.log(error);
     }
-    return jsonBody;
+}
+async function getRoom(id) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id}`);
+        return result.data.room;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"5Birt":[function(require,module,exports) {
@@ -748,8 +763,38 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "handleTicketButton", ()=>handleTicketButton);
 parcelHelpers.export(exports, "confirmEditTickets", ()=>confirmEditTickets);
+parcelHelpers.export(exports, "populateRoomLayout", ()=>populateRoomLayout);
 var _alertsJs = require("./alerts.js");
+var _backEndConnectionsJs = require("./backEndConnections.js");
 "use strict";
+const rowChars = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+];
 const handleTicketButton = (action, target)=>{
     if (action === "plus") target.innerText = target.innerText * 1 + 1;
     if (action === "minus") target.innerText = target.innerText * 1 > 0 ? target.innerText * 1 - 1 : 0;
@@ -767,7 +812,33 @@ const confirmEditTickets = (tickets, btn)=>{
         btn.innerText = "Edit";
     }
 };
+const populateRoomLayout = async (roomId, seatSelectionDiv)=>{
+    const room = await (0, _backEndConnectionsJs.getRoom)(roomId);
+    console.log(room);
+    const rowNameColumn = document.createElement("div");
+    rowNameColumn.classList.add("row-char-column");
+    for(let r = 0; r < room.dimensions.length; r++){
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("seats-row");
+        const rowName = document.createElement("div");
+        rowName.innerText = rowChars.at(r);
+        rowNameColumn.appendChild(rowName);
+        for(let c = 0; c < room.dimensions.width; c++){
+            const seatPos = document.createElement("div");
+            seatPos.classList.add("seat-position");
+            seatPos.dataset.col = c;
+            seatPos.dataset.row = r;
+            rowDiv.appendChild(seatPos);
+        }
+        seatSelectionDiv.appendChild(rowDiv);
+    }
+    seatSelectionDiv.insertAdjacentElement("beforebegin", rowNameColumn);
+    room.seatPositions.forEach((pos)=>{
+        const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+        seatEl.classList.add("seat");
+    });
+};
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./alerts.js":"TpGze"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./alerts.js":"TpGze","./backEndConnections.js":"erlY1"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map
