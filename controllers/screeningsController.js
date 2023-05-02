@@ -27,6 +27,10 @@ const getScreening = catchAsync(async (req, res, next) => {
     if (!screening) {
         return next(new AppError('No screening found with that ID', 404))
     }
+    if (req.query.bookings) {
+        screening.populate({ path: 'bookedSeats', select: '-userID' })
+        delete req.query.bookings
+    }
     res.status(200).json({
         status: 'success',
         data: {
