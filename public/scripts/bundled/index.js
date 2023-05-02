@@ -761,6 +761,7 @@ parcelHelpers.export(exports, "populateRoomLayout", ()=>populateRoomLayout);
 var _alertsJs = require("./alerts.js");
 var _backEndConnectionsJs = require("./backEndConnections.js");
 "use strict";
+const seatSelectionDiv = document.querySelector(".seats-selection");
 const rowChars = [
     "A",
     "B",
@@ -802,8 +803,11 @@ const confirmEditTickets = (btn)=>{
         return;
     }
     document.querySelectorAll(".ticket-btn").forEach((btn)=>btn.disabled = !btn.disabled);
-    if (btn.innerText === "EDIT") btn.innerText = "Confirm";
-    else {
+    if (btn.innerText === "EDIT") {
+        btn.innerText = "Confirm";
+        seatSelectionDiv.classList.toggle("seats-not-clickable");
+    } else {
+        seatSelectionDiv.classList.toggle("seats-not-clickable");
         btn.innerText = "Edit";
         ticketsElements.forEach((el)=>{
             checkoutData[el.dataset.ticketType] = el.innerText;

@@ -443,6 +443,7 @@ section.section__cinema-list, section.section__screening-list {
   border-bottom-right-radius: 1rem;
   text-align: center;
   line-height: 1;
+  cursor: pointer;
 }
 
 .seats-not-clickable {

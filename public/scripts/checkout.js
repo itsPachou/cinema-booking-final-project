@@ -3,6 +3,8 @@
 import { showAlert } from './alerts.js'
 import { getRoom } from './backEndConnections.js'
 
+const seatSelectionDiv = document.querySelector('.seats-selection')
+
 const rowChars = [
     'A',
     'B',
@@ -60,7 +62,9 @@ const confirmEditTickets = (btn) => {
         .forEach((btn) => (btn.disabled = !btn.disabled))
     if (btn.innerText === 'EDIT') {
         btn.innerText = 'Confirm'
+        seatSelectionDiv.classList.toggle('seats-not-clickable')
     } else {
+        seatSelectionDiv.classList.toggle('seats-not-clickable')
         btn.innerText = 'Edit'
         ticketsElements.forEach((el) => {
             checkoutData[el.dataset.ticketType] = el.innerText
