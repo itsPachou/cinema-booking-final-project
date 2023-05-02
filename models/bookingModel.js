@@ -25,10 +25,6 @@ const bookingSchema = new mongoose.Schema(
                 seatRow: Number,
                 seatCol: Number,
                 seatName: String,
-                ticketType: {
-                    type: String,
-                    default: 'Standard',
-                },
                 price: Number,
             },
         ],

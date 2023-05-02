@@ -812,6 +812,27 @@ const confirmEditTickets = (tickets, btn)=>{
         btn.innerText = "Edit";
     }
 };
+const selectSeat = (target)=>{
+    if (!target.classList.contains("seat-taken") && sessionStorage.getItem("numOfTickets") * 1 > sessionStorage.getItem("numOfSelected") * 1 && !target.classList.contains("seat-selected")) {
+        target.classList.add("seat-selected");
+        const selectedPositions = JSON.parse(sessionStorage.getItem("selectedPositions")) || [];
+        selectedPositions.push([
+            target.dataset.row,
+            target.dataset.col
+        ]);
+        sessionStorage.setItem("selectedPositions", JSON.stringify(selectedPositions));
+        sessionStorage.setItem("numOfSelected", sessionStorage.getItem("numOfSelected") * 1 + 1);
+    } else if (!target.classList.contains("seat-taken") && target.classList.contains("seat-selected")) {
+        target.classList.remove("seat-selected");
+        const unselectedCoords = [
+            target.dataset.row,
+            target.dataset.col
+        ];
+        const selectedPositions = JSON.parse(sessionStorage.getItem("selectedPositions")).filter((el)=>el.toString() !== unselectedCoords.toString());
+        sessionStorage.setItem("selectedPositions", JSON.stringify(selectedPositions));
+        sessionStorage.setItem("numOfSelected", sessionStorage.getItem("numOfSelected") * 1 - 1);
+    }
+};
 const populateRoomLayout = async (roomId, seatSelectionDiv)=>{
     const room = await (0, _backEndConnectionsJs.getRoom)(roomId);
     console.log(room);
@@ -836,9 +857,14 @@ const populateRoomLayout = async (roomId, seatSelectionDiv)=>{
     room.seatPositions.forEach((pos)=>{
         const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
         seatEl.classList.add("seat");
+        seatEl.innerText = seatEl.previousElementSibling ? seatEl.previousElementSibling.innerText * 1 + 1 : 1;
+        seatEl.addEventListener("click", (e)=>{
+            console.log(e);
+            selectSeat(e.target);
+        });
     });
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./alerts.js":"TpGze","./backEndConnections.js":"erlY1"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

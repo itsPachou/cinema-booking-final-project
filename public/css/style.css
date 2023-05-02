@@ -1,3 +1,8 @@
+:root {
+  --room-width: 6;
+  --room-length: 4;
+}
+
 *,
 *::before,
 *::after {
@@ -381,6 +386,7 @@ section.section__cinema-list, section.section__screening-list {
   overflow: auto;
   display: grid;
   row-gap: 2rem;
+  /* filter: grayscale(100%); */
   grid-template-columns: auto 1fr;
   background-color: #090110;
 }
@@ -409,11 +415,9 @@ section.section__cinema-list, section.section__screening-list {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.5rem;
-  min-height: 4rem;
-  width: 5vw;
-  height: 7vw;
-  margin: 1vw;
+  min-width: 2.8rem;
+  min-height: 2.8rem;
+  margin: .5vw;
 }
 
 .seats-row {
@@ -423,18 +427,37 @@ section.section__cinema-list, section.section__screening-list {
 
 .seat-position {
   display: inline-block;
-  min-width: 2.5rem;
-  min-height: 4rem;
-  width: 5vw;
-  height: 7vw;
-  margin: 1vw;
+  min-width: 2.8rem;
+  min-height: 2.8rem;
+  margin: .5vw;
 }
 
 .seat {
   background-color: #0f172a;
-  border: 1px solid #a5b4c9;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border: .05rem solid #a5b4c9;
+  border-right-width: .2rem;
+  border-left-width: .2rem;
+  border-bottom-width: .5rem;
+  border-bottom-style: double;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.seats-not-clickable {
+  pointer-events: none;
+}
+
+.seat-taken {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+  border-color:rgba(195, 195, 195, 0.3);
+}
+
+.seat-selected {
+  background-color: #00ADB5;
+  color: #000;
 }
 
 
@@ -708,6 +731,28 @@ section.section__cinema-list, section.section__screening-list {
 }
 
 @media screen and (min-width: 600px) {
+
+  .row-char-column div {
+    min-width: calc(10vw/var(--room-width) + 1rem);
+    min-height: calc(10vw/var(--room-width) + 1rem);
+    margin: .5vw;
+  }
+  
+  .seat-position {
+    width: calc(10vw/var(--room-width) + 1rem);
+    height: calc(10vw/var(--room-width) + 1rem);
+    margin: .5vw;
+  }
+  
+  .seat {
+    border: .05vw solid #a5b4c9;
+    border-right-width: .2vw;
+    border-left-width: .2vw;
+    border-bottom-width: .6vw;
+    border-bottom-style: double;
+    border-bottom-left-radius: 1vw;
+    border-bottom-right-radius: 1vw;
+  }
 
   #cinema-list a, 
   #cinema-list a:link,
