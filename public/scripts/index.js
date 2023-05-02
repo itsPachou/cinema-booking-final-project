@@ -62,7 +62,6 @@ if (ticketBtns) {
         document.querySelectorAll('.ticket-number')
     )
     ticketBtns.forEach((btn) => {
-        console.log(btn.dataset)
         btn.addEventListener('click', (e) => {
             handleTicketButton(
                 btn.dataset.btnType,
@@ -76,17 +75,7 @@ if (ticketBtns) {
 
 if (confirmTicketsBtn) {
     confirmTicketsBtn.addEventListener('click', (e) => {
-        const ticketsElements = Array.from(
-            document.querySelectorAll('.ticket-number')
-        )
-        const ticketsTotal = ticketsElements.reduce(
-            (accum, el) => accum + el.innerText * 1,
-            0
-        )
-        ticketsElements.forEach((el) => {
-            sessionStorage.setItem(el.dataset.ticketType, el.innerText)
-        })
-        confirmEditTickets(ticketsTotal, e.target)
+        confirmEditTickets(e.target)
     })
 }
 

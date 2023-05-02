@@ -31,6 +31,7 @@ const rowChars = [
     'Y',
     'Z',
 ]
+const checkoutData = {}
 
 const handleTicketButton = (action, target) => {
     if (action === 'plus') {
@@ -42,65 +43,77 @@ const handleTicketButton = (action, target) => {
     }
 }
 
-const confirmEditTickets = (tickets, btn) => {
-    console.log(btn)
-    if (tickets === 0) {
+const confirmEditTickets = (btn) => {
+    const ticketsElements = Array.from(
+        document.querySelectorAll('.ticket-number')
+    )
+    const ticketsTotal = ticketsElements.reduce(
+        (accum, el) => accum + el.innerText * 1,
+        0
+    )
+    if (ticketsTotal === 0) {
         showAlert('error', 'Select a valid number of tickets.')
         return
     }
     document
         .querySelectorAll('.ticket-btn')
         .forEach((btn) => (btn.disabled = !btn.disabled))
-    if (btn.innerText === 'Edit') {
+    if (btn.innerText === 'EDIT') {
         btn.innerText = 'Confirm'
     } else {
-        sessionStorage.setItem('numOfTickets', tickets)
         btn.innerText = 'Edit'
+        ticketsElements.forEach((el) => {
+            checkoutData[el.dataset.ticketType] = el.innerText
+        })
+        checkoutData['numOfTickets'] = ticketsTotal
+        if (
+            checkoutData['numOfSelected'] &&
+            checkoutData['numOfSelected'] > checkoutData['numOfTickets']
+        ) {
+            const diff =
+                checkoutData['numOfSelected'] - checkoutData['numOfTickets']
+            for (let i = 0; i < diff; i++) {
+                const extraSeat = checkoutData['selectedPositions'].pop()
+                document
+                    .querySelector(
+                        `[data-row="${extraSeat.at(
+                            0
+                        )}"][data-col="${extraSeat.at(1)}"]`
+                    )
+                    .classList.remove('seat-selected')
+            }
+            checkoutData['numOfSelected'] = checkoutData['numOfTickets']
+        }
     }
 }
 
 const selectSeat = (target) => {
     if (
         !target.classList.contains('seat-taken') &&
-        sessionStorage.getItem('numOfTickets') * 1 >
-            sessionStorage.getItem('numOfSelected') * 1 &&
+        (!checkoutData.numOfSelected ||
+            checkoutData.numOfTickets > checkoutData.numOfSelected) &&
         !target.classList.contains('seat-selected')
     ) {
         target.classList.add('seat-selected')
-        const selectedPositions =
-            JSON.parse(sessionStorage.getItem('selectedPositions')) || []
+        const selectedPositions = checkoutData.selectedPositions || []
         selectedPositions.push([target.dataset.row, target.dataset.col])
-        sessionStorage.setItem(
-            'selectedPositions',
-            JSON.stringify(selectedPositions)
-        )
-        sessionStorage.setItem(
-            'numOfSelected',
-            sessionStorage.getItem('numOfSelected') * 1 + 1
-        )
+        checkoutData['selectedPositions'] = selectedPositions
+        checkoutData['numOfSelected'] = checkoutData['numOfSelected'] + 1 || 1
     } else if (
         !target.classList.contains('seat-taken') &&
         target.classList.contains('seat-selected')
     ) {
         target.classList.remove('seat-selected')
         const unselectedCoords = [target.dataset.row, target.dataset.col]
-        const selectedPositions = JSON.parse(
-            sessionStorage.getItem('selectedPositions')
-        ).filter((el) => el.toString() !== unselectedCoords.toString())
-        sessionStorage.setItem(
-            'selectedPositions',
-            JSON.stringify(selectedPositions)
-        )
-        sessionStorage.setItem(
-            'numOfSelected',
-            sessionStorage.getItem('numOfSelected') * 1 - 1
-        )
+        checkoutData['selectedPositions'] = checkoutData[
+            'selectedPositions'
+        ].filter((el) => el.toString() !== unselectedCoords.toString())
+        checkoutData['numOfSelected'] = checkoutData['numOfSelected'] - 1
     }
 }
 
 const populateRoomLayout = async (roomId, seatSelectionDiv) => {
     const room = await getRoom(roomId)
-    console.log(room)
     const rowNameColumn = document.createElement('div')
     rowNameColumn.classList.add('row-char-column')
     for (let r = 0; r < room.dimensions.length; r++) {
@@ -128,7 +141,6 @@ const populateRoomLayout = async (roomId, seatSelectionDiv) => {
             ? seatEl.previousElementSibling.innerText * 1 + 1
             : 1
         seatEl.addEventListener('click', (e) => {
-            console.log(e)
             selectSeat(e.target)
         })
     })

@@ -447,6 +447,7 @@ section.section__cinema-list, section.section__screening-list {
 
 .seats-not-clickable {
   pointer-events: none;
+  filter: opacity(20%);
 }
 
 .seat-taken {
