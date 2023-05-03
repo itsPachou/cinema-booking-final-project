@@ -1,9 +1,10 @@
 'use strict'
 
 import { showAlert } from './alerts.js'
-import { getRoom } from './backEndConnections.js'
+import { getRoom, getScreening, postReservation } from './backEndConnections.js'
 
 const seatSelectionDiv = document.querySelector('.seats-selection')
+const proceedBtn = document.querySelector('.confirm-seats-btn')
 
 const rowChars = [
     'A',
@@ -45,6 +46,34 @@ const handleTicketButton = (action, target) => {
     }
 }
 
+const updateSeatSelection = async () => {
+    const screening = await getScreening(seatSelectionDiv.dataset.screeningId)
+    const bookedSeatsArray = screening.bookedSeats
+    document.querySelectorAll('.seat').forEach((el) => {
+        el.classList.remove('seat-taken')
+    })
+    bookedSeatsArray.forEach((booking) => {
+        booking.tickets.forEach((ticket) => {
+            const seatEl = document.querySelector(
+                `[data-row="${ticket.seatRow}"][data-col="${ticket.seatCol}"]`
+            )
+            seatEl.classList.add('seat-taken')
+            if (seatEl.classList.contains('seat-selected')) {
+                seatEl.classList.remove('seat-selected')
+                checkoutData['selectedPositions'] = checkoutData[
+                    'selectedPositions'
+                ].filter(
+                    (el) =>
+                        el.toString() !==
+                        [seatEl.dataset.row, seatEl.dataset.col].toString()
+                )
+                checkoutData['numOfSelected'] =
+                    checkoutData['numOfSelected'] - 1
+            }
+        })
+    })
+}
+
 const confirmEditTickets = (btn) => {
     const ticketsElements = Array.from(
         document.querySelectorAll('.ticket-number')
@@ -63,6 +92,7 @@ const confirmEditTickets = (btn) => {
     if (btn.innerText === 'EDIT') {
         btn.innerText = 'Confirm'
         seatSelectionDiv.classList.toggle('seats-not-clickable')
+        proceedBtn.disabled = true
     } else {
         seatSelectionDiv.classList.toggle('seats-not-clickable')
         btn.innerText = 'Edit'
@@ -70,6 +100,7 @@ const confirmEditTickets = (btn) => {
             checkoutData[el.dataset.ticketType] = el.innerText
         })
         checkoutData['numOfTickets'] = ticketsTotal
+        proceedBtn.disabled = false
         if (
             checkoutData['numOfSelected'] &&
             checkoutData['numOfSelected'] > checkoutData['numOfTickets']
@@ -88,6 +119,7 @@ const confirmEditTickets = (btn) => {
             }
             checkoutData['numOfSelected'] = checkoutData['numOfTickets']
         }
+        updateSeatSelection()
     }
 }
 
@@ -148,6 +180,57 @@ const populateRoomLayout = async (roomId, seatSelectionDiv) => {
             selectSeat(e.target)
         })
     })
+    updateSeatSelection()
 }
 
-export { handleTicketButton, confirmEditTickets, populateRoomLayout }
+const finalizeBooking = async () => {
+    try {
+        if (checkoutData['numOfSelected'] !== checkoutData['numOfTickets']) {
+            showAlert('error', 'Incorrect number of seats selected.')
+            return
+        }
+        checkoutData.seatNames = []
+        checkoutData['selectedPositions'].forEach((pos) => {
+            const seatEl = document.querySelector(
+                `[data-row="${pos.at(0)}"][data-col="${pos.at(1)}"]`
+            )
+            checkoutData.seatNames.push(
+                `${rowChars.at(pos.at(0))}-${seatEl.innerText}`
+            )
+        })
+        checkoutData.screeningID = seatSelectionDiv.dataset.screeningId
+        const priceArray = []
+        for (let i = 0; i < checkoutData.standard; i++) {
+            priceArray.push(8.0)
+        }
+        for (let i = 0; i < checkoutData.student; i++) {
+            priceArray.push(6.0)
+        }
+        const tickets = []
+        for (const i of checkoutData.selectedPositions.keys()) {
+            tickets.push({
+                seatRow: checkoutData.selectedPositions.at(i).at(0) * 1,
+                seatCol: checkoutData.selectedPositions.at(i).at(1) * 1,
+                seatName: checkoutData.seatNames.at(i),
+                price: priceArray.at(i),
+            })
+        }
+        const reservation = await postReservation(
+            checkoutData.screeningID,
+            tickets
+        )
+        location.assign(`/summary/${reservation._id}`)
+    } catch (error) {
+        showAlert('error', error.message)
+        if (error.message === 'Selected seats are no longer available.') {
+            updateSeatSelection()
+        }
+    }
+}
+
+export {
+    handleTicketButton,
+    confirmEditTickets,
+    populateRoomLayout,
+    finalizeBooking,
+}

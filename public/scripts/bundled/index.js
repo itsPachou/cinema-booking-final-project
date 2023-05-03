@@ -567,6 +567,7 @@ const menu = document.getElementById("menu");
 const ticketBtns = document.querySelectorAll(".ticket-btn");
 const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
 const seatSelectionDiv = document.querySelector(".seats-selection");
+const proceedBtn = document.querySelector(".confirm-seats-btn");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -600,6 +601,9 @@ if (confirmTicketsBtn) confirmTicketsBtn.addEventListener("click", (e)=>{
     (0, _checkoutJs.confirmEditTickets)(e.target);
 });
 if (seatSelectionDiv) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
+if (proceedBtn) proceedBtn.addEventListener("click", (e)=>{
+    (0, _checkoutJs.finalizeBooking)();
+});
 
 },{"./login.js":"eHNGO","./checkout.js":"9b6wq"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -683,6 +687,8 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadJSON", ()=>loadJSON);
 parcelHelpers.export(exports, "getRoom", ()=>getRoom);
+parcelHelpers.export(exports, "getScreening", ()=>getScreening);
+parcelHelpers.export(exports, "postReservation", ()=>postReservation);
 async function loadJSON(url, options) {
     try {
         const response = await fetch(url, options);
@@ -703,6 +709,31 @@ async function getRoom(id) {
         return result.data.room;
     } catch (error) {
         console.log(error);
+    }
+}
+async function getScreening(id) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/screenings/${id}`);
+        return result.data.screening;
+    } catch (error) {
+        console.log(error);
+    }
+}
+async function postReservation(screeningID, tickets) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/bookings/reservation`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                screeningID,
+                tickets
+            })
+        });
+        return result.data.newReservation;
+    } catch (error) {
+        return error;
     }
 }
 
@@ -758,10 +789,12 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "handleTicketButton", ()=>handleTicketButton);
 parcelHelpers.export(exports, "confirmEditTickets", ()=>confirmEditTickets);
 parcelHelpers.export(exports, "populateRoomLayout", ()=>populateRoomLayout);
+parcelHelpers.export(exports, "finalizeBooking", ()=>finalizeBooking);
 var _alertsJs = require("./alerts.js");
 var _backEndConnectionsJs = require("./backEndConnections.js");
 "use strict";
 const seatSelectionDiv = document.querySelector(".seats-selection");
+const proceedBtn = document.querySelector(".confirm-seats-btn");
 const rowChars = [
     "A",
     "B",
@@ -795,6 +828,27 @@ const handleTicketButton = (action, target)=>{
     if (action === "plus") target.innerText = target.innerText * 1 + 1;
     if (action === "minus") target.innerText = target.innerText * 1 > 0 ? target.innerText * 1 - 1 : 0;
 };
+const updateSeatSelection = async ()=>{
+    const screening = await (0, _backEndConnectionsJs.getScreening)(seatSelectionDiv.dataset.screeningId);
+    const bookedSeatsArray = screening.bookedSeats;
+    document.querySelectorAll(".seat").forEach((el)=>{
+        el.classList.remove("seat-taken");
+    });
+    bookedSeatsArray.forEach((booking)=>{
+        booking.tickets.forEach((ticket)=>{
+            const seatEl = document.querySelector(`[data-row="${ticket.seatRow}"][data-col="${ticket.seatCol}"]`);
+            seatEl.classList.add("seat-taken");
+            if (seatEl.classList.contains("seat-selected")) {
+                seatEl.classList.remove("seat-selected");
+                checkoutData["selectedPositions"] = checkoutData["selectedPositions"].filter((el)=>el.toString() !== [
+                        seatEl.dataset.row,
+                        seatEl.dataset.col
+                    ].toString());
+                checkoutData["numOfSelected"] = checkoutData["numOfSelected"] - 1;
+            }
+        });
+    });
+};
 const confirmEditTickets = (btn)=>{
     const ticketsElements = Array.from(document.querySelectorAll(".ticket-number"));
     const ticketsTotal = ticketsElements.reduce((accum, el)=>accum + el.innerText * 1, 0);
@@ -806,6 +860,7 @@ const confirmEditTickets = (btn)=>{
     if (btn.innerText === "EDIT") {
         btn.innerText = "Confirm";
         seatSelectionDiv.classList.toggle("seats-not-clickable");
+        proceedBtn.disabled = true;
     } else {
         seatSelectionDiv.classList.toggle("seats-not-clickable");
         btn.innerText = "Edit";
@@ -813,6 +868,7 @@ const confirmEditTickets = (btn)=>{
             checkoutData[el.dataset.ticketType] = el.innerText;
         });
         checkoutData["numOfTickets"] = ticketsTotal;
+        proceedBtn.disabled = false;
         if (checkoutData["numOfSelected"] && checkoutData["numOfSelected"] > checkoutData["numOfTickets"]) {
             const diff = checkoutData["numOfSelected"] - checkoutData["numOfTickets"];
             for(let i = 0; i < diff; i++){
@@ -821,6 +877,7 @@ const confirmEditTickets = (btn)=>{
             }
             checkoutData["numOfSelected"] = checkoutData["numOfTickets"];
         }
+        updateSeatSelection();
     }
 };
 const selectSeat = (target)=>{
@@ -871,6 +928,36 @@ const populateRoomLayout = async (roomId, seatSelectionDiv)=>{
             selectSeat(e.target);
         });
     });
+    updateSeatSelection();
+};
+const finalizeBooking = async ()=>{
+    try {
+        if (checkoutData["numOfSelected"] !== checkoutData["numOfTickets"]) {
+            (0, _alertsJs.showAlert)("error", "Incorrect number of seats selected.");
+            return;
+        }
+        checkoutData.seatNames = [];
+        checkoutData["selectedPositions"].forEach((pos)=>{
+            const seatEl = document.querySelector(`[data-row="${pos.at(0)}"][data-col="${pos.at(1)}"]`);
+            checkoutData.seatNames.push(`${rowChars.at(pos.at(0))}-${seatEl.innerText}`);
+        });
+        checkoutData.screeningID = seatSelectionDiv.dataset.screeningId;
+        const priceArray = [];
+        for(let i = 0; i < checkoutData.standard; i++)priceArray.push(8.0);
+        for(let i = 0; i < checkoutData.student; i++)priceArray.push(6.0);
+        const tickets = [];
+        for (const i of checkoutData.selectedPositions.keys())tickets.push({
+            seatRow: checkoutData.selectedPositions.at(i).at(0) * 1,
+            seatCol: checkoutData.selectedPositions.at(i).at(1) * 1,
+            seatName: checkoutData.seatNames.at(i),
+            price: priceArray.at(i)
+        });
+        const reservation = await (0, _backEndConnectionsJs.postReservation)(checkoutData.screeningID, tickets);
+        location.assign(`/summary/${reservation._id}`);
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+        if (error.message === "Selected seats are no longer available.") updateSeatSelection();
+    }
 };
 
 },{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")

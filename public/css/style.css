@@ -312,6 +312,7 @@ section.section__cinema-list, section.section__screening-list {
   background-color: #0a1121;
   font-size: 1.6rem;
   margin-bottom: 2rem;
+  row-gap: 1rem;
 }
 
 .checkout-subheading {
@@ -347,22 +348,28 @@ section.section__cinema-list, section.section__screening-list {
   background-color: #0a1121;
   transition: all .2s;
   opacity: 60%;
+  cursor: pointer;
 }
 
 .ticket-btn:enabled:hover,
 .ticket-btn:enabled:active,
 .confirm-tickets-btn:hover,
-.confirm-tickets-btn:active {
+.confirm-tickets-btn:active,
+.confirm-seats-btn:hover,
+.confirm-seats-btn:active {
   opacity: 100%;
 }
 
-.ticket-btn:disabled {
+.ticket-btn:disabled,
+.confirm-seats-btn:disabled {
   background-color: rgba(239, 239, 239, 0.3);
   color: rgba(255, 255, 255, 0.3);
   border-color:rgba(195, 195, 195, 0.3);
+  cursor: default;
 }
 
-.confirm-tickets-btn {
+.confirm-tickets-btn,
+.confirm-seats-btn {
   display: flex;
   color: #94a3b8;
   border-radius: 2rem;
@@ -373,6 +380,7 @@ section.section__cinema-list, section.section__screening-list {
   text-transform: uppercase;
   opacity: 80%;
   transition: opacity .2s;
+  cursor: pointer;
 }
 
 .confirm-box {
@@ -455,6 +463,7 @@ section.section__cinema-list, section.section__screening-list {
   background-color: rgba(239, 239, 239, 0.3);
   color: rgba(255, 255, 255, 0.3);
   border-color:rgba(195, 195, 195, 0.3);
+  cursor: default;
 }
 
 .seat-selected {

@@ -22,4 +22,33 @@ async function getRoom(id) {
     }
 }
 
-export { loadJSON, getRoom }
+async function getScreening(id) {
+    try {
+        const result = await loadJSON(
+            `${location.origin}/api/v1/screenings/${id}`
+        )
+        return result.data.screening
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function postReservation(screeningID, tickets) {
+    try {
+        const result = await loadJSON(
+            `${location.origin}/api/v1/bookings/reservation`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ screeningID, tickets }),
+            }
+        )
+        return result.data.newReservation
+    } catch (error) {
+        return error
+    }
+}
+
+export { loadJSON, getRoom, getScreening, postReservation }

@@ -23,13 +23,12 @@ const getAllScreenings = catchAsync(async (req, res, next) => {
 })
 
 const getScreening = catchAsync(async (req, res, next) => {
-    const screening = await Screening.findById(req.params.id)
+    const screening = await Screening.findById(req.params.id).populate({
+        path: 'bookedSeats',
+        select: '-userID',
+    })
     if (!screening) {
         return next(new AppError('No screening found with that ID', 404))
-    }
-    if (req.query.bookings) {
-        screening.populate({ path: 'bookedSeats', select: '-userID' })
-        delete req.query.bookings
     }
     res.status(200).json({
         status: 'success',

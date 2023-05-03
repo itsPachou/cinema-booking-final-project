@@ -15,6 +15,7 @@ import cinemaRouter from './routers/cinemaRouter.js'
 import userRouter from './routers/userRouter.js'
 import movieRouter from './routers/movieRouter.js'
 import roomRouter from './routers/roomRouter.js'
+import bookingRouter from './routers/bookingRouter.js'
 
 const app = express()
 
@@ -67,6 +68,7 @@ app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/screenings', screeningRouter)
 app.use('/api/v1/rooms', roomRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/bookings', bookingRouter)
 app.use('/', viewRouter)
 
 app.all('*', (req, res, next) => {

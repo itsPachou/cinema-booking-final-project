@@ -55,7 +55,7 @@ const createReservation = catchAsync(async (req, res, next) => {
     )
 
     const filteredBookedSeats = screening.bookedSeats.filter(
-        (el) => el.paid || el.createdAt + 5 * 60 * 1000 > Date.now()
+        (el) => !el.expired
     )
 
     const availableCheck = req.body.tickets.every((seat) =>
@@ -75,7 +75,7 @@ const createReservation = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: 'success',
-        data: newReservation,
+        data: { newReservation },
     })
 })
 

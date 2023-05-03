@@ -39,6 +39,11 @@ bookingSchema.virtual('totalPrice').get(function () {
     return this.tickets.reduce((accum, ticket) => accum + ticket.price, 0)
 })
 
+bookingSchema.virtual('expired').get(function () {
+    if (!this.paid && this.createdAt + 5 * 60 * 1000 < Date.now()) return true
+    return false
+})
+
 bookingSchema.pre(/^find/, function (next) {
     this.populate('screeningID')
     next()
