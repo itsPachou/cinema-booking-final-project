@@ -55,9 +55,10 @@ const getCheckoutPage = catchAsync(async (req, res, next) => {
 
 const getSummaryPage = catchAsync(async (req, res, next) => {
     const booking = await Booking.findById(req.params.bookingID)
+    const movie = await Movie.findById(booking.screeningID.movieID)
     const ticketSubtotals = []
     booking.tickets.forEach((ticket) => {
-        const ticketType = ticket.price === 8.0 ? 'standard' : 'student'
+        const ticketType = ticket.price === 8.0 ? 'Standard' : 'Student'
         const subtotalEL = ticketSubtotals.find(
             (el) => el.ticketType === ticketType
         )
@@ -74,6 +75,7 @@ const getSummaryPage = catchAsync(async (req, res, next) => {
     })
     res.status(200).render('summary', {
         booking,
+        movie,
         ticketSubtotals,
     })
 })

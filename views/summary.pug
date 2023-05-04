@@ -6,19 +6,25 @@ block content
         .checkout-container
             .summary-notice
                 p You have 5 mins to complete your booking.
-                p Booking started at: 1:41:23 PM
+                p= `Booking started at: ${booking.createdAt.toLocaleTimeString()}`
             .summary-screening
                 h3.summary-subheading Your screening 
                 .summary-screening-details 
-                    p John Wick 4
-                    p Tue May 5 2023
-                    p 5:50 PM 
+                    p= movie.title
+                        img(src=`/img/128px-BBFC_${movie.classification}_2019.png`, alt=`BBFC Classification ${movie.classification} symbol`)
+                    p= booking.screeningID.screeningType + (booking.screeningID.audioType==='original' ? '' : ` - ${booking.screeningID.audioType.slice(0,3)}`) + (booking.screeningID.audioLanguage==='none' ? ` - ${movie.language.slice(0,3)}` : ` - ${booking.screeningID.audioLanguage.slice(0,3)}`)
+                    p= booking.screeningID.date.toDateString()
+                    p= booking.screeningID.date.toLocaleTimeString('en', {timeStyle: 'short'})
             .summary-tickets
                 h3.summary-subheading Your tickets 
                 .summary-tickets-details 
-                    p 2 x Standard (£16.00), 1 x Student (£6.00)
-                    p Seats: M-1 | B-3 | A-8
+                    p 
+                        each ticketSubtotal in ticketSubtotals
+                            span= `${ticketSubtotal.quantity} x ${ticketSubtotal.ticketType} (£${ticketSubtotal.subtotal.toFixed(2)}) `
+                    p Seats: 
+                        each ticket, index in booking.tickets 
+                            span= `${ticket.seatName} ` + ((index<booking.tickets.length-1) ? '| ' : '')
             h3.checkout-subheading Order total: 
-                span.summary-total £22.00
+                span.summary-total= `£${booking.totalPrice.toFixed(2)}`
             .confirm-box 
                 button.proceed-payment-btn Proceed to payment

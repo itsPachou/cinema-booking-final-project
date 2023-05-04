@@ -481,9 +481,22 @@ section.section__cinema-list, section.section__screening-list {
 }
 
 .summary-screening,
-.summary-tickets,
+.summary-tickets {
+  grid-column: 1/3;
+}
+
 .summary-notice {
   grid-column: 1/3;
+  font-size: 1.4rem;
+}
+
+.summary-screening-details p {
+  display: flex;
+}
+
+.summary-screening-details img {
+  height: 2rem;
+  margin: auto 1rem;
 }
 
 #cinema-list a, 
