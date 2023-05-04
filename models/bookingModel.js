@@ -40,7 +40,9 @@ bookingSchema.virtual('totalPrice').get(function () {
 })
 
 bookingSchema.virtual('expired').get(function () {
-    if (!this.paid && this.createdAt + 5 * 60 * 1000 < Date.now()) return true
+    if (!this.paid && Date.parse(this.createdAt) + 5 * 60 * 1000 < Date.now()) {
+        return true
+    }
     return false
 })
 
