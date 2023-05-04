@@ -55,6 +55,12 @@ const getCheckoutPage = catchAsync(async (req, res, next) => {
 
 const getSummaryPage = catchAsync(async (req, res, next) => {
     const booking = await Booking.findById(req.params.bookingID)
+    if (!booking) {
+        return next(new AppError('No booking found with that ID.', 400))
+    }
+    if (booking.expired || booking.paid) {
+        return next(new AppError('This booking is no longer available.', 400))
+    }
     const movie = await Movie.findById(booking.screeningID.movieID)
     const ticketSubtotals = []
     booking.tickets.forEach((ticket) => {
