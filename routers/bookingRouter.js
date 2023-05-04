@@ -16,4 +16,6 @@ bookingRouter
     .route('/checkout/bookings/:bookingID')
     .get(authController.protect, bookingsController.getCheckoutSession)
 
+bookingRouter.route('/:id').get(bookingsController.getBooking)
+
 export default bookingRouter

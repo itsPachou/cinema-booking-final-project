@@ -4,6 +4,7 @@ import Screening from '../models/screeningModel.js'
 import Movie from '../models/movieModel.js'
 import groupByMovie from '../utils/groupByMovie.js'
 import AppError from '../utils/appError.js'
+import Booking from '../models/bookingModel.js'
 
 const getHomePage = catchAsync(async (req, res, next) => {
     const cinemas = await Cinema.find()
@@ -53,7 +54,28 @@ const getCheckoutPage = catchAsync(async (req, res, next) => {
 })
 
 const getSummaryPage = catchAsync(async (req, res, next) => {
-    res.status(200).render('summary')
+    const booking = await Booking.findById(req.params.bookingID)
+    const ticketSubtotals = []
+    booking.tickets.forEach((ticket) => {
+        const ticketType = ticket.price === 8.0 ? 'standard' : 'student'
+        const subtotalEL = ticketSubtotals.find(
+            (el) => el.ticketType === ticketType
+        )
+        if (subtotalEL) {
+            subtotalEL.subtotal += ticket.price
+            subtotalEL.quantity += 1
+        } else {
+            ticketSubtotals.push({
+                ticketType,
+                subtotal: ticket.price,
+                quantity: 1,
+            })
+        }
+    })
+    res.status(200).render('summary', {
+        booking,
+        ticketSubtotals,
+    })
 })
 
 export {

@@ -481,7 +481,8 @@ section.section__cinema-list, section.section__screening-list {
 }
 
 .summary-screening,
-.summary-tickets {
+.summary-tickets,
+.summary-notice {
   grid-column: 1/3;
 }
 

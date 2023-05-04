@@ -79,6 +79,19 @@ const createReservation = catchAsync(async (req, res, next) => {
     })
 })
 
+const getBooking = catchAsync(async (req, res, next) => {
+    const booking = await Booking.findById(req.params.id)
+    if (!booking) {
+        return next(new AppError('No booking found with that ID', 404))
+    }
+    res.status(200).json({
+        status: 'success',
+        data: {
+            booking,
+        },
+    })
+})
+
 const createBooking = factory.createOne(Booking)
 
 const updateBooking = factory.updateOne(Booking)
@@ -92,4 +105,5 @@ export {
     createBooking,
     updateBooking,
     deleteBooking,
+    getBooking,
 }
