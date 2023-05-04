@@ -1,0 +1,21 @@
+extends base 
+
+block content 
+    .container 
+        h2.checkout-heading Summary 
+        .checkout-container
+            .summary-screening
+                h3.summary-subheading Your screening 
+                .summary-screening-details 
+                    p John Wick 4
+                    p Tue May 5 2023
+                    p 5:50 PM 
+            .summary-tickets
+                h3.summary-subheading Your tickets 
+                .summary-tickets-details 
+                    p 2 x Standard (£16.00), 1 x Student (£6.00)
+                    p Seats: M-1 | B-3 | A-8
+            h3.checkout-subheading Order total: 
+                span.summary-total £22.00
+            .confirm-box 
+                button.proceed-payment-btn Proceed to payment

@@ -52,6 +52,10 @@ const getCheckoutPage = catchAsync(async (req, res, next) => {
     })
 })
 
+const getSummaryPage = catchAsync(async (req, res, next) => {
+    res.status(200).render('summary')
+})
+
 export {
     getHomePage,
     getCinemaPage,
@@ -59,4 +63,5 @@ export {
     getCheckoutLoginPage,
     getSignupPage,
     getCheckoutPage,
+    getSummaryPage,
 }
