@@ -12,7 +12,9 @@ const createCheckoutSession = catchAsync(async (req, res, next) => {
 
     const session = await stripe.checkout.sessions.create({
         mode: 'payment',
-        success_url: `${req.protocol}://${req.get('host')}/bookingSuccess`,
+        success_url: `${req.protocol}://${req.get('host')}/bookingSuccess/${
+            booking._id
+        }`,
         cancel_url: `${req.protocol}://${req.get('host')}/summary/${
             booking._id
         }`,

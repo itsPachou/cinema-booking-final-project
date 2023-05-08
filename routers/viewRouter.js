@@ -37,6 +37,12 @@ viewRouter
     .route('/checkout/screenings/:screeningID')
     .get(authController.protect, viewsController.getCheckoutPage)
 
-viewRouter.route('/summary/:bookingID').get(viewsController.getSummaryPage)
+viewRouter
+    .route('/summary/:bookingID')
+    .get(authController.protect, viewsController.getSummaryPage)
+
+viewRouter
+    .route('/bookingSuccess/:bookingID')
+    .get(authController.protect, viewsController.getBookingSuccessPage)
 
 export default viewRouter

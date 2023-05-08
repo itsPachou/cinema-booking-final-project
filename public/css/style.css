@@ -499,6 +499,42 @@ section.section__cinema-list, section.section__screening-list {
   margin: auto 1rem;
 }
 
+.success-container {
+  display: grid;
+  column-gap: 2rem;
+  justify-items: center;
+  background-color: #0a1121;
+  padding: 2rem;
+  font-size: 3rem;
+  margin-top: 3rem;
+}
+
+.success-booking-successful {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.success-circle {
+  color: #20bf6b;
+  padding: 0 1rem;
+}
+
+.success-booking-successful-msg {
+  font-weight: 300;
+}
+
+.success-thank-you {
+  font-weight: 600;
+  color: #e2e8f0;
+  text-align: center;
+}
+
+.success-see-you {
+  text-align: center;
+  font-weight: 300;
+}
+
 #cinema-list a, 
 #cinema-list a:link,
 #cinema-list a:visited {
@@ -869,5 +905,9 @@ section.section__cinema-list, section.section__screening-list {
 
   .summary-screening {
     margin-right: 5rem;
+  }
+
+  .success-booking-successful {
+    flex-direction: row;
   }
 }

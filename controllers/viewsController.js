@@ -86,6 +86,11 @@ const getSummaryPage = catchAsync(async (req, res, next) => {
     })
 })
 
+const getBookingSuccessPage = catchAsync(async (req, res, next) => {
+    await Booking.findByIdAndUpdate(req.params.bookingID, { paid: true })
+    res.status(200).render('bookingSuccess')
+})
+
 export {
     getHomePage,
     getCinemaPage,
@@ -94,4 +99,5 @@ export {
     getSignupPage,
     getCheckoutPage,
     getSummaryPage,
+    getBookingSuccessPage,
 }
