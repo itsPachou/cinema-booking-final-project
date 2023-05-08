@@ -45,6 +45,7 @@ screeningSchema.virtual('bookedSeats', {
     ref: 'Booking',
     localField: '_id',
     foreignField: 'screeningID',
+    match: { $or: [{ paid: true }, { expired: false }] },
 })
 
 const Screening = mongoose.model('Screening', screeningSchema)
