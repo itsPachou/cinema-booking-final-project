@@ -14,7 +14,7 @@ bookingRouter
 
 bookingRouter
     .route('/checkout/bookings/:bookingID')
-    .get(authController.protect, bookingsController.getCheckoutSession)
+    .post(authController.protect, bookingsController.createCheckoutSession)
 
 bookingRouter.route('/:id').get(bookingsController.getBooking)
 

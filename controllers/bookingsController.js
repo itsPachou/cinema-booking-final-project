@@ -5,10 +5,10 @@ import AppError from '../utils/appError.js'
 import Screening from '../models/screeningModel.js'
 import * as factory from './handlerFactory.js'
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
-
-const getCheckoutSession = catchAsync(async (req, res, next) => {
+const createCheckoutSession = catchAsync(async (req, res, next) => {
     const booking = await Booking.findById(req.params.bookingID)
+
+    const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
     const session = await stripe.checkout.sessions.create({
         mode: 'payment',
@@ -27,8 +27,8 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
                         description: 'placeholder',
                     },
                     unit_amount: booking.totalPrice * 100,
-                    quantity: 1,
                 },
+                quantity: 1,
             },
         ],
     })
@@ -99,7 +99,7 @@ const updateBooking = factory.updateOne(Booking)
 const deleteBooking = factory.deleteOne(Booking)
 
 export {
-    getCheckoutSession,
+    createCheckoutSession,
     setScreeningID,
     createReservation,
     createBooking,

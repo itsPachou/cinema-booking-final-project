@@ -558,6 +558,7 @@ function hmrAccept(bundle, id) {
 },{}],"3r7Gr":[function(require,module,exports) {
 var _loginJs = require("./login.js");
 var _checkoutJs = require("./checkout.js");
+var _summaryJs = require("./summary.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
@@ -568,6 +569,7 @@ const ticketBtns = document.querySelectorAll(".ticket-btn");
 const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
 const seatSelectionDiv = document.querySelector(".seats-selection");
 const proceedBtn = document.querySelector(".confirm-seats-btn");
+const proceedPaymentBtn = document.querySelector(".proceed-payment-btn");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -604,8 +606,11 @@ if (seatSelectionDiv) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.datas
 if (proceedBtn) proceedBtn.addEventListener("click", (e)=>{
     (0, _checkoutJs.finalizeBooking)();
 });
+if (proceedPaymentBtn) proceedPaymentBtn.addEventListener("click", (e)=>{
+    (0, _summaryJs.goToCheckout)(e.target);
+});
 
-},{"./login.js":"eHNGO","./checkout.js":"9b6wq"}],"eHNGO":[function(require,module,exports) {
+},{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
@@ -689,6 +694,7 @@ parcelHelpers.export(exports, "loadJSON", ()=>loadJSON);
 parcelHelpers.export(exports, "getRoom", ()=>getRoom);
 parcelHelpers.export(exports, "getScreening", ()=>getScreening);
 parcelHelpers.export(exports, "postReservation", ()=>postReservation);
+parcelHelpers.export(exports, "createCheckout", ()=>createCheckout);
 async function loadJSON(url, options) {
     try {
         const response = await fetch(url, options);
@@ -733,6 +739,17 @@ async function postReservation(screeningID, tickets) {
         });
         return result.data.newReservation;
     } catch (error) {
+        return error;
+    }
+}
+async function createCheckout(id) {
+    try {
+        const session = await loadJSON(`${location.origin}/api/v1/bookings/checkout/bookings/${id}`, {
+            method: "POST"
+        });
+        return session.session;
+    } catch (error) {
+        console.log(error);
         return error;
     }
 }
@@ -960,6 +977,24 @@ const finalizeBooking = async ()=>{
     }
 };
 
-},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"62RuN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "goToCheckout", ()=>goToCheckout);
+var _backEndConnectionsJs = require("./backEndConnections.js");
+var _alertsJs = require("./alerts.js");
+"use strict";
+const goToCheckout = async (target)=>{
+    try {
+        target.innerText = "Processing...";
+        const session = await (0, _backEndConnectionsJs.createCheckout)(target.dataset.bookingId);
+        location.assign(session.url);
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error);
+        target.innerText = "Proceed to payment";
+    }
+};
+
+},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

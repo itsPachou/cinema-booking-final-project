@@ -7,6 +7,7 @@ import {
     populateRoomLayout,
     finalizeBooking,
 } from './checkout.js'
+import { goToCheckout } from './summary.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -17,6 +18,7 @@ const ticketBtns = document.querySelectorAll('.ticket-btn')
 const confirmTicketsBtn = document.querySelector('.confirm-tickets-btn')
 const seatSelectionDiv = document.querySelector('.seats-selection')
 const proceedBtn = document.querySelector('.confirm-seats-btn')
+const proceedPaymentBtn = document.querySelector('.proceed-payment-btn')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -88,5 +90,11 @@ if (seatSelectionDiv) {
 if (proceedBtn) {
     proceedBtn.addEventListener('click', (e) => {
         finalizeBooking()
+    })
+}
+
+if (proceedPaymentBtn) {
+    proceedPaymentBtn.addEventListener('click', (e) => {
+        goToCheckout(e.target)
     })
 }

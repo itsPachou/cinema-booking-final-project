@@ -30,4 +30,4 @@ block content
             h3.checkout-subheading Order total: 
                 span.summary-total= `£${booking.totalPrice.toFixed(2)}`
             .confirm-box 
-                button.proceed-payment-btn Proceed to payment
+                button.proceed-payment-btn(data-booking-id=booking._id) Proceed to payment

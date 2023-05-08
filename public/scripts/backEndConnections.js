@@ -51,4 +51,19 @@ async function postReservation(screeningID, tickets) {
     }
 }
 
-export { loadJSON, getRoom, getScreening, postReservation }
+async function createCheckout(id) {
+    try {
+        const session = await loadJSON(
+            `${location.origin}/api/v1/bookings/checkout/bookings/${id}`,
+            {
+                method: 'POST',
+            }
+        )
+        return session.session
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+export { loadJSON, getRoom, getScreening, postReservation, createCheckout }
