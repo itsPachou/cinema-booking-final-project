@@ -1,3 +1,8 @@
+:root {
+  --room-width: 6;
+  --room-length: 4;
+}
+
 *,
 *::before,
 *::after {
@@ -125,6 +130,16 @@ section.section__cinema-list, section.section__screening-list {
   max-width: 1200px;
   width: 90%;
   margin: auto;
+}
+
+.checkout-login-or {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.required-info {
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .container__login-form {
@@ -282,6 +297,242 @@ section.section__cinema-list, section.section__screening-list {
 
 .screening-tile-time {
   color: #e2e8f0;
+}
+
+.checkout-heading {
+  color: #e2e8f0;
+  font-size: 4rem;
+  font-weight: 500;
+}
+
+.checkout-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  padding: 1rem 2rem;
+  background-color: #0a1121;
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+  row-gap: 1rem;
+}
+
+.checkout-subheading,
+.summary-subheading {
+  font-size: 2.5rem;
+  grid-column: 1/3;
+}
+
+.ticket-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ticket-name {
+  margin-right: 3rem;
+}
+
+.ticket-number {
+  padding: 0 1rem;
+  font-size: 2rem;
+  text-align: center;
+  font-weight: 700;
+  width: 50px;
+}
+
+.ticket-btn {
+  display: flex;
+  color: #94a3b8;
+  border-radius: 50%;
+  padding: 0.5rem;
+  font-weight: 700;
+  border: 1px solid #94a3b8;
+  background-color: #0a1121;
+  transition: all .2s;
+  opacity: 60%;
+  cursor: pointer;
+}
+
+.ticket-btn:enabled:hover,
+.ticket-btn:enabled:active,
+.confirm-tickets-btn:hover,
+.confirm-tickets-btn:active,
+.confirm-seats-btn:hover,
+.confirm-seats-btn:active,
+.proceed-payment-btn:active,
+.proceed-payment-btn:hover {
+  opacity: 100%;
+}
+
+.ticket-btn:disabled,
+.confirm-seats-btn:disabled {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+  border-color:rgba(195, 195, 195, 0.3);
+  cursor: default;
+}
+
+.confirm-tickets-btn,
+.confirm-seats-btn,
+.proceed-payment-btn {
+  display: flex;
+  color: #94a3b8;
+  border-radius: 2rem;
+  padding: 1rem;
+  font-size: 1.8rem;
+  background-color: #0f172a;
+  border: 1px solid #94a3b8;
+  text-transform: uppercase;
+  opacity: 80%;
+  transition: opacity .2s;
+  cursor: pointer;
+}
+
+.confirm-box {
+  grid-column: 1/3;
+  display: flex;
+  justify-content: end;
+}
+
+.seat-selection-container {
+  grid-column: 1/3;
+  overflow: auto;
+  display: grid;
+  row-gap: 2rem;
+  /* filter: grayscale(100%); */
+  grid-template-columns: auto 1fr;
+  background-color: #090110;
+}
+
+.screen-div {
+  grid-column: 2/3;
+  text-align: center;
+  background-color: #616161;
+  text-transform: uppercase;
+  color: #090110;
+  letter-spacing: 1rem;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.seats-selection {
+  grid-column: 2/3;
+}
+
+.row-char-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-char-column div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.8rem;
+  min-height: 2.8rem;
+  margin: .5vw;
+}
+
+.seats-row {
+  display: flex;
+  justify-content: center;
+}
+
+.seat-position {
+  display: inline-block;
+  min-width: 2.8rem;
+  min-height: 2.8rem;
+  margin: .5vw;
+}
+
+.seat {
+  background-color: #0f172a;
+  border: .05rem solid #a5b4c9;
+  border-right-width: .2rem;
+  border-left-width: .2rem;
+  border-bottom-width: .5rem;
+  border-bottom-style: double;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  text-align: center;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.seats-not-clickable {
+  pointer-events: none;
+  filter: opacity(20%);
+}
+
+.seat-taken {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+  border-color:rgba(195, 195, 195, 0.3);
+  cursor: default;
+}
+
+.seat-selected {
+  background-color: #00ADB5;
+  color: #000;
+}
+
+.summary-total {
+  font-weight: 400;
+  color: #e2e8f0;
+}
+
+.summary-screening,
+.summary-tickets {
+  grid-column: 1/3;
+}
+
+.summary-notice {
+  grid-column: 1/3;
+  font-size: 1.4rem;
+}
+
+.summary-screening-details p {
+  display: flex;
+}
+
+.summary-screening-details img {
+  height: 2rem;
+  margin: auto 1rem;
+}
+
+.success-container {
+  display: grid;
+  column-gap: 2rem;
+  justify-items: center;
+  background-color: #0a1121;
+  padding: 2rem;
+  font-size: 3rem;
+  margin-top: 3rem;
+}
+
+.success-booking-successful {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.success-circle {
+  color: #20bf6b;
+  padding: 0 1rem;
+}
+
+.success-booking-successful-msg {
+  font-weight: 300;
+}
+
+.success-thank-you {
+  font-weight: 600;
+  color: #e2e8f0;
+  text-align: center;
+}
+
+.success-see-you {
+  text-align: center;
+  font-weight: 300;
 }
 
 #cinema-list a, 
@@ -555,6 +806,28 @@ section.section__cinema-list, section.section__screening-list {
 
 @media screen and (min-width: 600px) {
 
+  .row-char-column div {
+    min-width: calc(10vw/var(--room-width) + 1rem);
+    min-height: calc(10vw/var(--room-width) + 1rem);
+    margin: .5vw;
+  }
+  
+  .seat-position {
+    width: calc(10vw/var(--room-width) + 1rem);
+    height: calc(10vw/var(--room-width) + 1rem);
+    margin: .5vw;
+  }
+  
+  .seat {
+    border: .05vw solid #a5b4c9;
+    border-right-width: .2vw;
+    border-left-width: .2vw;
+    border-bottom-width: .6vw;
+    border-bottom-style: double;
+    border-bottom-left-radius: 1vw;
+    border-bottom-right-radius: 1vw;
+  }
+
   #cinema-list a, 
   #cinema-list a:link,
   #cinema-list a:visited {
@@ -621,5 +894,20 @@ section.section__cinema-list, section.section__screening-list {
 
   .footer__nav li {
     margin-left: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .summary-screening,
+  .summary-tickets {
+    grid-column: auto;
+  }
+
+  .summary-screening {
+    margin-right: 5rem;
+  }
+
+  .success-booking-successful {
+    flex-direction: row;
   }
 }

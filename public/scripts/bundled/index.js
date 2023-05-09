@@ -557,11 +557,19 @@ function hmrAccept(bundle, id) {
 
 },{}],"3r7Gr":[function(require,module,exports) {
 var _loginJs = require("./login.js");
+var _checkoutJs = require("./checkout.js");
+var _summaryJs = require("./summary.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
 const logoutBtn = document.getElementById("logoutBtn");
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const menu = document.getElementById("menu");
+const ticketBtns = document.querySelectorAll(".ticket-btn");
+const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
+const seatSelectionDiv = document.querySelector(".seats-selection");
+const proceedBtn = document.querySelector(".confirm-seats-btn");
+const proceedPaymentBtn = document.querySelector(".proceed-payment-btn");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -572,13 +580,42 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     const password = document.getElementById("password").value;
     (0, _loginJs.login)(email, password);
 });
+if (signupForm) signupForm.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const email = document.getElementById("emailSU").value;
+    const password = document.getElementById("passwordSU").value;
+    const passwordConfirm = document.getElementById("passwordConfirmSU").value;
+    const firstName = document.getElementById("firstNameSU").value;
+    const lastName = document.getElementById("lastNameSU").value;
+    const phoneNumber = document.getElementById("phoneNumberSU").value;
+    (0, _loginJs.signup)(email, password, passwordConfirm, firstName, lastName, phoneNumber !== "" ? phoneNumber : undefined);
+});
 if (logoutBtn) logoutBtn.addEventListener("click", (0, _loginJs.logout));
+if (ticketBtns) {
+    const ticketNumbers = Array.from(document.querySelectorAll(".ticket-number"));
+    ticketBtns.forEach((btn)=>{
+        btn.addEventListener("click", (e)=>{
+            (0, _checkoutJs.handleTicketButton)(btn.dataset.btnType, ticketNumbers.find((el)=>el.dataset.ticketType === btn.dataset.ticketType));
+        });
+    });
+}
+if (confirmTicketsBtn) confirmTicketsBtn.addEventListener("click", (e)=>{
+    (0, _checkoutJs.confirmEditTickets)(e.target);
+});
+if (seatSelectionDiv) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
+if (proceedBtn) proceedBtn.addEventListener("click", (e)=>{
+    (0, _checkoutJs.finalizeBooking)();
+});
+if (proceedPaymentBtn) proceedPaymentBtn.addEventListener("click", (e)=>{
+    (0, _summaryJs.goToCheckout)(e.target);
+});
 
-},{"./login.js":"eHNGO"}],"eHNGO":[function(require,module,exports) {
+},{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
+parcelHelpers.export(exports, "signup", ()=>signup);
 var _backEndConnectionsJs = require("./backEndConnections.js");
 var _alertsJs = require("./alerts.js");
 "use strict";
@@ -599,6 +636,12 @@ const login = async (email, password)=>{
             if (location.pathname === "/login") window.setTimeout(()=>{
                 location.assign("/home");
             }, 1500);
+            else if (location.pathname.startsWith("/checkoutLogin")) {
+                console.log(location.pathname.split("/").at(-1));
+                window.setTimeout(()=>{
+                    location.assign(`/checkout/screenings/${location.pathname.split("/")[-1]}`);
+                }, 1500);
+            }
         }
     } catch (error) {
         (0, _alertsJs.showAlert)("error", error.message);
@@ -614,20 +657,101 @@ const logout = async ()=>{
         (0, _alertsJs.showAlert)("error", "Error logging out! Try again.");
     }
 };
+const signup = async (email, password, passwordConfirm, firstName, lastName, phoneNumber)=>{
+    try {
+        const result = await (0, _backEndConnectionsJs.loadJSON)("http://localhost:3000/api/v1/users/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                passwordConfirm,
+                firstName,
+                lastName,
+                phoneNumber: phoneNumber
+            })
+        });
+        if (result.status === "success") {
+            (0, _alertsJs.showAlert)("success", "Signed up successfully!");
+            if (location.pathname === "/signup") window.setTimeout(()=>{
+                location.assign("/home");
+            }, 1500);
+            else if (location.pathname.startsWith("/checkoutLogin")) window.setTimeout(()=>{
+                location.assign(`/checkout/screenings/${res.locals.screeningID}`);
+            }, 1500);
+        }
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
 
 },{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"erlY1":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadJSON", ()=>loadJSON);
+parcelHelpers.export(exports, "getRoom", ()=>getRoom);
+parcelHelpers.export(exports, "getScreening", ()=>getScreening);
+parcelHelpers.export(exports, "postReservation", ()=>postReservation);
+parcelHelpers.export(exports, "createCheckout", ()=>createCheckout);
 async function loadJSON(url, options) {
-    const response = await fetch(url, options);
-    const jsonBody = await response.json();
-    if (!response.ok) {
-        const error = Error(jsonBody.message);
-        error.status = response.status;
-        throw error;
+    try {
+        const response = await fetch(url, options);
+        const jsonBody = await response.json();
+        if (!response.ok) {
+            const error = Error(jsonBody.message);
+            error.status = response.status;
+            throw error;
+        }
+        return jsonBody;
+    } catch (error) {
+        console.log(error);
     }
-    return jsonBody;
+}
+async function getRoom(id) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id}`);
+        return result.data.room;
+    } catch (error) {
+        console.log(error);
+    }
+}
+async function getScreening(id) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/screenings/${id}`);
+        return result.data.screening;
+    } catch (error) {
+        console.log(error);
+    }
+}
+async function postReservation(screeningID, tickets) {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/bookings/reservation`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                screeningID,
+                tickets
+            })
+        });
+        return result.data.newReservation;
+    } catch (error) {
+        return error;
+    }
+}
+async function createCheckout(id) {
+    try {
+        const session = await loadJSON(`${location.origin}/api/v1/bookings/checkout/bookings/${id}`, {
+            method: "POST"
+        });
+        return session.session;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"5Birt":[function(require,module,exports) {
@@ -676,6 +800,201 @@ const showAlert = (type, msg)=>{
     window.setTimeout(hideAlert, 5000);
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"9b6wq":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "handleTicketButton", ()=>handleTicketButton);
+parcelHelpers.export(exports, "confirmEditTickets", ()=>confirmEditTickets);
+parcelHelpers.export(exports, "populateRoomLayout", ()=>populateRoomLayout);
+parcelHelpers.export(exports, "finalizeBooking", ()=>finalizeBooking);
+var _alertsJs = require("./alerts.js");
+var _backEndConnectionsJs = require("./backEndConnections.js");
+"use strict";
+const seatSelectionDiv = document.querySelector(".seats-selection");
+const proceedBtn = document.querySelector(".confirm-seats-btn");
+const rowChars = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+];
+const checkoutData = {};
+const handleTicketButton = (action, target)=>{
+    if (action === "plus") target.innerText = target.innerText * 1 + 1;
+    if (action === "minus") target.innerText = target.innerText * 1 > 0 ? target.innerText * 1 - 1 : 0;
+};
+const updateSeatSelection = async ()=>{
+    const screening = await (0, _backEndConnectionsJs.getScreening)(seatSelectionDiv.dataset.screeningId);
+    const bookedSeatsArray = screening.bookedSeats;
+    document.querySelectorAll(".seat").forEach((el)=>{
+        el.classList.remove("seat-taken");
+    });
+    bookedSeatsArray.forEach((booking)=>{
+        booking.tickets.forEach((ticket)=>{
+            const seatEl = document.querySelector(`[data-row="${ticket.seatRow}"][data-col="${ticket.seatCol}"]`);
+            seatEl.classList.add("seat-taken");
+            if (seatEl.classList.contains("seat-selected")) {
+                seatEl.classList.remove("seat-selected");
+                checkoutData["selectedPositions"] = checkoutData["selectedPositions"].filter((el)=>el.toString() !== [
+                        seatEl.dataset.row,
+                        seatEl.dataset.col
+                    ].toString());
+                checkoutData["numOfSelected"] = checkoutData["numOfSelected"] - 1;
+            }
+        });
+    });
+};
+const confirmEditTickets = (btn)=>{
+    const ticketsElements = Array.from(document.querySelectorAll(".ticket-number"));
+    const ticketsTotal = ticketsElements.reduce((accum, el)=>accum + el.innerText * 1, 0);
+    if (ticketsTotal === 0) {
+        (0, _alertsJs.showAlert)("error", "Select a valid number of tickets.");
+        return;
+    }
+    document.querySelectorAll(".ticket-btn").forEach((btn)=>btn.disabled = !btn.disabled);
+    if (btn.innerText === "EDIT") {
+        btn.innerText = "Confirm";
+        seatSelectionDiv.classList.toggle("seats-not-clickable");
+        proceedBtn.disabled = true;
+    } else {
+        seatSelectionDiv.classList.toggle("seats-not-clickable");
+        btn.innerText = "Edit";
+        ticketsElements.forEach((el)=>{
+            checkoutData[el.dataset.ticketType] = el.innerText;
+        });
+        checkoutData["numOfTickets"] = ticketsTotal;
+        proceedBtn.disabled = false;
+        if (checkoutData["numOfSelected"] && checkoutData["numOfSelected"] > checkoutData["numOfTickets"]) {
+            const diff = checkoutData["numOfSelected"] - checkoutData["numOfTickets"];
+            for(let i = 0; i < diff; i++){
+                const extraSeat = checkoutData["selectedPositions"].pop();
+                document.querySelector(`[data-row="${extraSeat.at(0)}"][data-col="${extraSeat.at(1)}"]`).classList.remove("seat-selected");
+            }
+            checkoutData["numOfSelected"] = checkoutData["numOfTickets"];
+        }
+        updateSeatSelection();
+    }
+};
+const selectSeat = (target)=>{
+    if (!target.classList.contains("seat-taken") && (!checkoutData.numOfSelected || checkoutData.numOfTickets > checkoutData.numOfSelected) && !target.classList.contains("seat-selected")) {
+        target.classList.add("seat-selected");
+        const selectedPositions = checkoutData.selectedPositions || [];
+        selectedPositions.push([
+            target.dataset.row,
+            target.dataset.col
+        ]);
+        checkoutData["selectedPositions"] = selectedPositions;
+        checkoutData["numOfSelected"] = checkoutData["numOfSelected"] + 1 || 1;
+    } else if (!target.classList.contains("seat-taken") && target.classList.contains("seat-selected")) {
+        target.classList.remove("seat-selected");
+        const unselectedCoords = [
+            target.dataset.row,
+            target.dataset.col
+        ];
+        checkoutData["selectedPositions"] = checkoutData["selectedPositions"].filter((el)=>el.toString() !== unselectedCoords.toString());
+        checkoutData["numOfSelected"] = checkoutData["numOfSelected"] - 1;
+    }
+};
+const populateRoomLayout = async (roomId, seatSelectionDiv)=>{
+    const room = await (0, _backEndConnectionsJs.getRoom)(roomId);
+    const rowNameColumn = document.createElement("div");
+    rowNameColumn.classList.add("row-char-column");
+    for(let r = 0; r < room.dimensions.length; r++){
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("seats-row");
+        const rowName = document.createElement("div");
+        rowName.innerText = rowChars.at(r);
+        rowNameColumn.appendChild(rowName);
+        for(let c = 0; c < room.dimensions.width; c++){
+            const seatPos = document.createElement("div");
+            seatPos.classList.add("seat-position");
+            seatPos.dataset.col = c;
+            seatPos.dataset.row = r;
+            rowDiv.appendChild(seatPos);
+        }
+        seatSelectionDiv.appendChild(rowDiv);
+    }
+    seatSelectionDiv.insertAdjacentElement("beforebegin", rowNameColumn);
+    room.seatPositions.forEach((pos)=>{
+        const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+        seatEl.classList.add("seat");
+        seatEl.innerText = seatEl.previousElementSibling ? seatEl.previousElementSibling.innerText * 1 + 1 : 1;
+        seatEl.addEventListener("click", (e)=>{
+            selectSeat(e.target);
+        });
+    });
+    updateSeatSelection();
+};
+const finalizeBooking = async ()=>{
+    try {
+        if (checkoutData["numOfSelected"] !== checkoutData["numOfTickets"]) {
+            (0, _alertsJs.showAlert)("error", "Incorrect number of seats selected.");
+            return;
+        }
+        checkoutData.seatNames = [];
+        checkoutData["selectedPositions"].forEach((pos)=>{
+            const seatEl = document.querySelector(`[data-row="${pos.at(0)}"][data-col="${pos.at(1)}"]`);
+            checkoutData.seatNames.push(`${rowChars.at(pos.at(0))}-${seatEl.innerText}`);
+        });
+        checkoutData.screeningID = seatSelectionDiv.dataset.screeningId;
+        const priceArray = [];
+        for(let i = 0; i < checkoutData.standard; i++)priceArray.push(8.0);
+        for(let i = 0; i < checkoutData.student; i++)priceArray.push(6.0);
+        const tickets = [];
+        for (const i of checkoutData.selectedPositions.keys())tickets.push({
+            seatRow: checkoutData.selectedPositions.at(i).at(0) * 1,
+            seatCol: checkoutData.selectedPositions.at(i).at(1) * 1,
+            seatName: checkoutData.seatNames.at(i),
+            price: priceArray.at(i)
+        });
+        const reservation = await (0, _backEndConnectionsJs.postReservation)(checkoutData.screeningID, tickets);
+        location.assign(`/summary/${reservation._id}`);
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+        if (error.message === "Selected seats are no longer available.") updateSeatSelection();
+    }
+};
+
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"62RuN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "goToCheckout", ()=>goToCheckout);
+var _backEndConnectionsJs = require("./backEndConnections.js");
+var _alertsJs = require("./alerts.js");
+"use strict";
+const goToCheckout = async (target)=>{
+    try {
+        target.innerText = "Processing...";
+        const session = await (0, _backEndConnectionsJs.createCheckout)(target.dataset.bookingId);
+        location.assign(session.url);
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error);
+        target.innerText = "Proceed to payment";
+    }
+};
+
+},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

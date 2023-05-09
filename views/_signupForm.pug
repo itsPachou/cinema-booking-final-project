@@ -1,0 +1,25 @@
+.form-box
+    h2.heading-login-form Create a new account
+    form#signupForm
+        .form-group 
+            label.form-label(for='firstName') First name *
+            input#firstNameSU.form-input(type='text', placeholder='John', required)
+        .form-group 
+            label.form-label(for='lastName') Last name *
+            input#lastNameSU.form-input(type='text', placeholder='Smith', required)
+        .form-group 
+            label.form-label(for='email') Email address *
+            input#emailSU.form-input(type='email', placeholder='email@example.com', required)
+        .form-group 
+            label.form-label(for='phoneNumber') Phone number 
+            input#phoneNumberSU.form-input(type='tel')
+        .form-group 
+            label.form-label(for='password') Password *
+            input#passwordSU.form-input(type='password', placeholder='••••••••', required, minlength='8')
+        .form-group 
+            label.form-label(for='passwordConfirm') Confirm password *
+            input#passwordConfirmSU.form-input(type='password', placeholder='••••••••', required, minlength='8')
+        .form-group 
+            button.btn-login Sign up
+        .required-info * required fields
+        
