@@ -571,6 +571,12 @@ section.section__cinema-list, section.section__screening-list {
   filter: brightness(1.2);
 }
 
+.user-details a.delete-account,
+.user-details a.delete-account:link,
+.user-details a.delete-account:visited {
+  color: #e42626;
+}
+
 .booking-link p:not(:last-child) {
   font-weight: 400;
 }
