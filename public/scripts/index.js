@@ -8,6 +8,7 @@ import {
     finalizeBooking,
 } from './checkout.js'
 import { goToCheckout } from './summary.js'
+import { deleteAccount } from './userPage.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -19,6 +20,7 @@ const confirmTicketsBtn = document.querySelector('.confirm-tickets-btn')
 const seatSelectionDiv = document.querySelector('.seats-selection')
 const proceedBtn = document.querySelector('.confirm-seats-btn')
 const proceedPaymentBtn = document.querySelector('.proceed-payment-btn')
+const deleteAccountLink = document.querySelector('.delete-account')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -97,4 +99,8 @@ if (proceedPaymentBtn) {
     proceedPaymentBtn.addEventListener('click', (e) => {
         goToCheckout(e.target)
     })
+}
+
+if (deleteAccountLink) {
+    deleteAccountLink.addEventListener('click', (e) => deleteAccount())
 }

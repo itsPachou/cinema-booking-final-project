@@ -559,6 +559,7 @@ function hmrAccept(bundle, id) {
 var _loginJs = require("./login.js");
 var _checkoutJs = require("./checkout.js");
 var _summaryJs = require("./summary.js");
+var _userPageJs = require("./userPage.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
@@ -570,6 +571,7 @@ const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
 const seatSelectionDiv = document.querySelector(".seats-selection");
 const proceedBtn = document.querySelector(".confirm-seats-btn");
 const proceedPaymentBtn = document.querySelector(".proceed-payment-btn");
+const deleteAccountLink = document.querySelector(".delete-account");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -609,8 +611,9 @@ if (proceedBtn) proceedBtn.addEventListener("click", (e)=>{
 if (proceedPaymentBtn) proceedPaymentBtn.addEventListener("click", (e)=>{
     (0, _summaryJs.goToCheckout)(e.target);
 });
+if (deleteAccountLink) deleteAccountLink.addEventListener("click", (e)=>(0, _userPageJs.deleteAccount)());
 
-},{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN"}],"eHNGO":[function(require,module,exports) {
+},{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN","./userPage.js":"bLBCY"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
@@ -695,6 +698,8 @@ parcelHelpers.export(exports, "getRoom", ()=>getRoom);
 parcelHelpers.export(exports, "getScreening", ()=>getScreening);
 parcelHelpers.export(exports, "postReservation", ()=>postReservation);
 parcelHelpers.export(exports, "createCheckout", ()=>createCheckout);
+parcelHelpers.export(exports, "deleteMe", ()=>deleteMe);
+"use strict";
 async function loadJSON(url, options) {
     try {
         const response = await fetch(url, options);
@@ -750,6 +755,16 @@ async function createCheckout(id) {
         return session.session;
     } catch (error) {
         console.log(error);
+        return error;
+    }
+}
+async function deleteMe() {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/users/deleteMe`, {
+            method: "DELETE"
+        });
+        return result;
+    } catch (error) {
         return error;
     }
 }
@@ -992,6 +1007,30 @@ const goToCheckout = async (target)=>{
     } catch (error) {
         (0, _alertsJs.showAlert)("error", error);
         target.innerText = "Proceed to payment";
+    }
+};
+
+},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"bLBCY":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "deleteAccount", ()=>deleteAccount);
+var _alertsJs = require("./alerts.js");
+var _backEndConnectionsJs = require("./backEndConnections.js");
+"use strict";
+const deleteAccount = async ()=>{
+    try {
+        if (window.confirm("Are you sure you want to delete your account?")) {
+            await (0, _backEndConnectionsJs.deleteMe)();
+            (0, _alertsJs.showAlert)("success", "Successfully deleted account.");
+            const result = await (0, _backEndConnectionsJs.loadJSON)("http://localhost:3000/api/v1/users/logout", {
+                method: "GET"
+            });
+            window.setTimeout(()=>{
+                location.assign(`/home`);
+            }, 1500);
+        }
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
     }
 };
 

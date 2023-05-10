@@ -1,3 +1,5 @@
+'use strict'
+
 async function loadJSON(url, options) {
     try {
         const response = await fetch(url, options)
@@ -66,4 +68,25 @@ async function createCheckout(id) {
     }
 }
 
-export { loadJSON, getRoom, getScreening, postReservation, createCheckout }
+async function deleteMe() {
+    try {
+        const result = await loadJSON(
+            `${location.origin}/api/v1/users/deleteMe`,
+            {
+                method: 'DELETE',
+            }
+        )
+        return result
+    } catch (error) {
+        return error
+    }
+}
+
+export {
+    loadJSON,
+    getRoom,
+    getScreening,
+    postReservation,
+    createCheckout,
+    deleteMe,
+}
