@@ -10,6 +10,7 @@ const getHomePage = catchAsync(async (req, res, next) => {
     const cinemas = await Cinema.find()
     res.status(200).render('home', {
         cinemas,
+        carousel: true,
     })
 })
 

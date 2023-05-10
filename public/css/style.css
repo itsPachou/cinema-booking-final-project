@@ -585,6 +585,12 @@ section.section__cinema-list, section.section__screening-list {
   font-weight: 400;
 }
 
+.carousel-height {
+  max-height: 300px !important;
+  object-fit: contain !important;
+  background-color: #0a1121;
+}
+
 #cinema-list a, 
 #cinema-list a:link,
 #cinema-list a:visited,
