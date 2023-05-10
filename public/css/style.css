@@ -225,7 +225,8 @@ section.section__cinema-list, section.section__screening-list {
   background-color: #2e864b;
 }
 
-#cinema-list {
+#cinema-list,
+.user-bookings-container {
   display: flex;
   flex-wrap: wrap;
 }
@@ -501,7 +502,7 @@ section.section__cinema-list, section.section__screening-list {
 
 .success-container {
   display: grid;
-  column-gap: 2rem;
+  row-gap: 2rem;
   justify-items: center;
   background-color: #0a1121;
   padding: 2rem;
@@ -535,9 +536,55 @@ section.section__cinema-list, section.section__screening-list {
   font-weight: 300;
 }
 
+.user-page-heading {
+  color: #e2e8f0;
+  font-size: 4rem;
+  font-weight: 500;
+}
+
+.user-page-container {
+  padding: 1rem 2rem;
+  background-color: #0a1121;
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+}
+
+.user-details-container {
+  display: grid;
+  row-gap: 1rem;
+}
+
+.user-details h3 {
+  color: #e2e8f0;
+}
+
+.user-details a,
+.user-details a:visited,
+.user-details a:link {
+  text-decoration: none;
+  cursor: pointer;
+  color:#94a3b8;
+}
+
+.user-details a:hover {
+  text-decoration: underline;
+  filter: brightness(1.2);
+}
+
+.booking-link p:not(:last-child) {
+  font-weight: 400;
+}
+
+.booking-link p:last-child span {
+  font-weight: 400;
+}
+
 #cinema-list a, 
 #cinema-list a:link,
-#cinema-list a:visited {
+#cinema-list a:visited,
+a.booking-link,
+a.booking-link:link,
+a.booking-link:visited {
   flex: 1 1 450px;
   text-decoration: none !important;
   text-transform: uppercase;
@@ -553,7 +600,8 @@ section.section__cinema-list, section.section__screening-list {
   transition: all .2s;
 }
 
-#cinema-list a:hover {
+#cinema-list a:hover,
+a.booking-link:hover {
   filter: brightness(1.4)
 }
 
@@ -828,9 +876,16 @@ section.section__cinema-list, section.section__screening-list {
     border-bottom-right-radius: 1vw;
   }
 
+  .user-details-container {
+    grid-template-columns: auto auto;
+  }
+
   #cinema-list a, 
   #cinema-list a:link,
-  #cinema-list a:visited {
+  #cinema-list a:visited,
+  a.booking-link,
+  a.booking-link:link,
+  a.booking-link:visited {
     margin: .4rem 2rem;
     font-size: 2.5rem;
   }

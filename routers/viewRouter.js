@@ -45,4 +45,6 @@ viewRouter
     .route('/bookingSuccess/:bookingID')
     .get(authController.protect, viewsController.getBookingSuccessPage)
 
+viewRouter.route('/me').get(authController.protect, viewsController.getUserPage)
+
 export default viewRouter

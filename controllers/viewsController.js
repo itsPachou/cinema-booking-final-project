@@ -91,6 +91,34 @@ const getBookingSuccessPage = catchAsync(async (req, res, next) => {
     res.status(200).render('bookingSuccess')
 })
 
+const getUserPage = catchAsync(async (req, res, next) => {
+    const bookings = await Booking.find({ userID: req.user._id, paid: true })
+    const screeningIDArray = bookings.map((el) => el.screeningID)
+    const screenings = await Screening.find({ _id: screeningIDArray }).populate(
+        'movieID'
+    )
+    const activeBookings = []
+    const pastBookings = []
+    bookings.forEach((el) => {
+        const sc = screenings.find(
+            (screening) => screening.id === el.screeningID.id
+        )
+        if (
+            Date.parse(sc.date) + sc.movieID.runtime * 60 * 1000 >=
+            Date.now()
+        ) {
+            activeBookings.push(el)
+        } else {
+            pastBookings.push(el)
+        }
+    })
+    res.status(200).render('userPage', {
+        activeBookings,
+        pastBookings,
+        screenings,
+    })
+})
+
 export {
     getHomePage,
     getCinemaPage,
@@ -100,4 +128,5 @@ export {
     getCheckoutPage,
     getSummaryPage,
     getBookingSuccessPage,
+    getUserPage,
 }

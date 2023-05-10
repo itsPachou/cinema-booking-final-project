@@ -1,0 +1,39 @@
+extends base 
+
+mixin bookingElement(screening, booking)
+    a.booking-link(href=`/pass/${booking._id}`)= `${screening.date.toLocaleTimeString('en', {timeStyle: 'short'})}, ${screening.date.toDateString()}`
+        p= screening.movieID.title 
+        p= screening.screeningType + (screening.audioType==='original' ? '' : ` - ${screening.audioType.slice(0,3)}`) + (screening.audioLanguage==='none' ? ` - ${screening.movieID.language.slice(0,3)}` : ` - ${screening.audioLanguage.slice(0,3)}`)
+        p Seats: 
+            each ticket, index in booking.tickets 
+                span= `${ticket.seatName} ` + ((index<booking.tickets.length-1) ? '| ' : '')
+
+
+block content 
+    .container
+        h2.user-page-heading Account details
+        .user-page-container 
+            .user-details-container
+                .user-details 
+                    h3 Name: 
+                    p= `${user.firstName} ${user.lastName}`
+                    h3 Email: 
+                    p= user.email
+                    if user.phoneNumber
+                        h3 Phone number: 
+                        p= user.phoneNumber
+                .user-details
+                    h3 Password settings
+                    a(href="#") Update password 
+                    h3 Account settings 
+                    a(href="#") Delete account 
+        h2.user-page-heading Bookings
+        .user-page-container
+            .user-bookings-container 
+                each booking in activeBookings 
+                    +bookingElement(screenings.find(el => el.id === booking.screeningID.id), booking)
+        h2.user-page-heading Past bookings
+        .user-page-container 
+            .user-bookings-container
+                each booking in pastBookings 
+                    +bookingElement(screenings.find(el => el.id === booking.screeningID.id), booking)
