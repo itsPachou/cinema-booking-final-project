@@ -1034,6 +1034,6 @@ const deleteAccount = async ()=>{
     }
 };
 
-},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

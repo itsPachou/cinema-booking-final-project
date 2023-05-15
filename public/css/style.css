@@ -577,6 +577,12 @@ section.section__cinema-list, section.section__screening-list {
   color: #e42626;
 }
 
+.user-details a.delete-account:hover {
+  text-decoration: underline;
+  filter: brightness(1.2);
+  color: #e42626;
+}
+
 .booking-link p:not(:last-child) {
   font-weight: 400;
 }
@@ -585,10 +591,44 @@ section.section__cinema-list, section.section__screening-list {
   font-weight: 400;
 }
 
+.user-page-admin-link,
+.user-page-admin-link:link,
+.user-page-admin-link:visited {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  background-color: #0a1121;
+  border: .5px solid #e2e8f0;
+  border-radius: 2rem;
+  color: #e2e8f0;
+  padding: 1rem 0;
+  opacity: 70%;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.user-page-admin-link:hover {
+  opacity: 100%;
+}
+
 .carousel-height {
   max-height: 300px !important;
   object-fit: contain !important;
   background-color: #0a1121;
+}
+
+.carousel-caption h5 {
+  font-size: 2.5rem;
+  color: #e2e8f0;
+  text-shadow: 1px 1px 2px black;
+}
+
+.carousel-caption p {
+  font-size: 2rem;
+  color: #e2e8f0;
+  text-shadow: 1px 1px 2px black;
 }
 
 #cinema-list a, 
