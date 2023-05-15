@@ -5,6 +5,7 @@ import Movie from '../models/movieModel.js'
 import groupByMovie from '../utils/groupByMovie.js'
 import AppError from '../utils/appError.js'
 import Booking from '../models/bookingModel.js'
+import Room from '../models/roomModel.js'
 
 const getHomePage = catchAsync(async (req, res, next) => {
     const cinemas = await Cinema.find()
@@ -120,8 +121,46 @@ const getUserPage = catchAsync(async (req, res, next) => {
     })
 })
 
-const getConsolePage = catchAsync(async (req, res, next) => {
+const getConsolePage = (req, res, next) => {
     res.status(200).render('console')
+}
+
+const getResourceConsolePage = catchAsync(async (req, res, next) => {
+    if (
+        !['cinemas', 'users', 'movies', 'screenings', 'rooms'].includes(
+            req.params.resource
+        )
+    ) {
+        return next(
+            new AppError(`No such resource ${req.params.resource}`, 404)
+        )
+    }
+    if (req.params.resource === 'users') {
+        // users special case
+    }
+    let model
+    switch (req.params.resource) {
+        case 'cinemas':
+            model = Cinema
+            break
+        case 'rooms':
+            model = Room
+            break
+        case 'screenings':
+            model = Screening
+            break
+        case 'movies':
+            model = Movie
+            break
+
+        default:
+            break
+    }
+    const data = model.find({})
+
+    res.status(200).render('resourceConsole', {
+        data,
+    })
 })
 
 export {
@@ -135,4 +174,5 @@ export {
     getBookingSuccessPage,
     getUserPage,
     getConsolePage,
+    getResourceConsolePage,
 }

@@ -55,4 +55,12 @@ viewRouter
         viewsController.getConsolePage
     )
 
+viewRouter
+    .route('/console/:resource')
+    .get(
+        authController.protect,
+        authController.restrictTo('employee', 'admin'),
+        viewsController.getResourceConsolePage
+    )
+
 export default viewRouter
