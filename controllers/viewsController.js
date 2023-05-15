@@ -156,7 +156,7 @@ const getResourceConsolePage = catchAsync(async (req, res, next) => {
         default:
             break
     }
-    const data = model.find({})
+    const data = await model.find({})
 
     res.status(200).render('resourceConsole', {
         data,
