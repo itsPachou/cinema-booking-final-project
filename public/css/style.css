@@ -577,12 +577,6 @@ section.section__cinema-list, section.section__screening-list {
   color: #e42626;
 }
 
-.user-details a.delete-account:hover {
-  text-decoration: underline;
-  filter: brightness(1.2);
-  color: #e42626;
-}
-
 .booking-link p:not(:last-child) {
   font-weight: 400;
 }
