@@ -1,0 +1,26 @@
+extends base 
+
+block content 
+    .container 
+        .warning-view-experience
+            span.material-symbols-outlined warning 
+            |  For best experience use large screen devices
+        h1.console-main-heading= `${user.role} Console`
+        p.console-main-comment
+            span Here you can manage the CinemaGO website. Control 
+            if user.role === 'admin'
+                span cinema locations, screening rooms, movies, screenings, and users.
+            else 
+                span movies, screenings.
+        .console-resource-list 
+            a.console-resource-link(href="/console/movies") Movies
+                .console-resource-link-comment View, delete, update and create new movie listings.
+            a.console-resource-link(href="/console/screenings") Screenings
+                .console-resource-link-comment View, delete, update and create new screenings.
+            if user.role === 'admin'
+                a.console-resource-link(href="/console/users") Users
+                    .console-resource-link-comment View and manage users' permissions.
+                a.console-resource-link(href="/console/cinemas") Cinemas 
+                    .console-resource-link-comment View, delete, update and create new cinema locations.
+                a.console-resource-link(href="/console/rooms") Rooms
+                    .console-resource-link-comment View, delete, update and create new screening rooms.

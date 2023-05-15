@@ -47,4 +47,12 @@ viewRouter
 
 viewRouter.route('/me').get(authController.protect, viewsController.getUserPage)
 
+viewRouter
+    .route('/console')
+    .get(
+        authController.protect,
+        authController.restrictTo('employee', 'admin'),
+        viewsController.getConsolePage
+    )
+
 export default viewRouter

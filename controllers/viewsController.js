@@ -120,6 +120,10 @@ const getUserPage = catchAsync(async (req, res, next) => {
     })
 })
 
+const getConsolePage = catchAsync(async (req, res, next) => {
+    res.status(200).render('console')
+})
+
 export {
     getHomePage,
     getCinemaPage,
@@ -130,4 +134,5 @@ export {
     getSummaryPage,
     getBookingSuccessPage,
     getUserPage,
+    getConsolePage,
 }
