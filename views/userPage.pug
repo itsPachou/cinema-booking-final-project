@@ -12,7 +12,7 @@ mixin bookingElement(screening, booking)
 block content 
     .container
         if user.role !== 'client'
-            a.user-page-admin-link(href="/admin")= `${user.role} Console`
+            a.user-page-admin-link(href="/console")= `${user.role} Console`
         h2.user-page-heading Account details
         .user-page-container 
             .user-details-container
