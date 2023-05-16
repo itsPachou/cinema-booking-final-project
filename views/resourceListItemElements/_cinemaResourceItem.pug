@@ -1,0 +1,14 @@
+.resource-list-item-content
+    .resource-item-heading= itemData.locationName
+    .resource-item-pair 
+        span.resource-item-key ID:  
+        span.resource-item-value= itemData.id 
+    .resource-item-pair 
+        span.resource-item-key Postcode:  
+        span.resource-item-value= itemData.postcode 
+    .resource-item-pair 
+        span.resource-item-key Address:
+        span.resource-item-value= itemData.address 
+    .resource-item-pair 
+        span.resource-item-key Location:  
+        span.resource-item-value= itemData.location.join(', ') 

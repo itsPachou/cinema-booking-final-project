@@ -1,0 +1,23 @@
+.resource-list-item-content
+    .resource-item-heading= `${itemData.cinemaID} - Room ${itemData.roomNumber}`
+    .resource-item-pair 
+        span.resource-item-key ID:  
+        span.resource-item-value= itemData.id 
+    .resource-item-pair 
+        span.resource-item-key Cinema ID:  
+        span.resource-item-value= itemData.cinemaID 
+    .resource-item-pair 
+        span.resource-item-key Room number:  
+        span.resource-item-value= itemData.roomNumber 
+    .resource-item-pair 
+        span.resource-item-key Active:  
+        span.resource-item-value= (itemData.isActive) ? 'Yes' : 'No'
+    .resource-item-pair 
+        span.resource-item-key Number of Rows:  
+        span.resource-item-value= itemData.dimensions.length 
+    .resource-item-pair 
+        span.resource-item-key Number of Columns:  
+        span.resource-item-value= itemData.dimensions.width 
+    .resource-item-pair 
+        span.resource-item-key Seating arrangement:  
+        span.resource-item-value= 'To be implemented'

@@ -54,7 +54,7 @@ block content
                 .resource-console-toolbar-search 
                     input#resource-search-bar(type="text" placeholder="Search by heading...")
             .resource-console-list
-                each dataItem in data.sort((a, b) => { if(a.title<b.title) {return -1} else {return 1}})
+                each dataItem in data
                     +resourceListItem(resource, dataItem)
     +createEditDialog(resource)
     
