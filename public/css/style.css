@@ -692,6 +692,7 @@ section.section__cinema-list, section.section__screening-list {
   font-size: 1.6rem;
   color: #e2e8f0;
   opacity: 70%;
+  cursor: pointer;
 }
 
 .resource-toolbar-btn:hover,
@@ -769,6 +770,27 @@ section.section__cinema-list, section.section__screening-list {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+dialog {
+  width: 85%;
+  margin: 5rem auto;
+  min-height: min-content;
+  border: 1px solid #a5b4c955;
+  border-radius: 10px;
+  max-height: 85%;
+  padding: 2rem 0;
+  background-color: #0a101f;
+  color: #a5b4c9;
+}
+
+.form-group input {
+  color-scheme: dark;
+}
+
+.resource-form-btns {
+  display: flex;
+  justify-content: space-between;
 }
 
 .carousel-height {

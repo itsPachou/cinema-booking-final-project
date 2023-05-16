@@ -9,7 +9,7 @@ import {
 } from './checkout.js'
 import { goToCheckout } from './summary.js'
 import { deleteAccount } from './userPage.js'
-import { filterResourceList } from './resourceConsole.js'
+import { filterResourceList, openNewResourceModal } from './resourceConsole.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -23,6 +23,13 @@ const proceedBtn = document.querySelector('.confirm-seats-btn')
 const proceedPaymentBtn = document.querySelector('.proceed-payment-btn')
 const deleteAccountLink = document.querySelector('.delete-account')
 const resourceSearchBar = document.getElementById('resource-search-bar')
+const resourceNewBtn = document.getElementById('resource-new-btn')
+const resourceEditBtn = document.getElementById('resource-edit-btn')
+const resourceDeleteBtn = document.getElementById('resource-delete-btn')
+const resourceFormCancelBtn = document.getElementById(
+    'resource-form-cancel-btn'
+)
+const movieForm = document.getElementById('movieForm')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -111,4 +118,20 @@ if (resourceSearchBar) {
     resourceSearchBar.addEventListener('input', (e) =>
         filterResourceList(e.target)
     )
+}
+
+if (resourceNewBtn) {
+    resourceNewBtn.addEventListener('click', (e) => openNewResourceModal())
+}
+
+if (resourceFormCancelBtn) {
+    resourceFormCancelBtn.addEventListener('click', (e) => {
+        document.getElementById('create-edit-dialog').close()
+    })
+}
+
+if (movieForm) {
+    movieForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+    })
 }

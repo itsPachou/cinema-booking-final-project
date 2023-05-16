@@ -1,0 +1,42 @@
+.form-box
+    h2.heading-login-form Log into your account
+    form#movieForm
+        .form-group
+            label.form-label(for='movie-title') Title *
+            input#movie-title.form-input(type='text', placeholder='Movie Title', required)
+        .form-group
+            label.form-label(for='movie-synopsis') Synopsis
+            input#movie-synopsis.form-input(type='text', placeholder='A short movie description...')
+        .form-group
+            label.form-label(for='movie-runtime') Runtime *
+            input#movie-runtime.form-input(type='number', placeholder='Runtime in minutes', required)
+        .form-group
+            label.form-label(for='movie-release-date') Release date *
+            input#movie-release-date.form-input(type='date', required)
+        .form-group
+            label.form-label(for='movie-director') Director
+            input#movie-director.form-input(type='text', placeholder='John Example')
+        .form-group
+            label.form-label(for='movie-classification') Classification *
+            select#movie-classification.form-input(required)
+                option(value="") --Please select a rating--
+                option(value="U") U - Suitable for all
+                option(value="PG") PG - Parental guidance
+                option(value="12A") 12A - Cinema release suitable for 12 years and over
+                option(value="12") 12 - Video release suitable for 12 years and over
+                option(value="15") 15 - Suitable only for 15 years and over
+                option(value="18") 18 - Suitable only for adults
+                option(value="R18") R18 - Adults works for licensed premises only
+        .form-group
+            label.form-label(for='movie-cast') Cast *
+            input#movie-cast.form-input(type='text', placeholder='Comma separated list of cast member', required)
+        .form-group
+            label.form-label(for='movie-language') Language *
+            input#movie-language.form-input(type='text', placeholder='Original language of the movie', required)
+        .form-group
+            label.form-label(for='movie-cast') Thumbnail location *
+            input#movie-cast.form-input(type='text', placeholder='Location (URL or location on server) of the movie poster (prefered 480x300px)', required)
+        .form-group.resource-form-btns
+            button.btn-login#resource-form-cancel-btn(type='button') Cancel
+            button.btn-login(type='submit') Create
+        .required-info * required fields

@@ -16,4 +16,9 @@ const filterResourceList = (target) => {
     }
 }
 
-export { filterResourceList }
+const openNewResourceModal = () => {
+    const createDialog = document.getElementById('create-edit-dialog')
+    createDialog.showModal()
+}
+
+export { filterResourceList, openNewResourceModal }

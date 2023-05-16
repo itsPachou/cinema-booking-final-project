@@ -574,6 +574,11 @@ const proceedBtn = document.querySelector(".confirm-seats-btn");
 const proceedPaymentBtn = document.querySelector(".proceed-payment-btn");
 const deleteAccountLink = document.querySelector(".delete-account");
 const resourceSearchBar = document.getElementById("resource-search-bar");
+const resourceNewBtn = document.getElementById("resource-new-btn");
+const resourceEditBtn = document.getElementById("resource-edit-btn");
+const resourceDeleteBtn = document.getElementById("resource-delete-btn");
+const resourceFormCancelBtn = document.getElementById("resource-form-cancel-btn");
+const movieForm = document.getElementById("movieForm");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -615,6 +620,13 @@ if (proceedPaymentBtn) proceedPaymentBtn.addEventListener("click", (e)=>{
 });
 if (deleteAccountLink) deleteAccountLink.addEventListener("click", (e)=>(0, _userPageJs.deleteAccount)());
 if (resourceSearchBar) resourceSearchBar.addEventListener("input", (e)=>(0, _resourceConsoleJs.filterResourceList)(e.target));
+if (resourceNewBtn) resourceNewBtn.addEventListener("click", (e)=>(0, _resourceConsoleJs.openNewResourceModal)());
+if (resourceFormCancelBtn) resourceFormCancelBtn.addEventListener("click", (e)=>{
+    document.getElementById("create-edit-dialog").close();
+});
+if (movieForm) movieForm.addEventListener("submit", (e)=>{
+    e.preventDefault();
+});
 
 },{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN","./userPage.js":"bLBCY","./resourceConsole.js":"ibxqy"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1041,11 +1053,16 @@ const deleteAccount = async ()=>{
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "filterResourceList", ()=>filterResourceList);
+parcelHelpers.export(exports, "openNewResourceModal", ()=>openNewResourceModal);
 const resourceListItems = document.querySelectorAll(".resource-list-item");
 const filterResourceList = (target)=>{
     const searchTerm = target.value.trim().toLowerCase();
     for (const item of resourceListItems)if (item.lastChild.firstChild.firstChild.innerText.trim().toLowerCase().includes(searchTerm)) item.classList.remove("resource-not-matched");
     else item.classList.add("resource-not-matched");
+};
+const openNewResourceModal = ()=>{
+    const createDialog = document.getElementById("create-edit-dialog");
+    createDialog.showModal();
 };
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")

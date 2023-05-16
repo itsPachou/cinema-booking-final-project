@@ -23,7 +23,7 @@ const movieSchema = new mongoose.Schema({
     },
     classification: {
         type: String,
-        enum: ['U', 'PG', '12A', '12', '15', '18'],
+        enum: ['U', 'PG', '12A', '12', '15', '18', 'R18'],
         required: true,
     },
     cast: [String],
