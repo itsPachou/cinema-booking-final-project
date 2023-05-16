@@ -714,7 +714,7 @@ section.section__cinema-list, section.section__screening-list {
 }
 
 .resource-console-list {
-  max-height: 45vh;
+  max-height: 42vh;
   display: flex;
   flex-direction: column;
   border: 1px solid #a5b4c955;
@@ -1065,7 +1065,7 @@ a.booking-link:hover {
 @media screen and (min-width: 600px) {
 
   .resource-console-list {
-    max-height: 55vh;
+    max-height: 52vh;
   }
 
   .row-char-column div {
