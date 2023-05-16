@@ -1,26 +1,25 @@
 .resource-form-box
-    if updating
-        p.resource-form-id ID:
+    p.resource-form-id
     h2.heading-login-form Create a new movie 
     form#movieForm
         .form-group
-            label.form-label(for='movie-title') Title *
-            input#movie-title.form-input(type='text', placeholder='Movie Title', required)
+            label.form-label(for='movies-title') Title *
+            input#movies-title.form-input(type='text', placeholder='Movie Title', required)
         .form-group
-            label.form-label(for='movie-synopsis') Synopsis
-            input#movie-synopsis.form-input(type='text', placeholder='A short movie description...')
+            label.form-label(for='movies-synopsis') Synopsis
+            input#movies-synopsis.form-input(type='text', placeholder='A short movie description...')
         .form-group
-            label.form-label(for='movie-runtime') Runtime *
-            input#movie-runtime.form-input(type='number', placeholder='Runtime in minutes', required)
+            label.form-label(for='movies-runtime') Runtime *
+            input#movies-runtime.form-input(type='number', placeholder='Runtime in minutes', required)
         .form-group
-            label.form-label(for='movie-release-date') Release date *
-            input#movie-release-date.form-input(type='date', required)
+            label.form-label(for='movies-releaseDate') Release date *
+            input#movies-releaseDate.form-input(type='date', required)
         .form-group
-            label.form-label(for='movie-director') Director
-            input#movie-director.form-input(type='text', placeholder='John Example')
+            label.form-label(for='movies-director') Director
+            input#movies-director.form-input(type='text', placeholder='John Example')
         .form-group
-            label.form-label(for='movie-classification') Classification *
-            select#movie-classification.form-input(required)
+            label.form-label(for='movies-classification') Classification *
+            select#movies-classification.form-input(required)
                 option(value="") --Please select a rating--
                 option(value="U") U - Suitable for all
                 option(value="PG") PG - Parental guidance
@@ -30,15 +29,15 @@
                 option(value="18") 18 - Suitable only for adults
                 option(value="R18") R18 - Adults works for licensed premises only
         .form-group
-            label.form-label(for='movie-cast') Cast *
-            input#movie-cast.form-input(type='text', placeholder='Comma separated list of cast member', required)
+            label.form-label(for='movies-cast') Cast *
+            input#movies-cast.form-input(type='text', placeholder='Comma separated list of cast member', required)
         .form-group
-            label.form-label(for='movie-language') Language *
-            input#movie-language.form-input(type='text', placeholder='Original language of the movie', required)
+            label.form-label(for='movies-language') Language *
+            input#movies-language.form-input(type='text', placeholder='Original language of the movie', required)
         .form-group
-            label.form-label(for='movie-cast') Thumbnail location *
-            input#movie-cast.form-input(type='text', placeholder='Location (URL or location on server) of the movie poster (prefered 480x300px)', required)
+            label.form-label(for='movies-cast') Thumbnail location *
+            input#movies-cast.form-input(type='text', placeholder='Location (URL or location on server) of the movie poster (prefered 480x300px)', required)
         .form-group.resource-form-btns
             button.btn-login#resource-form-cancel-btn(type='button') Cancel
-            button.btn-login(type='submit')= (updating) ? 'Update' : 'Create'
+            button.btn-login#resource-form-submit-btn(type='submit') Confirm
         .required-info * required fields

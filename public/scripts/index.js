@@ -9,7 +9,12 @@ import {
 } from './checkout.js'
 import { goToCheckout } from './summary.js'
 import { deleteAccount } from './userPage.js'
-import { filterResourceList, openNewResourceModal } from './resourceConsole.js'
+import {
+    filterResourceList,
+    openNewResourceModal,
+    openEditResourceModal,
+    handleDeleteResource,
+} from './resourceConsole.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -26,6 +31,9 @@ const resourceSearchBar = document.getElementById('resource-search-bar')
 const resourceNewBtn = document.getElementById('resource-new-btn')
 const resourceEditBtn = document.getElementById('resource-edit-btn')
 const resourceDeleteBtn = document.getElementById('resource-delete-btn')
+const resourceItemRadios = document.querySelectorAll(
+    '.resource-list-item input'
+)
 const resourceFormCancelBtn = document.getElementById(
     'resource-form-cancel-btn'
 )
@@ -127,6 +135,34 @@ if (resourceNewBtn) {
 if (resourceFormCancelBtn) {
     resourceFormCancelBtn.addEventListener('click', (e) => {
         document.getElementById('create-edit-dialog').close()
+    })
+}
+
+if (resourceItemRadios) {
+    console.log(resourceItemRadios)
+    resourceItemRadios.forEach((radio) => {
+        radio.addEventListener('change', (e) => {
+            resourceEditBtn.disabled = false
+            resourceDeleteBtn.disabled = false
+        })
+    })
+}
+
+if (resourceEditBtn) {
+    resourceEditBtn.addEventListener('click', (e) => {
+        const itemId = document.querySelector(
+            '.resource-list-item input:checked'
+        ).value
+        openEditResourceModal(itemId, e.target.dataset.resource)
+    })
+}
+
+if (resourceDeleteBtn) {
+    resourceDeleteBtn.addEventListener('click', (e) => {
+        const itemId = document.querySelector(
+            '.resource-list-item input:checked'
+        ).value
+        handleDeleteResource(itemId, e.target.dataset.resource)
     })
 }
 

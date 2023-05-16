@@ -577,6 +577,7 @@ const resourceSearchBar = document.getElementById("resource-search-bar");
 const resourceNewBtn = document.getElementById("resource-new-btn");
 const resourceEditBtn = document.getElementById("resource-edit-btn");
 const resourceDeleteBtn = document.getElementById("resource-delete-btn");
+const resourceItemRadios = document.querySelectorAll(".resource-list-item input");
 const resourceFormCancelBtn = document.getElementById("resource-form-cancel-btn");
 const movieForm = document.getElementById("movieForm");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
@@ -623,6 +624,23 @@ if (resourceSearchBar) resourceSearchBar.addEventListener("input", (e)=>(0, _res
 if (resourceNewBtn) resourceNewBtn.addEventListener("click", (e)=>(0, _resourceConsoleJs.openNewResourceModal)());
 if (resourceFormCancelBtn) resourceFormCancelBtn.addEventListener("click", (e)=>{
     document.getElementById("create-edit-dialog").close();
+});
+if (resourceItemRadios) {
+    console.log(resourceItemRadios);
+    resourceItemRadios.forEach((radio)=>{
+        radio.addEventListener("change", (e)=>{
+            resourceEditBtn.disabled = false;
+            resourceDeleteBtn.disabled = false;
+        });
+    });
+}
+if (resourceEditBtn) resourceEditBtn.addEventListener("click", (e)=>{
+    const itemId = document.querySelector(".resource-list-item input:checked").value;
+    (0, _resourceConsoleJs.openEditResourceModal)(itemId, e.target.dataset.resource);
+});
+if (resourceDeleteBtn) resourceDeleteBtn.addEventListener("click", (e)=>{
+    const itemId = document.querySelector(".resource-list-item input:checked").value;
+    (0, _resourceConsoleJs.handleDeleteResource)(itemId, e.target.dataset.resource);
 });
 if (movieForm) movieForm.addEventListener("submit", (e)=>{
     e.preventDefault();
@@ -714,6 +732,9 @@ parcelHelpers.export(exports, "getScreening", ()=>getScreening);
 parcelHelpers.export(exports, "postReservation", ()=>postReservation);
 parcelHelpers.export(exports, "createCheckout", ()=>createCheckout);
 parcelHelpers.export(exports, "deleteMe", ()=>deleteMe);
+parcelHelpers.export(exports, "getResource", ()=>getResource);
+parcelHelpers.export(exports, "submitResource", ()=>submitResource);
+parcelHelpers.export(exports, "deleteResource", ()=>deleteResource);
 "use strict";
 async function loadJSON(url, options) {
     try {
@@ -729,17 +750,17 @@ async function loadJSON(url, options) {
         console.log(error);
     }
 }
-async function getRoom(id) {
+async function getRoom(id1) {
     try {
-        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id}`);
+        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id1}`);
         return result.data.room;
     } catch (error) {
         console.log(error);
     }
 }
-async function getScreening(id) {
+async function getScreening(id1) {
     try {
-        const result = await loadJSON(`${location.origin}/api/v1/screenings/${id}`);
+        const result = await loadJSON(`${location.origin}/api/v1/screenings/${id1}`);
         return result.data.screening;
     } catch (error) {
         console.log(error);
@@ -762,9 +783,9 @@ async function postReservation(screeningID, tickets) {
         return error;
     }
 }
-async function createCheckout(id) {
+async function createCheckout(id1) {
     try {
-        const session = await loadJSON(`${location.origin}/api/v1/bookings/checkout/bookings/${id}`, {
+        const session = await loadJSON(`${location.origin}/api/v1/bookings/checkout/bookings/${id1}`, {
             method: "POST"
         });
         return session.session;
@@ -782,6 +803,34 @@ async function deleteMe() {
     } catch (error) {
         return error;
     }
+}
+async function getResource(id1, resource) {
+    const result = await loadJSON(`${location.origin}/api/v1/${resource}/${id1}`);
+    return result.data[resource.substring(0, resource.length - 1)];
+}
+async function submitResource(data, resource) {
+    if (data.id) {
+        delete data.id;
+        return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+    }
+    return await loadJSON(`${location.origin}/api/v1/${resource}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+}
+async function deleteResource(id1, resource) {
+    return await loadJSON(`${location.origin}/api/v1/${resource}/${id1}`, {
+        method: "DELETE"
+    });
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"5Birt":[function(require,module,exports) {
@@ -1054,6 +1103,10 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "filterResourceList", ()=>filterResourceList);
 parcelHelpers.export(exports, "openNewResourceModal", ()=>openNewResourceModal);
+parcelHelpers.export(exports, "openEditResourceModal", ()=>openEditResourceModal);
+parcelHelpers.export(exports, "handleDeleteResource", ()=>handleDeleteResource);
+var _alertsJs = require("./alerts.js");
+var _backEndConnectionsJs = require("./backEndConnections.js");
 const resourceListItems = document.querySelectorAll(".resource-list-item");
 const filterResourceList = (target)=>{
     const searchTerm = target.value.trim().toLowerCase();
@@ -1064,7 +1117,43 @@ const openNewResourceModal = ()=>{
     const createDialog = document.getElementById("create-edit-dialog");
     createDialog.showModal();
 };
+const openEditResourceModal = async (itemId, resource)=>{
+    try {
+        const resourceData = await (0, _backEndConnectionsJs.getResource)(itemId, resource);
+        delete resourceData._id;
+        delete resourceData.__v;
+        if (resourceData.slug) delete resourceData.slug;
+        console.log(resourceData);
+        const editDialog = document.getElementById("create-edit-dialog");
+        const resourceFormItemID = document.querySelector(".resource-form-id");
+        resourceFormItemID.innerText = `ID: ${itemId}`;
+        for(const prop in resourceData){
+            const formInput = document.getElementById(`${resource}-${prop}`);
+            if (formInput.tagName === "SELECT") document.querySelector(`option[value="${resourceData[prop]}"]`).selected = true;
+            else if (formInput.type === "date") {
+                const dateObj = new Date(resourceData["releaseDate"]);
+                formInput.value = resourceData[prop].substring(0, dateObj.toISOString().indexOf("T"));
+            } else formInput.value = !Array.isArray(resourceData[prop]) ? resourceData[prop] : resourceData[prop].join(", ");
+        }
+        editDialog.showModal();
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
+const handleDeleteResource = async (itemId, resource)=>{
+    try {
+        if (window.confirm(`Are you sure you want to delete this ${resource.substring(0, resource.length - 1)}?`)) {
+            await (0, _backEndConnectionsJs.deleteResource)(itemId, resource);
+            (0, _alertsJs.showAlert)("success", "Successfully deleted resource.");
+            window.setTimeout(()=>{
+                location.reload();
+            }, 1500);
+        }
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./backEndConnections.js":"erlY1","./alerts.js":"TpGze"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map
