@@ -9,6 +9,7 @@ import {
 } from './checkout.js'
 import { goToCheckout } from './summary.js'
 import { deleteAccount } from './userPage.js'
+import { filterResourceList } from './resourceConsole.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -21,6 +22,7 @@ const seatSelectionDiv = document.querySelector('.seats-selection')
 const proceedBtn = document.querySelector('.confirm-seats-btn')
 const proceedPaymentBtn = document.querySelector('.proceed-payment-btn')
 const deleteAccountLink = document.querySelector('.delete-account')
+const resourceSearchBar = document.getElementById('resource-search-bar')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -103,4 +105,10 @@ if (proceedPaymentBtn) {
 
 if (deleteAccountLink) {
     deleteAccountLink.addEventListener('click', (e) => deleteAccount())
+}
+
+if (resourceSearchBar) {
+    resourceSearchBar.addEventListener('input', (e) =>
+        filterResourceList(e.target)
+    )
 }

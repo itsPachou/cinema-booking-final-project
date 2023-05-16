@@ -1,0 +1,47 @@
+extends base
+
+mixin mainCommentTail(name)
+    if name === 'movies'
+        span movie listings.
+    else if name === 'cinemas'
+        span cinema locations.
+    else if name === 'rooms'
+        span screening rooms.
+    else
+        span screenings. 
+
+mixin resourceListItem(groupName, itemData)
+    .resource-list-item 
+        input(type="radio" name=groupName id=itemData.id value=itemData.id)
+        label(for=itemData.id)
+            if groupName === 'movies'
+                include resourceListItemElements/_movieResourceItem.pug
+            else if groupName === 'cinemas'
+                include resourceListItemElements/_movieResourceItem.pug
+            else if groupName === 'rooms'
+                include resourceListItemElements/_movieResourceItem.pug
+            else if groupName === 'screenings'
+                include resourceListItemElements/_movieResourceItem.pug
+
+block content 
+    .container
+        .warning-view-experience
+            span.material-symbols-outlined warning 
+            |  For best experience use large screen devices
+        h1.console-main-heading= `Console: ${resource.charAt(0).toUpperCase()}${resource.substring(1)}`
+        p.console-main-comment
+            span View, delete, update and create new 
+            +mainCommentTail(resource)
+        .resource-console-container
+            .resource-console-toolbar
+                .resource-console-toolbar-btns
+                    button.resource-toolbar-btn 
+                        span.material-symbols-outlined add
+                        span New
+                    button.resource-toolbar-btn(disabled) Edit
+                    button.resource-toolbar-btn(disabled) Delete
+                .resource-console-toolbar-search 
+                    input#resource-search-bar(type="text" placeholder="Search by heading...")
+            .resource-console-list
+                each dataItem in data.sort((a, b) => { if(a.title<b.title) {return -1} else {return 1}})
+                    +resourceListItem(resource, dataItem)

@@ -160,6 +160,7 @@ const getResourceConsolePage = catchAsync(async (req, res, next) => {
 
     res.status(200).render('resourceConsole', {
         data,
+        resource: req.params.resource,
     })
 })
 
