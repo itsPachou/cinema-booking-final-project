@@ -1,5 +1,7 @@
-.form-box
-    h2.heading-login-form Log into your account
+.resource-form-box
+    if updating
+        p.resource-form-id ID:
+    h2.heading-login-form Create a new movie 
     form#movieForm
         .form-group
             label.form-label(for='movie-title') Title *
@@ -38,5 +40,5 @@
             input#movie-cast.form-input(type='text', placeholder='Location (URL or location on server) of the movie poster (prefered 480x300px)', required)
         .form-group.resource-form-btns
             button.btn-login#resource-form-cancel-btn(type='button') Cancel
-            button.btn-login(type='submit') Create
+            button.btn-login(type='submit')= (updating) ? 'Update' : 'Create'
         .required-info * required fields

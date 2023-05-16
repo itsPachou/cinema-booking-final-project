@@ -56,6 +56,5 @@ block content
             .resource-console-list
                 each dataItem in data.sort((a, b) => { if(a.title<b.title) {return -1} else {return 1}})
                     +resourceListItem(resource, dataItem)
-
-block prepend content 
     +createEditDialog(resource)
+    

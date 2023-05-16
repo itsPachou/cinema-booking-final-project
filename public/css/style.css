@@ -784,6 +784,15 @@ dialog {
   color: #a5b4c9;
 }
 
+dialog::backdrop {
+	backdrop-filter: blur(5px);
+}
+
+.resource-form-box {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .form-group input {
   color-scheme: dark;
 }
