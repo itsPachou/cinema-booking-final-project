@@ -15,6 +15,7 @@ import {
     openEditResourceModal,
     handleDeleteResource,
     populateRoomLayoutAdmin,
+    handleResourceFormSubmission,
 } from './resourceConsole.js'
 
 const loginForm = document.getElementById('loginForm')
@@ -175,6 +176,10 @@ if (resourceDeleteBtn) {
 if (resourceForm) {
     resourceForm.addEventListener('submit', (e) => {
         e.preventDefault()
+        handleResourceFormSubmission(
+            e.target.dataset.operation,
+            e.target.dataset.resource
+        )
     })
 }
 

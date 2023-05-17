@@ -1,5 +1,17 @@
 import { showAlert } from './alerts.js'
-import { getResource, deleteResource, getRoom } from './backEndConnections.js'
+import {
+    getResource,
+    deleteResource,
+    getRoom,
+    submitResource,
+} from './backEndConnections.js'
+import {
+    compileCinemaData,
+    compileMovieData,
+    compileScreeningData,
+    compileUserData,
+    compileRoomData,
+} from './compileData.js'
 
 const resourceListItems = document.querySelectorAll('.resource-list-item')
 
@@ -59,11 +71,19 @@ const clearResourceForm = () => {
             inputEl.value = ''
         }
     })
+    if (document.getElementById('rooms-seatPositions')) {
+        populateRoomLayoutAdmin(
+            undefined,
+            document.getElementById('rooms-seatPositions')
+        )
+    }
 }
 
 const openNewResourceModal = () => {
     clearResourceForm()
     const createDialog = document.getElementById('create-edit-dialog')
+    const resourceForm = document.getElementById('resource-form')
+    resourceForm.dataset.operation = 'create'
     createDialog.showModal()
 }
 
@@ -78,8 +98,9 @@ const openEditResourceModal = async (itemId, resource) => {
         delete resourceData.slug
         const editDialog = document.getElementById('create-edit-dialog')
         const resourceFormItemID = document.querySelector('.resource-form-id')
+        const resourceForm = document.getElementById('resource-form')
+        resourceForm.dataset.operation = 'edit'
         resourceFormItemID.innerText = `ID: ${itemId}`
-        console.log(resourceData)
         if (resourceData.dimensions) {
             for (const prop in resourceData.dimensions) {
                 const formInput = document.getElementById(
@@ -90,7 +111,6 @@ const openEditResourceModal = async (itemId, resource) => {
             delete resourceData.dimensions
         }
         for (const prop in resourceData) {
-            console.log(prop)
             const formInput = document.getElementById(`${resource}-${prop}`)
             if (prop === 'seatPositions') {
                 populateRoomLayoutAdmin(itemId, formInput)
@@ -190,7 +210,6 @@ const populateRoomLayoutAdmin = async (roomId, seatSelectionDiv) => {
     }
     seatSelectionDiv.insertAdjacentElement('beforebegin', rowNameColumn)
     if (roomId) {
-        console.log('i have a room id')
         room.seatPositions.forEach((pos) => {
             const seatEl = document.querySelector(
                 `[data-row="${pos.row}"][data-col="${pos.col}"]`
@@ -198,12 +217,45 @@ const populateRoomLayoutAdmin = async (roomId, seatSelectionDiv) => {
             seatEl.classList.add('seat')
         })
     } else {
-        console.log('i dont have a room id')
-
         const allSeatPos = document.querySelectorAll('.seat-position')
         allSeatPos.forEach((pos) => {
             pos.classList.add('seat')
         })
+    }
+}
+
+const handleResourceFormSubmission = async (operation, resource) => {
+    try {
+        let data
+        switch (resource) {
+            case 'movies':
+                data = compileMovieData()
+                break
+            case 'cinemas':
+                data = compileCinemaData()
+                break
+            case 'rooms':
+                data = compileRoomData()
+                break
+            case 'screenings':
+                data = compileScreeningData()
+                break
+            case 'users':
+                data = compileUserData()
+                break
+        }
+        data['id'] =
+            operation === 'edit'
+                ? document.querySelector('.resource-list-item input:checked')
+                      .value
+                : undefined
+        await submitResource(data, resource)
+        document.getElementById('create-edit-dialog').close()
+        showAlert('success', `${operation} successful on ${resource}`)
+    } catch (error) {
+        console.log(error)
+        document.getElementById('create-edit-dialog').close()
+        showAlert('error', error.message)
     }
 }
 
@@ -213,4 +265,5 @@ export {
     openEditResourceModal,
     handleDeleteResource,
     populateRoomLayoutAdmin,
+    handleResourceFormSubmission,
 }

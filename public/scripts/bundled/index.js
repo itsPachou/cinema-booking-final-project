@@ -646,6 +646,7 @@ if (resourceDeleteBtn) resourceDeleteBtn.addEventListener("click", (e)=>{
 });
 if (resourceForm) resourceForm.addEventListener("submit", (e)=>{
     e.preventDefault();
+    (0, _resourceConsoleJs.handleResourceFormSubmission)(e.target.dataset.operation, e.target.dataset.resource);
 });
 if (roomLengthInput && roomWidthInput) {
     roomLengthInput.addEventListener("change", (e)=>(0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv));
@@ -756,17 +757,17 @@ async function loadJSON(url, options) {
         console.log(error);
     }
 }
-async function getRoom(id1) {
+async function getRoom(id) {
     try {
-        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id1}`);
+        const result = await loadJSON(`${location.origin}/api/v1/rooms/${id}`);
         return result.data.room;
     } catch (error) {
         console.log(error);
     }
 }
-async function getScreening(id1) {
+async function getScreening(id) {
     try {
-        const result = await loadJSON(`${location.origin}/api/v1/screenings/${id1}`);
+        const result = await loadJSON(`${location.origin}/api/v1/screenings/${id}`);
         return result.data.screening;
     } catch (error) {
         console.log(error);
@@ -789,9 +790,9 @@ async function postReservation(screeningID, tickets) {
         return error;
     }
 }
-async function createCheckout(id1) {
+async function createCheckout(id) {
     try {
-        const session = await loadJSON(`${location.origin}/api/v1/bookings/checkout/bookings/${id1}`, {
+        const session = await loadJSON(`${location.origin}/api/v1/bookings/checkout/bookings/${id}`, {
             method: "POST"
         });
         return session.session;
@@ -810,12 +811,13 @@ async function deleteMe() {
         return error;
     }
 }
-async function getResource(id1, resource) {
-    const result = await loadJSON(`${location.origin}/api/v1/${resource}/${id1}`);
+async function getResource(id, resource) {
+    const result = await loadJSON(`${location.origin}/api/v1/${resource}/${id}`);
     return result.data[resource.substring(0, resource.length - 1)];
 }
 async function submitResource(data, resource) {
     if (data.id) {
+        const id = data.id;
         delete data.id;
         return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
             method: "PATCH",
@@ -833,8 +835,8 @@ async function submitResource(data, resource) {
         body: JSON.stringify(data)
     });
 }
-async function deleteResource(id1, resource) {
-    return await loadJSON(`${location.origin}/api/v1/${resource}/${id1}`, {
+async function deleteResource(id, resource) {
+    return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
         method: "DELETE"
     });
 }
@@ -1112,8 +1114,10 @@ parcelHelpers.export(exports, "openNewResourceModal", ()=>openNewResourceModal);
 parcelHelpers.export(exports, "openEditResourceModal", ()=>openEditResourceModal);
 parcelHelpers.export(exports, "handleDeleteResource", ()=>handleDeleteResource);
 parcelHelpers.export(exports, "populateRoomLayoutAdmin", ()=>populateRoomLayoutAdmin);
+parcelHelpers.export(exports, "handleResourceFormSubmission", ()=>handleResourceFormSubmission);
 var _alertsJs = require("./alerts.js");
 var _backEndConnectionsJs = require("./backEndConnections.js");
+var _compileDataJs = require("./compileData.js");
 const resourceListItems = document.querySelectorAll(".resource-list-item");
 const rowChars = [
     "A",
@@ -1155,10 +1159,13 @@ const clearResourceForm = ()=>{
         else if (inputEl.type === "number" && inputEl.min) inputEl.value = inputEl.min;
         else inputEl.value = "";
     });
+    if (document.getElementById("rooms-seatPositions")) populateRoomLayoutAdmin(undefined, document.getElementById("rooms-seatPositions"));
 };
 const openNewResourceModal = ()=>{
     clearResourceForm();
     const createDialog = document.getElementById("create-edit-dialog");
+    const resourceForm = document.getElementById("resource-form");
+    resourceForm.dataset.operation = "create";
     createDialog.showModal();
 };
 const openEditResourceModal = async (itemId, resource)=>{
@@ -1172,8 +1179,9 @@ const openEditResourceModal = async (itemId, resource)=>{
         delete resourceData.slug;
         const editDialog = document.getElementById("create-edit-dialog");
         const resourceFormItemID = document.querySelector(".resource-form-id");
+        const resourceForm = document.getElementById("resource-form");
+        resourceForm.dataset.operation = "edit";
         resourceFormItemID.innerText = `ID: ${itemId}`;
-        console.log(resourceData);
         if (resourceData.dimensions) {
             for(const prop in resourceData.dimensions){
                 const formInput = document.getElementById(`${resource}-dimensions-${prop}`);
@@ -1182,7 +1190,6 @@ const openEditResourceModal = async (itemId, resource)=>{
             delete resourceData.dimensions;
         }
         for(const prop in resourceData){
-            console.log(prop);
             const formInput = document.getElementById(`${resource}-${prop}`);
             if (prop === "seatPositions") populateRoomLayoutAdmin(itemId, formInput);
             else if (formInput.tagName === "SELECT") document.querySelector(`option[value="${resourceData[prop]}"]`).selected = true;
@@ -1250,21 +1257,117 @@ const populateRoomLayoutAdmin = async (roomId, seatSelectionDiv)=>{
         seatSelectionDiv.appendChild(rowDiv);
     }
     seatSelectionDiv.insertAdjacentElement("beforebegin", rowNameColumn);
-    if (roomId) {
-        console.log("i have a room id");
-        room.seatPositions.forEach((pos)=>{
-            const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
-            seatEl.classList.add("seat");
-        });
-    } else {
-        console.log("i dont have a room id");
+    if (roomId) room.seatPositions.forEach((pos)=>{
+        const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+        seatEl.classList.add("seat");
+    });
+    else {
         const allSeatPos = document.querySelectorAll(".seat-position");
         allSeatPos.forEach((pos)=>{
             pos.classList.add("seat");
         });
     }
 };
+const handleResourceFormSubmission = async (operation, resource)=>{
+    try {
+        let data;
+        switch(resource){
+            case "movies":
+                data = (0, _compileDataJs.compileMovieData)();
+                break;
+            case "cinemas":
+                data = (0, _compileDataJs.compileCinemaData)();
+                break;
+            case "rooms":
+                data = (0, _compileDataJs.compileRoomData)();
+                break;
+            case "screenings":
+                data = (0, _compileDataJs.compileScreeningData)();
+                break;
+            case "users":
+                data = (0, _compileDataJs.compileUserData)();
+                break;
+        }
+        data["id"] = operation === "edit" ? document.querySelector(".resource-list-item input:checked").value : undefined;
+        await (0, _backEndConnectionsJs.submitResource)(data, resource);
+        document.getElementById("create-edit-dialog").close();
+        (0, _alertsJs.showAlert)("success", `${operation} successful on ${resource}`);
+    } catch (error) {
+        console.log(error);
+        document.getElementById("create-edit-dialog").close();
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
 
-},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./compileData.js":"gJRPZ"}],"gJRPZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "compileCinemaData", ()=>compileCinemaData);
+parcelHelpers.export(exports, "compileMovieData", ()=>compileMovieData);
+parcelHelpers.export(exports, "compileScreeningData", ()=>compileScreeningData);
+parcelHelpers.export(exports, "compileUserData", ()=>compileUserData);
+parcelHelpers.export(exports, "compileRoomData", ()=>compileRoomData);
+const compileMovieData = ()=>{
+    const dataObj = {};
+    dataObj.title = document.getElementById("movies-title").value.trim();
+    dataObj.synopsis = document.getElementById("movies-synopsis").value.trim() ? document.getElementById("movies-synopsis").value.trim() : undefined;
+    dataObj.runtime = document.getElementById("movies-runtime").value * 1;
+    dataObj.releaseDate = document.getElementById("movies-releaseDate").value.trim();
+    dataObj.director = document.getElementById("movies-director").value.trim() ? document.getElementById("movies-director").value.trim() : undefined;
+    dataObj.classification = document.getElementById("movies-classification").value;
+    dataObj.cast = document.getElementById("movies-cast").value.split(",").map((el)=>el.trim());
+    dataObj.language = document.getElementById("movies-language").value.trim();
+    dataObj.thumbnail = document.getElementById("movies-thumbnail").value.trim();
+    return dataObj;
+};
+const compileCinemaData = ()=>{
+    const dataObj = {};
+    dataObj.locationName = document.getElementById("cinemas-locationName").value.trim();
+    dataObj.postcode = document.getElementById("cinemas-postcode").value.trim();
+    dataObj.address = document.getElementById("cinemas-address").value.trim();
+    dataObj.location = document.getElementById("cinemas-location").value.trim() ? document.getElementById("cinemas-location").value.trim().value.split(",").map((el)=>parseFloat(el.trim())) : undefined;
+    return dataObj;
+};
+const compileUserData = ()=>{
+    const dataObj = {};
+    dataObj.email = document.getElementById("users-email").value.trim();
+    dataObj.role = document.getElementById("users-role").value;
+    dataObj.firstName = document.getElementById("users-firstName").value.trim();
+    dataObj.lastName = document.getElementById("users-lastName").value.trim();
+    dataObj.phoneNumber = document.getElementById("users-phoneNumber").value.trim() ? document.getElementById("users-phoneNumber").value.trim() : undefined;
+    return dataObj;
+};
+const compileScreeningData = ()=>{
+    const dataObj = {};
+    dataObj.cinemaID = document.getElementById("screenings-cinemaID").value.trim();
+    dataObj.movieID = document.getElementById("screenings-movieID").value.trim();
+    dataObj.screeningRoomID = document.getElementById("screenings-screeningRoomID").value.trim();
+    dataObj.date = document.getElementById("screenings-date").value.trim();
+    dataObj.screeningType = document.getElementById("screenings-screeningType").value.trim();
+    dataObj.audioType = document.getElementById("screenings-audioType").value;
+    dataObj.audioLanguage = document.getElementById("screenings-audioLanguage").value ? document.getElementById("screenings-audioLanguage").value : undefined;
+    return dataObj;
+};
+const compileRoomData = ()=>{
+    const dataObj = {};
+    dataObj.cinemaID = document.getElementById("rooms-cinemaID").value.trim();
+    dataObj.roomNumber = document.getElementById("rooms-roomNumber").value * 1;
+    dataObj.isActive = document.getElementById("rooms-isActive").checked;
+    dataObj.dimensions = {
+        length: document.getElementById("rooms-dimensions-length").value * 1,
+        width: document.getElementById("rooms-dimensions-width").value * 1
+    };
+    const selectedSeats = document.querySelectorAll(".seat");
+    dataObj.seatPositions = [];
+    selectedSeats.forEach((seat)=>{
+        dataObj.seatPositions.push({
+            row: seat.dataset.row * 1,
+            col: seat.dataset.col * 1
+        });
+    });
+    return dataObj;
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

@@ -89,6 +89,7 @@ async function getResource(id, resource) {
 
 async function submitResource(data, resource) {
     if (data.id) {
+        const id = data.id
         delete data.id
         return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
             method: 'PATCH',
