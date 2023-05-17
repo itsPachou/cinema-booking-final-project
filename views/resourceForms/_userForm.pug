@@ -1,0 +1,26 @@
+.resource-form-box
+    p.resource-form-id
+    h2.heading-login-form Update a user 
+    form#resource-form(data-resource=name)
+        .form-group
+            label.form-label(for='users-email') Email *
+            input#users-email.form-input(type='email', placeholder='user@example.com', required)
+        .form-group
+            label.form-label(for='users-firstName') First name *
+            input#users-firstName.form-input(type='text', placeholder='Joe' required)
+        .form-group
+            label.form-label(for='users-lastName') Last name *
+            input#users-lastName.form-input(type='text', placeholder='Bloggs', required)
+        .form-group
+            label.form-label(for='users-phoneNumber') Phone number
+            input#users-phoneNumber.form-input(type='tel')
+        .form-group
+            label.form-label(for='users-role') Role *
+            select#movies-classification.form-input(required)
+                option(value="client" selected) Client
+                option(value="employee") Employee
+                option(value="admin") Admin
+        .form-group.resource-form-btns
+            button.btn-login#resource-form-cancel-btn(type='button') Cancel
+            button.btn-login#resource-form-submit-btn(type='submit') Confirm
+        .required-info * required fields

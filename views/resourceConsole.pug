@@ -7,8 +7,10 @@ mixin mainCommentTail(name)
         span cinema locations.
     else if name === 'rooms'
         span screening rooms.
-    else
+    else if name === 'screenings'
         span screenings. 
+    else 
+        span users.
 
 mixin resourceListItem(groupName, itemData)
     .resource-list-item 
@@ -22,6 +24,8 @@ mixin resourceListItem(groupName, itemData)
                 include resourceListItemElements/_roomResourceItem.pug
             else if groupName === 'screenings'
                 include resourceListItemElements/_screeningResourceItem.pug
+            else if groupName === 'users'
+                include resourceListItemElements/_userResourceItem.pug
 
 mixin createEditDialog(name)
     dialog#create-edit-dialog
@@ -33,6 +37,8 @@ mixin createEditDialog(name)
             include resourceForms/_roomForm.pug
         else if name === 'screenings'
             include resourceForms/_screeningForm.pug
+        else if name === 'users'
+            include resourceForms/_userForm.pug
 
 block content 
     .container
@@ -46,11 +52,13 @@ block content
         .resource-console-container
             .resource-console-toolbar
                 .resource-console-toolbar-btns
-                    button#resource-new-btn.resource-toolbar-btn 
-                        span.material-symbols-outlined add
-                        span New
+                    if resource !== 'users'
+                        button#resource-new-btn.resource-toolbar-btn 
+                            span.material-symbols-outlined add
+                            span New
                     button#resource-edit-btn.resource-toolbar-btn(data-resource=resource disabled) Edit
-                    button#resource-delete-btn.resource-toolbar-btn(data-resource=resource disabled) Delete
+                    if resource !== 'users'
+                        button#resource-delete-btn.resource-toolbar-btn(data-resource=resource disabled) Delete
                 .resource-console-toolbar-search 
                     input#resource-search-bar(type="text" placeholder="Search by heading...")
             .resource-console-list
