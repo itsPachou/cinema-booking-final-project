@@ -17,11 +17,11 @@ mixin resourceListItem(groupName, itemData)
             if groupName === 'movies'
                 include resourceListItemElements/_movieResourceItem.pug
             else if groupName === 'cinemas'
-                include resourceListItemElements/_movieResourceItem.pug
+                include resourceListItemElements/_cinemaResourceItem.pug
             else if groupName === 'rooms'
-                include resourceListItemElements/_movieResourceItem.pug
+                include resourceListItemElements/_roomResourceItem.pug
             else if groupName === 'screenings'
-                include resourceListItemElements/_movieResourceItem.pug
+                include resourceListItemElements/_screeningResourceItem.pug
 
 mixin createEditDialog(name)
     dialog#create-edit-dialog
