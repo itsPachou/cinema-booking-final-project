@@ -16,8 +16,9 @@
             input#users-phoneNumber.form-input(type='tel')
         .form-group
             label.form-label(for='users-role') Role *
-            select#movies-classification.form-input(required)
-                option(value="client" selected) Client
+            select#users-role.form-input(required)
+                option(value="") --Please select a role--
+                option(value="client") Client
                 option(value="employee") Employee
                 option(value="admin") Admin
         .form-group.resource-form-btns

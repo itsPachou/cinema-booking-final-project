@@ -632,8 +632,8 @@ if (resourceFormCancelBtn) resourceFormCancelBtn.addEventListener("click", (e)=>
 });
 if (resourceItemRadios) resourceItemRadios.forEach((radio)=>{
     radio.addEventListener("change", (e)=>{
-        resourceEditBtn.disabled = false;
-        resourceDeleteBtn.disabled = false;
+        if (resourceDeleteBtn) resourceDeleteBtn.disabled = false;
+        if (resourceEditBtn) resourceEditBtn.disabled = false;
     });
 });
 if (resourceEditBtn) resourceEditBtn.addEventListener("click", (e)=>{

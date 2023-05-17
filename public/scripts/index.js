@@ -148,8 +148,8 @@ if (resourceFormCancelBtn) {
 if (resourceItemRadios) {
     resourceItemRadios.forEach((radio) => {
         radio.addEventListener('change', (e) => {
-            resourceEditBtn.disabled = false
-            resourceDeleteBtn.disabled = false
+            if (resourceDeleteBtn) resourceDeleteBtn.disabled = false
+            if (resourceEditBtn) resourceEditBtn.disabled = false
         })
     })
 }

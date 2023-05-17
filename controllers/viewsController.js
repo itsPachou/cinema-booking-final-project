@@ -6,6 +6,7 @@ import groupByMovie from '../utils/groupByMovie.js'
 import AppError from '../utils/appError.js'
 import Booking from '../models/bookingModel.js'
 import Room from '../models/roomModel.js'
+import User from '../models/userModel.js'
 
 const getHomePage = catchAsync(async (req, res, next) => {
     const cinemas = await Cinema.find()
@@ -151,6 +152,9 @@ const getResourceConsolePage = catchAsync(async (req, res, next) => {
             break
         case 'movies':
             model = Movie
+            break
+        case 'users':
+            model = User
             break
 
         default:
