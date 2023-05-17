@@ -1113,12 +1113,21 @@ const filterResourceList = (target)=>{
     for (const item of resourceListItems)if (item.lastChild.firstChild.firstChild.innerText.trim().toLowerCase().includes(searchTerm)) item.classList.remove("resource-not-matched");
     else item.classList.add("resource-not-matched");
 };
+const clearResourceForm = ()=>{
+    const allInputs = document.querySelectorAll(".form-input");
+    allInputs.forEach((inputEl)=>{
+        if (inputEl.tagName === "SELECT") document.querySelector('option[value=""]').selected = true;
+        else inputEl.value = "";
+    });
+};
 const openNewResourceModal = ()=>{
+    clearResourceForm();
     const createDialog = document.getElementById("create-edit-dialog");
     createDialog.showModal();
 };
 const openEditResourceModal = async (itemId, resource)=>{
     try {
+        clearResourceForm();
         const resourceData = await (0, _backEndConnectionsJs.getResource)(itemId, resource);
         delete resourceData._id;
         delete resourceData.__v;
@@ -1154,6 +1163,6 @@ const handleDeleteResource = async (itemId, resource)=>{
     }
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt","./backEndConnections.js":"erlY1","./alerts.js":"TpGze"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,7 @@
 .resource-form-box
     p.resource-form-id
     h2.heading-login-form Create a new movie 
-    form#movieForm
+    form#resource-form(data-resource=name)
         .form-group
             label.form-label(for='movies-title') Title *
             input#movies-title.form-input(type='text', placeholder='Movie Title', required)

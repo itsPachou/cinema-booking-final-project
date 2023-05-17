@@ -19,13 +19,26 @@ const filterResourceList = (target) => {
     }
 }
 
+const clearResourceForm = () => {
+    const allInputs = document.querySelectorAll('.form-input')
+    allInputs.forEach((inputEl) => {
+        if (inputEl.tagName === 'SELECT') {
+            document.querySelector('option[value=""]').selected = true
+        } else {
+            inputEl.value = ''
+        }
+    })
+}
+
 const openNewResourceModal = () => {
+    clearResourceForm()
     const createDialog = document.getElementById('create-edit-dialog')
     createDialog.showModal()
 }
 
 const openEditResourceModal = async (itemId, resource) => {
     try {
+        clearResourceForm()
         const resourceData = await getResource(itemId, resource)
         delete resourceData._id
         delete resourceData.__v
