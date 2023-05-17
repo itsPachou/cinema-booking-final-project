@@ -400,7 +400,6 @@ section.section__cinema-list, section.section__screening-list {
   overflow: auto;
   display: grid;
   row-gap: 2rem;
-  /* filter: grayscale(100%); */
   grid-template-columns: auto 1fr;
   background-color: #090110;
 }
@@ -444,6 +443,13 @@ section.section__cinema-list, section.section__screening-list {
   min-width: 2.8rem;
   min-height: 2.8rem;
   margin: .5vw;
+}
+
+.seat-outline {
+  border: .01rem solid #a5b4c955;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  cursor: pointer;
 }
 
 .seat {
@@ -1109,6 +1115,12 @@ a.booking-link:hover {
     width: calc(10vw/var(--room-width) + 1rem);
     height: calc(10vw/var(--room-width) + 1rem);
     margin: .5vw;
+  }
+  
+  .seat-outline {
+      border: 1px solid #a5b4c955;
+      border-bottom-left-radius: 1vw;
+      border-bottom-right-radius: 1vw;
   }
   
   .seat {

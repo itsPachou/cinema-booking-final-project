@@ -579,7 +579,9 @@ const resourceEditBtn = document.getElementById("resource-edit-btn");
 const resourceDeleteBtn = document.getElementById("resource-delete-btn");
 const resourceItemRadios = document.querySelectorAll(".resource-list-item input");
 const resourceFormCancelBtn = document.getElementById("resource-form-cancel-btn");
-const movieForm = document.getElementById("movieForm");
+const resourceForm = document.getElementById("resource-form");
+const roomWidthInput = document.getElementById("rooms-dimensions-width");
+const roomLengthInput = document.getElementById("rooms-dimensions-length");
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -612,7 +614,10 @@ if (ticketBtns) {
 if (confirmTicketsBtn) confirmTicketsBtn.addEventListener("click", (e)=>{
     (0, _checkoutJs.confirmEditTickets)(e.target);
 });
-if (seatSelectionDiv) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
+if (seatSelectionDiv) {
+    if (seatSelectionDiv.dataset.roomId) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
+    else (0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv);
+}
 if (proceedBtn) proceedBtn.addEventListener("click", (e)=>{
     (0, _checkoutJs.finalizeBooking)();
 });
@@ -625,15 +630,12 @@ if (resourceNewBtn) resourceNewBtn.addEventListener("click", (e)=>(0, _resourceC
 if (resourceFormCancelBtn) resourceFormCancelBtn.addEventListener("click", (e)=>{
     document.getElementById("create-edit-dialog").close();
 });
-if (resourceItemRadios) {
-    console.log(resourceItemRadios);
-    resourceItemRadios.forEach((radio)=>{
-        radio.addEventListener("change", (e)=>{
-            resourceEditBtn.disabled = false;
-            resourceDeleteBtn.disabled = false;
-        });
+if (resourceItemRadios) resourceItemRadios.forEach((radio)=>{
+    radio.addEventListener("change", (e)=>{
+        resourceEditBtn.disabled = false;
+        resourceDeleteBtn.disabled = false;
     });
-}
+});
 if (resourceEditBtn) resourceEditBtn.addEventListener("click", (e)=>{
     const itemId = document.querySelector(".resource-list-item input:checked").value;
     (0, _resourceConsoleJs.openEditResourceModal)(itemId, e.target.dataset.resource);
@@ -642,9 +644,13 @@ if (resourceDeleteBtn) resourceDeleteBtn.addEventListener("click", (e)=>{
     const itemId = document.querySelector(".resource-list-item input:checked").value;
     (0, _resourceConsoleJs.handleDeleteResource)(itemId, e.target.dataset.resource);
 });
-if (movieForm) movieForm.addEventListener("submit", (e)=>{
+if (resourceForm) resourceForm.addEventListener("submit", (e)=>{
     e.preventDefault();
 });
+if (roomLengthInput && roomWidthInput) {
+    roomLengthInput.addEventListener("change", (e)=>(0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv));
+    roomWidthInput.addEventListener("change", (e)=>(0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv));
+}
 
 },{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN","./userPage.js":"bLBCY","./resourceConsole.js":"ibxqy"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1105,9 +1111,38 @@ parcelHelpers.export(exports, "filterResourceList", ()=>filterResourceList);
 parcelHelpers.export(exports, "openNewResourceModal", ()=>openNewResourceModal);
 parcelHelpers.export(exports, "openEditResourceModal", ()=>openEditResourceModal);
 parcelHelpers.export(exports, "handleDeleteResource", ()=>handleDeleteResource);
+parcelHelpers.export(exports, "populateRoomLayoutAdmin", ()=>populateRoomLayoutAdmin);
 var _alertsJs = require("./alerts.js");
 var _backEndConnectionsJs = require("./backEndConnections.js");
 const resourceListItems = document.querySelectorAll(".resource-list-item");
+const rowChars = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+];
 const filterResourceList = (target)=>{
     const searchTerm = target.value.trim().toLowerCase();
     for (const item of resourceListItems)if (item.lastChild.firstChild.firstChild.innerText.trim().toLowerCase().includes(searchTerm)) item.classList.remove("resource-not-matched");
@@ -1117,6 +1152,7 @@ const clearResourceForm = ()=>{
     const allInputs = document.querySelectorAll(".form-input");
     allInputs.forEach((inputEl)=>{
         if (inputEl.tagName === "SELECT") document.querySelector('option[value=""]').selected = true;
+        else if (inputEl.type === "number" && inputEl.min) inputEl.value = inputEl.min;
         else inputEl.value = "";
     });
 };
@@ -1131,17 +1167,34 @@ const openEditResourceModal = async (itemId, resource)=>{
         const resourceData = await (0, _backEndConnectionsJs.getResource)(itemId, resource);
         delete resourceData._id;
         delete resourceData.__v;
-        if (resourceData.slug) delete resourceData.slug;
-        console.log(resourceData);
+        delete resourceData.bookedSeats;
+        delete resourceData.id;
+        delete resourceData.slug;
         const editDialog = document.getElementById("create-edit-dialog");
         const resourceFormItemID = document.querySelector(".resource-form-id");
         resourceFormItemID.innerText = `ID: ${itemId}`;
+        console.log(resourceData);
+        if (resourceData.dimensions) {
+            for(const prop in resourceData.dimensions){
+                const formInput = document.getElementById(`${resource}-dimensions-${prop}`);
+                formInput.value = resourceData.dimensions[prop];
+            }
+            delete resourceData.dimensions;
+        }
         for(const prop in resourceData){
+            console.log(prop);
             const formInput = document.getElementById(`${resource}-${prop}`);
-            if (formInput.tagName === "SELECT") document.querySelector(`option[value="${resourceData[prop]}"]`).selected = true;
+            if (prop === "seatPositions") populateRoomLayoutAdmin(itemId, formInput);
+            else if (formInput.tagName === "SELECT") document.querySelector(`option[value="${resourceData[prop]}"]`).selected = true;
             else if (formInput.type === "date") {
                 const dateObj = new Date(resourceData["releaseDate"]);
                 formInput.value = resourceData[prop].substring(0, dateObj.toISOString().indexOf("T"));
+            } else if (formInput.type === "datetime-local") {
+                const dateObj = new Date(resourceData["date"]);
+                const tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
+                ;
+                const localISOTime = new Date(dateObj - tzoffset).toISOString().slice(0, -1);
+                formInput.value = localISOTime;
             } else formInput.value = !Array.isArray(resourceData[prop]) ? resourceData[prop] : resourceData[prop].join(", ");
         }
         editDialog.showModal();
@@ -1160,6 +1213,55 @@ const handleDeleteResource = async (itemId, resource)=>{
         }
     } catch (error) {
         (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
+const selectSeatAdmin = (target)=>{
+    target.classList.toggle("seat");
+};
+const populateRoomLayoutAdmin = async (roomId, seatSelectionDiv)=>{
+    let room;
+    if (roomId) room = await (0, _backEndConnectionsJs.getRoom)(roomId);
+    else room = {
+        dimensions: {
+            length: document.getElementById("rooms-dimensions-length").value * 1,
+            width: document.getElementById("rooms-dimensions-width").value * 1
+        }
+    };
+    if (document.querySelector(".row-char-column")) document.querySelector(".row-char-column").remove();
+    while(seatSelectionDiv.firstChild)seatSelectionDiv.removeChild(seatSelectionDiv.firstChild);
+    const rowNameColumn = document.createElement("div");
+    rowNameColumn.classList.add("row-char-column");
+    for(let r = 0; r < room.dimensions.length; r++){
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("seats-row");
+        const rowName = document.createElement("div");
+        rowName.innerText = rowChars.at(r);
+        rowNameColumn.appendChild(rowName);
+        for(let c = 0; c < room.dimensions.width; c++){
+            const seatPos = document.createElement("div");
+            seatPos.classList.add("seat-position", "seat-outline");
+            seatPos.addEventListener("click", (e)=>{
+                selectSeatAdmin(e.target);
+            });
+            seatPos.dataset.col = c;
+            seatPos.dataset.row = r;
+            rowDiv.appendChild(seatPos);
+        }
+        seatSelectionDiv.appendChild(rowDiv);
+    }
+    seatSelectionDiv.insertAdjacentElement("beforebegin", rowNameColumn);
+    if (roomId) {
+        console.log("i have a room id");
+        room.seatPositions.forEach((pos)=>{
+            const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+            seatEl.classList.add("seat");
+        });
+    } else {
+        console.log("i dont have a room id");
+        const allSeatPos = document.querySelectorAll(".seat-position");
+        allSeatPos.forEach((pos)=>{
+            pos.classList.add("seat");
+        });
     }
 };
 

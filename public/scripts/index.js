@@ -14,6 +14,7 @@ import {
     openNewResourceModal,
     openEditResourceModal,
     handleDeleteResource,
+    populateRoomLayoutAdmin,
 } from './resourceConsole.js'
 
 const loginForm = document.getElementById('loginForm')
@@ -37,7 +38,9 @@ const resourceItemRadios = document.querySelectorAll(
 const resourceFormCancelBtn = document.getElementById(
     'resource-form-cancel-btn'
 )
-const movieForm = document.getElementById('movieForm')
+const resourceForm = document.getElementById('resource-form')
+const roomWidthInput = document.getElementById('rooms-dimensions-width')
+const roomLengthInput = document.getElementById('rooms-dimensions-length')
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -103,7 +106,11 @@ if (confirmTicketsBtn) {
 }
 
 if (seatSelectionDiv) {
-    populateRoomLayout(seatSelectionDiv.dataset.roomId, seatSelectionDiv)
+    if (seatSelectionDiv.dataset.roomId) {
+        populateRoomLayout(seatSelectionDiv.dataset.roomId, seatSelectionDiv)
+    } else {
+        populateRoomLayoutAdmin(undefined, seatSelectionDiv)
+    }
 }
 
 if (proceedBtn) {
@@ -139,7 +146,6 @@ if (resourceFormCancelBtn) {
 }
 
 if (resourceItemRadios) {
-    console.log(resourceItemRadios)
     resourceItemRadios.forEach((radio) => {
         radio.addEventListener('change', (e) => {
             resourceEditBtn.disabled = false
@@ -166,8 +172,17 @@ if (resourceDeleteBtn) {
     })
 }
 
-if (movieForm) {
-    movieForm.addEventListener('submit', (e) => {
+if (resourceForm) {
+    resourceForm.addEventListener('submit', (e) => {
         e.preventDefault()
     })
+}
+
+if (roomLengthInput && roomWidthInput) {
+    roomLengthInput.addEventListener('change', (e) =>
+        populateRoomLayoutAdmin(undefined, seatSelectionDiv)
+    )
+    roomWidthInput.addEventListener('change', (e) =>
+        populateRoomLayoutAdmin(undefined, seatSelectionDiv)
+    )
 }

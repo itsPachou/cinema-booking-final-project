@@ -10,6 +10,7 @@ const cinemaSchema = new mongoose.Schema({
     postcode: {
         type: String,
         required: true,
+        uppercase: true,
     },
     address: {
         type: String,

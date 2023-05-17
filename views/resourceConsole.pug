@@ -28,11 +28,11 @@ mixin createEditDialog(name)
         if name === 'movies'
             include resourceForms/_movieForm.pug
         else if name === 'cinemas'
-            include resourceForms/_movieForm.pug
+            include resourceForms/_cinemaForm.pug
         else if name === 'rooms'
-            include resourceForms/_movieForm.pug
+            include resourceForms/_roomForm.pug
         else if name === 'screenings'
-            include resourceForms/_movieForm.pug
+            include resourceForms/_screeningForm.pug
 
 block content 
     .container

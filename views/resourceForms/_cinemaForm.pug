@@ -1,0 +1,20 @@
+.resource-form-box
+    p.resource-form-id
+    h2.heading-login-form Create a new cinema 
+    form#resource-form(data-resource=name)
+        .form-group
+            label.form-label(for='cinemas-locationName') Location Name *
+            input#cinemas-locationName.form-input(type='text', placeholder='A name for the cinema location', required)
+        .form-group
+            label.form-label(for='cinemas-postcode') Postcode *
+            input#cinemas-postcode.form-input(type='text', placeholder='A valid UK postcode' minlength="5" maxlength="8" required)
+        .form-group
+            label.form-label(for='cinemas-address') Full address *
+            input#cinemas-address.form-input(type='text', placeholder='Full cinema address', required)
+        .form-group
+            label.form-label(for='cinemas-location') Location coordinates
+            input#cinemas-location.form-input(type='text', placeholder='Comma separated set of geographical coordinates (6 decimal points)(lat, lon)')
+        .form-group.resource-form-btns
+            button.btn-login#resource-form-cancel-btn(type='button') Cancel
+            button.btn-login#resource-form-submit-btn(type='submit') Confirm
+        .required-info * required fields
