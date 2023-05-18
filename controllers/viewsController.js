@@ -3,6 +3,7 @@ import Cinema from '../models/cinemaModel.js'
 import Screening from '../models/screeningModel.js'
 import Movie from '../models/movieModel.js'
 import groupByMovie from '../utils/groupByMovie.js'
+import groupByDate from '../utils/groupByDate.js'
 import AppError from '../utils/appError.js'
 import Booking from '../models/bookingModel.js'
 import Room from '../models/roomModel.js'
@@ -21,10 +22,25 @@ const getCinemaPage = catchAsync(async (req, res, next) => {
     const cinema = await Cinema.findOne({ slug: req.params.slug })
     if (!cinema)
         return next(new AppError('There is no cinema with that name.', 404))
-    const screenings = await Screening.find({ cinemaID: cinema._id })
+    const currDate = new Date(Date.now()).toISOString()
+    const weekAheadDate = new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000
+    ).toISOString()
+    const screenings = await Screening.find({
+        cinemaID: cinema._id,
+        // date: {
+        //     $gte: currDate.substring(0, currDate.indexOf('T')),
+        //     $lt: weekAheadDate.substring(0, currDate.indexOf('T')),
+        // },
+    })
     const movieIdArray = screenings.map((sc) => sc.movieID)
-    const movies = await Movie.find({ _id: movieIdArray })
+    const movies = await Movie.find({
+        _id: movieIdArray,
+    })
     const groupedScreenings = groupByMovie(screenings)
+    Object.keys(groupedScreenings).forEach((el) => {
+        groupedScreenings[el] = groupByDate(groupedScreenings[el])
+    })
     res.status(200).render('cinema', {
         cinema,
         screenings,

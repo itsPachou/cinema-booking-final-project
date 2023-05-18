@@ -1,10 +1,12 @@
 .screening-times-list 
-        h3.screening-date SUN 16 APRIL
-        .screening-tiles-container
-            each screening in groupedScreenings[movie._id]
-                .screening-times-tile
-                    a(href=`/checkoutLogin/screenings/${screening._id}`)
-                        .screening-tile-time= screening.date.toLocaleTimeString().split(':').slice(0,2).join(':') + (screening.date.toLocaleTimeString().split(' ').at(-1) === 'AM' ? ' AM' : ' PM')
-                        .screening-tile-info 
-                            span= screening.screeningType
-                            span= (screening.audioType==='original' ? '' : ` - ${screening.audioType.slice(0,3)}`) + (screening.audioLanguage==='none' ? ` - ${movie.language.slice(0,3)}` : ` - ${screening.audioLanguage.slice(0,3)}`)
+    each screeningsGroup, date in groupedScreenings[movie._id]
+        .screening-time(data-date=(new Date(date).toLocaleDateString()))
+            h3.screening-date= (new Date(date)).toDateString().substring(0, (new Date(date)).toDateString().lastIndexOf(' '))
+            .screening-tiles-container
+                each screening in screeningsGroup
+                    .screening-times-tile
+                        a(href=`/checkoutLogin/screenings/${screening._id}`)
+                            .screening-tile-time= screening.date.toLocaleTimeString().split(':').slice(0,2).join(':') + (screening.date.toLocaleTimeString().split(' ').at(-1) === 'AM' ? ' AM' : ' PM')
+                            .screening-tile-info 
+                                span= screening.screeningType
+                                span= (screening.audioType==='original' ? '' : ` - ${screening.audioType.slice(0,3)}`) + (screening.audioLanguage==='none' ? ` - ${movie.language.slice(0,3)}` : ` - ${screening.audioLanguage.slice(0,3)}`)

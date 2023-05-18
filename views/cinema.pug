@@ -1,8 +1,19 @@
 extends base
 
+mixin dateSelectionTile(timestamp)
+    button.date-selection-tile(data-date-selection=(new Date(timestamp).toLocaleDateString()))= (new Date(timestamp)).toDateString().substring(0, (new Date(timestamp)).toDateString().lastIndexOf(' '))
+
 block content 
     section.section__screening-list 
         h2= `Selected Cinema: ${cinema.locationName}`
+        .date-selection-tiles
+            +dateSelectionTile(Date.now())
+            +dateSelectionTile(Date.now()+1*24*60*60*1000)
+            +dateSelectionTile(Date.now()+2*24*60*60*1000)
+            +dateSelectionTile(Date.now()+3*24*60*60*1000)
+            +dateSelectionTile(Date.now()+4*24*60*60*1000)
+            +dateSelectionTile(Date.now()+5*24*60*60*1000)
+            +dateSelectionTile(Date.now()+6*24*60*60*1000)
         if (movies.length === 0)
             .no-movies-notice There are no movies available.
         else

@@ -231,6 +231,45 @@ section.section__cinema-list, section.section__screening-list {
   flex-wrap: wrap;
 }
 
+.date-selection-tiles {
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
+}
+
+.date-selection-tile {
+  background-color: #0a101f;
+  border: 1px solid #a5b4c955;
+  font-weight: 600;
+  color: #e2e8f0;
+  border-radius: 1rem;
+  padding: .7rem 1rem;
+  margin: .2rem .5rem;
+  opacity: 80%;
+  transition: all .1s;
+}
+
+.date-selection-tile:hover {
+  filter: brightness(1.1);
+  opacity: 100%;
+}
+
+.date-selection-tile-active {
+  background-color: #00ADB5;
+  color: #000;
+  opacity: 100%;
+}
+
+.screening-time {
+  display: none;
+}
+
+.screening-time-shown {
+  display: block;
+}
+
 .section__cinema-list h2, .section__screening-list h2 {
   margin: auto;
   align-self: center;

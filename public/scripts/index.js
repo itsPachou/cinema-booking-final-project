@@ -42,6 +42,44 @@ const resourceFormCancelBtn = document.getElementById(
 const resourceForm = document.getElementById('resource-form')
 const roomWidthInput = document.getElementById('rooms-dimensions-width')
 const roomLengthInput = document.getElementById('rooms-dimensions-length')
+const dateSelectionTilesDiv = document.querySelector('.date-selection-tiles')
+
+if (dateSelectionTilesDiv) {
+    const firstDateSelectionTile = document.querySelector(
+        '.date-selection-tile'
+    )
+    firstDateSelectionTile.classList.add('date-selection-tile-active')
+    const selectedScreeningTimes = document.querySelectorAll(
+        `.screening-time[data-date="${firstDateSelectionTile.dataset.dateSelection}"]`
+    )
+    selectedScreeningTimes.forEach((el) => {
+        el.classList.add('screening-time-shown')
+    })
+    const allDateSelectionTiles = document.querySelectorAll(
+        '.date-selection-tile'
+    )
+    allDateSelectionTiles.forEach((tile) => {
+        tile.addEventListener('click', (e) => {
+            const prevSelectedTile = document.querySelector(
+                '.date-selection-tile-active'
+            )
+            prevSelectedTile.classList.remove('date-selection-tile-active')
+            e.target.classList.add('date-selection-tile-active')
+            const prevRevealedTimes = document.querySelectorAll(
+                '.screening-time-shown'
+            )
+            prevRevealedTimes.forEach((el) => {
+                el.classList.remove('screening-time-shown')
+            })
+            const selectedScreeningTimes = document.querySelectorAll(
+                `.screening-time[data-date="${e.target.dataset.dateSelection}"]`
+            )
+            selectedScreeningTimes.forEach((el) => {
+                el.classList.add('screening-time-shown')
+            })
+        })
+    })
+}
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
