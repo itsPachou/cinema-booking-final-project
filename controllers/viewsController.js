@@ -28,10 +28,10 @@ const getCinemaPage = catchAsync(async (req, res, next) => {
     ).toISOString()
     const screenings = await Screening.find({
         cinemaID: cinema._id,
-        // date: {
-        //     $gte: currDate.substring(0, currDate.indexOf('T')),
-        //     $lt: weekAheadDate.substring(0, currDate.indexOf('T')),
-        // },
+        date: {
+            $gte: currDate.substring(0, currDate.indexOf('T')),
+            $lt: weekAheadDate.substring(0, currDate.indexOf('T')),
+        },
     })
     const movieIdArray = screenings.map((sc) => sc.movieID)
     const movies = await Movie.find({
