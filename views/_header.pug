@@ -16,7 +16,7 @@ header.header
     nav.nav
         if user
             a.nav__el#logoutBtn(href='#') Log out
-            a.nav__el(href='#')
+            a.nav__el(href='/me')
                 span= `Hi, ${user.firstName}` 
         else
             a.nav__el(href='/login') Log in

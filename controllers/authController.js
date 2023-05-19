@@ -20,7 +20,7 @@ const createSendCookieAndToken = (user, statusCode, res) => {
         ), // setting cookie expiration to 30 days in miliseconds
         httpOnly: true, // make it so the browser can only get, store, and send back the cookie
     }
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true // only send cookie over HTTPS (only relevant once we go to production)
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true // only send cookie over HTTPS (only relevant in production)
     res.cookie('jwt', token, cookieOptions)
 
     res.status(statusCode).json({
@@ -128,7 +128,7 @@ const restrictTo =
     (...roles) =>
     (req, res, next) => {
         if (!roles.includes(req.user.role)) {
-            next(
+            return next(
                 new AppError(
                     'You do not have permission to perform this action',
                     403

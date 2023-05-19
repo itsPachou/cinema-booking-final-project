@@ -1,0 +1,68 @@
+extends base
+
+mixin mainCommentTail(name)
+    if name === 'movies'
+        span movie listings.
+    else if name === 'cinemas'
+        span cinema locations.
+    else if name === 'rooms'
+        span screening rooms.
+    else if name === 'screenings'
+        span screenings. 
+    else 
+        span users.
+
+mixin resourceListItem(groupName, itemData)
+    .resource-list-item 
+        input(type="radio" name=groupName id=itemData.id value=itemData.id)
+        label(for=itemData.id)
+            if groupName === 'movies'
+                include resourceListItemElements/_movieResourceItem.pug
+            else if groupName === 'cinemas'
+                include resourceListItemElements/_cinemaResourceItem.pug
+            else if groupName === 'rooms'
+                include resourceListItemElements/_roomResourceItem.pug
+            else if groupName === 'screenings'
+                include resourceListItemElements/_screeningResourceItem.pug
+            else if groupName === 'users'
+                include resourceListItemElements/_userResourceItem.pug
+
+mixin createEditDialog(name)
+    dialog#create-edit-dialog
+        if name === 'movies'
+            include resourceForms/_movieForm.pug
+        else if name === 'cinemas'
+            include resourceForms/_cinemaForm.pug
+        else if name === 'rooms'
+            include resourceForms/_roomForm.pug
+        else if name === 'screenings'
+            include resourceForms/_screeningForm.pug
+        else if name === 'users'
+            include resourceForms/_userForm.pug
+
+block content 
+    .container
+        .warning-view-experience
+            span.material-symbols-outlined warning 
+            |  For best experience use large screen devices
+        h1.console-main-heading= `Console: ${resource.charAt(0).toUpperCase()}${resource.substring(1)}`
+        p.console-main-comment
+            span View, delete, update and create new 
+            +mainCommentTail(resource)
+        .resource-console-container
+            .resource-console-toolbar
+                .resource-console-toolbar-btns
+                    if resource !== 'users'
+                        button#resource-new-btn.resource-toolbar-btn 
+                            span.material-symbols-outlined add
+                            span New
+                    button#resource-edit-btn.resource-toolbar-btn(data-resource=resource disabled) Edit
+                    if resource !== 'users'
+                        button#resource-delete-btn.resource-toolbar-btn(data-resource=resource disabled) Delete
+                .resource-console-toolbar-search 
+                    input#resource-search-bar(type="text" placeholder="Search by heading...")
+            .resource-console-list
+                each dataItem in data
+                    +resourceListItem(resource, dataItem)
+    +createEditDialog(resource)
+    

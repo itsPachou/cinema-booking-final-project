@@ -559,6 +559,8 @@ function hmrAccept(bundle, id) {
 var _loginJs = require("./login.js");
 var _checkoutJs = require("./checkout.js");
 var _summaryJs = require("./summary.js");
+var _userPageJs = require("./userPage.js");
+var _resourceConsoleJs = require("./resourceConsole.js");
 "use strict";
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
@@ -570,6 +572,41 @@ const confirmTicketsBtn = document.querySelector(".confirm-tickets-btn");
 const seatSelectionDiv = document.querySelector(".seats-selection");
 const proceedBtn = document.querySelector(".confirm-seats-btn");
 const proceedPaymentBtn = document.querySelector(".proceed-payment-btn");
+const deleteAccountLink = document.querySelector(".delete-account");
+const resourceSearchBar = document.getElementById("resource-search-bar");
+const resourceNewBtn = document.getElementById("resource-new-btn");
+const resourceEditBtn = document.getElementById("resource-edit-btn");
+const resourceDeleteBtn = document.getElementById("resource-delete-btn");
+const resourceItemRadios = document.querySelectorAll(".resource-list-item input");
+const resourceFormCancelBtn = document.getElementById("resource-form-cancel-btn");
+const resourceForm = document.getElementById("resource-form");
+const roomWidthInput = document.getElementById("rooms-dimensions-width");
+const roomLengthInput = document.getElementById("rooms-dimensions-length");
+const dateSelectionTilesDiv = document.querySelector(".date-selection-tiles");
+if (dateSelectionTilesDiv) {
+    const firstDateSelectionTile = document.querySelector(".date-selection-tile");
+    firstDateSelectionTile.classList.add("date-selection-tile-active");
+    const selectedScreeningTimes = document.querySelectorAll(`.screening-time[data-date="${firstDateSelectionTile.dataset.dateSelection}"]`);
+    selectedScreeningTimes.forEach((el)=>{
+        el.classList.add("screening-time-shown");
+    });
+    const allDateSelectionTiles = document.querySelectorAll(".date-selection-tile");
+    allDateSelectionTiles.forEach((tile)=>{
+        tile.addEventListener("click", (e)=>{
+            const prevSelectedTile = document.querySelector(".date-selection-tile-active");
+            prevSelectedTile.classList.remove("date-selection-tile-active");
+            e.target.classList.add("date-selection-tile-active");
+            const prevRevealedTimes = document.querySelectorAll(".screening-time-shown");
+            prevRevealedTimes.forEach((el)=>{
+                el.classList.remove("screening-time-shown");
+            });
+            const selectedScreeningTimes = document.querySelectorAll(`.screening-time[data-date="${e.target.dataset.dateSelection}"]`);
+            selectedScreeningTimes.forEach((el)=>{
+                el.classList.add("screening-time-shown");
+            });
+        });
+    });
+}
 if (hamburgerBtn) hamburgerBtn.addEventListener("click", function() {
     hamburgerBtn.classList.toggle("is-active");
     menu.classList.toggle("is-active");
@@ -602,15 +639,46 @@ if (ticketBtns) {
 if (confirmTicketsBtn) confirmTicketsBtn.addEventListener("click", (e)=>{
     (0, _checkoutJs.confirmEditTickets)(e.target);
 });
-if (seatSelectionDiv) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
+if (seatSelectionDiv) {
+    if (seatSelectionDiv.dataset.roomId) (0, _checkoutJs.populateRoomLayout)(seatSelectionDiv.dataset.roomId, seatSelectionDiv);
+    else (0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv);
+}
 if (proceedBtn) proceedBtn.addEventListener("click", (e)=>{
     (0, _checkoutJs.finalizeBooking)();
 });
 if (proceedPaymentBtn) proceedPaymentBtn.addEventListener("click", (e)=>{
     (0, _summaryJs.goToCheckout)(e.target);
 });
+if (deleteAccountLink) deleteAccountLink.addEventListener("click", (e)=>(0, _userPageJs.deleteAccount)());
+if (resourceSearchBar) resourceSearchBar.addEventListener("input", (e)=>(0, _resourceConsoleJs.filterResourceList)(e.target));
+if (resourceNewBtn) resourceNewBtn.addEventListener("click", (e)=>(0, _resourceConsoleJs.openNewResourceModal)());
+if (resourceFormCancelBtn) resourceFormCancelBtn.addEventListener("click", (e)=>{
+    document.getElementById("create-edit-dialog").close();
+});
+if (resourceItemRadios) resourceItemRadios.forEach((radio)=>{
+    radio.addEventListener("change", (e)=>{
+        if (resourceDeleteBtn) resourceDeleteBtn.disabled = false;
+        if (resourceEditBtn) resourceEditBtn.disabled = false;
+    });
+});
+if (resourceEditBtn) resourceEditBtn.addEventListener("click", (e)=>{
+    const itemId = document.querySelector(".resource-list-item input:checked").value;
+    (0, _resourceConsoleJs.openEditResourceModal)(itemId, e.target.dataset.resource);
+});
+if (resourceDeleteBtn) resourceDeleteBtn.addEventListener("click", (e)=>{
+    const itemId = document.querySelector(".resource-list-item input:checked").value;
+    (0, _resourceConsoleJs.handleDeleteResource)(itemId, e.target.dataset.resource);
+});
+if (resourceForm) resourceForm.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    (0, _resourceConsoleJs.handleResourceFormSubmission)(e.target.dataset.operation, e.target.dataset.resource);
+});
+if (roomLengthInput && roomWidthInput) {
+    roomLengthInput.addEventListener("change", (e)=>(0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv));
+    roomWidthInput.addEventListener("change", (e)=>(0, _resourceConsoleJs.populateRoomLayoutAdmin)(undefined, seatSelectionDiv));
+}
 
-},{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN"}],"eHNGO":[function(require,module,exports) {
+},{"./login.js":"eHNGO","./checkout.js":"9b6wq","./summary.js":"62RuN","./userPage.js":"bLBCY","./resourceConsole.js":"ibxqy"}],"eHNGO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
@@ -695,6 +763,11 @@ parcelHelpers.export(exports, "getRoom", ()=>getRoom);
 parcelHelpers.export(exports, "getScreening", ()=>getScreening);
 parcelHelpers.export(exports, "postReservation", ()=>postReservation);
 parcelHelpers.export(exports, "createCheckout", ()=>createCheckout);
+parcelHelpers.export(exports, "deleteMe", ()=>deleteMe);
+parcelHelpers.export(exports, "getResource", ()=>getResource);
+parcelHelpers.export(exports, "submitResource", ()=>submitResource);
+parcelHelpers.export(exports, "deleteResource", ()=>deleteResource);
+"use strict";
 async function loadJSON(url, options) {
     try {
         const response = await fetch(url, options);
@@ -752,6 +825,45 @@ async function createCheckout(id) {
         console.log(error);
         return error;
     }
+}
+async function deleteMe() {
+    try {
+        const result = await loadJSON(`${location.origin}/api/v1/users/deleteMe`, {
+            method: "DELETE"
+        });
+        return result;
+    } catch (error) {
+        return error;
+    }
+}
+async function getResource(id, resource) {
+    const result = await loadJSON(`${location.origin}/api/v1/${resource}/${id}`);
+    return result.data[resource.substring(0, resource.length - 1)];
+}
+async function submitResource(data, resource) {
+    if (data.id) {
+        const id = data.id;
+        delete data.id;
+        return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+    }
+    return await loadJSON(`${location.origin}/api/v1/${resource}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+}
+async function deleteResource(id, resource) {
+    return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
+        method: "DELETE"
+    });
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"5Birt":[function(require,module,exports) {
@@ -995,6 +1107,292 @@ const goToCheckout = async (target)=>{
     }
 };
 
-},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
+},{"./backEndConnections.js":"erlY1","./alerts.js":"TpGze","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"bLBCY":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "deleteAccount", ()=>deleteAccount);
+var _alertsJs = require("./alerts.js");
+var _backEndConnectionsJs = require("./backEndConnections.js");
+"use strict";
+const deleteAccount = async ()=>{
+    try {
+        if (window.confirm("Are you sure you want to delete your account?")) {
+            await (0, _backEndConnectionsJs.deleteMe)();
+            (0, _alertsJs.showAlert)("success", "Successfully deleted account.");
+            const result = await (0, _backEndConnectionsJs.loadJSON)("http://localhost:3000/api/v1/users/logout", {
+                method: "GET"
+            });
+            window.setTimeout(()=>{
+                location.assign(`/home`);
+            }, 1500);
+        }
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
+
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"ibxqy":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "filterResourceList", ()=>filterResourceList);
+parcelHelpers.export(exports, "openNewResourceModal", ()=>openNewResourceModal);
+parcelHelpers.export(exports, "openEditResourceModal", ()=>openEditResourceModal);
+parcelHelpers.export(exports, "handleDeleteResource", ()=>handleDeleteResource);
+parcelHelpers.export(exports, "populateRoomLayoutAdmin", ()=>populateRoomLayoutAdmin);
+parcelHelpers.export(exports, "handleResourceFormSubmission", ()=>handleResourceFormSubmission);
+var _alertsJs = require("./alerts.js");
+var _backEndConnectionsJs = require("./backEndConnections.js");
+var _compileDataJs = require("./compileData.js");
+const resourceListItems = document.querySelectorAll(".resource-list-item");
+const rowChars = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+];
+const filterResourceList = (target)=>{
+    const searchTerm = target.value.trim().toLowerCase();
+    for (const item of resourceListItems)if (item.lastChild.firstChild.firstChild.innerText.trim().toLowerCase().includes(searchTerm)) item.classList.remove("resource-not-matched");
+    else item.classList.add("resource-not-matched");
+};
+const clearResourceForm = ()=>{
+    const allInputs = document.querySelectorAll(".form-input");
+    allInputs.forEach((inputEl)=>{
+        if (inputEl.tagName === "SELECT") document.querySelector('option[value=""]').selected = true;
+        else if (inputEl.type === "number" && inputEl.min) inputEl.value = inputEl.min;
+        else inputEl.value = "";
+    });
+    if (document.getElementById("rooms-seatPositions")) populateRoomLayoutAdmin(undefined, document.getElementById("rooms-seatPositions"));
+};
+const openNewResourceModal = ()=>{
+    clearResourceForm();
+    const createDialog = document.getElementById("create-edit-dialog");
+    const resourceForm = document.getElementById("resource-form");
+    resourceForm.dataset.operation = "create";
+    createDialog.showModal();
+};
+const openEditResourceModal = async (itemId, resource)=>{
+    try {
+        clearResourceForm();
+        const resourceData = await (0, _backEndConnectionsJs.getResource)(itemId, resource);
+        delete resourceData._id;
+        delete resourceData.__v;
+        delete resourceData.bookedSeats;
+        delete resourceData.id;
+        delete resourceData.slug;
+        const editDialog = document.getElementById("create-edit-dialog");
+        const resourceFormItemID = document.querySelector(".resource-form-id");
+        const resourceForm = document.getElementById("resource-form");
+        resourceForm.dataset.operation = "edit";
+        resourceFormItemID.innerText = `ID: ${itemId}`;
+        if (resourceData.dimensions) {
+            for(const prop in resourceData.dimensions){
+                const formInput = document.getElementById(`${resource}-dimensions-${prop}`);
+                formInput.value = resourceData.dimensions[prop];
+            }
+            delete resourceData.dimensions;
+        }
+        for(const prop in resourceData){
+            const formInput = document.getElementById(`${resource}-${prop}`);
+            if (prop === "seatPositions") populateRoomLayoutAdmin(itemId, formInput);
+            else if (formInput.tagName === "SELECT") document.querySelector(`option[value="${resourceData[prop]}"]`).selected = true;
+            else if (formInput.type === "date") {
+                const dateObj = new Date(resourceData["releaseDate"]);
+                formInput.value = resourceData[prop].substring(0, dateObj.toISOString().indexOf("T"));
+            } else if (formInput.type === "datetime-local") {
+                const dateObj = new Date(resourceData["date"]);
+                const tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
+                ;
+                const localISOTime = new Date(dateObj - tzoffset).toISOString().slice(0, -1);
+                formInput.value = localISOTime;
+            } else formInput.value = !Array.isArray(resourceData[prop]) ? resourceData[prop] : resourceData[prop].join(", ");
+        }
+        editDialog.showModal();
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
+const handleDeleteResource = async (itemId, resource)=>{
+    try {
+        if (window.confirm(`Are you sure you want to delete this ${resource.substring(0, resource.length - 1)}?`)) {
+            await (0, _backEndConnectionsJs.deleteResource)(itemId, resource);
+            (0, _alertsJs.showAlert)("success", "Successfully deleted resource.");
+            window.setTimeout(()=>{
+                location.reload();
+            }, 1500);
+        }
+    } catch (error) {
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
+const selectSeatAdmin = (target)=>{
+    target.classList.toggle("seat");
+};
+const populateRoomLayoutAdmin = async (roomId, seatSelectionDiv)=>{
+    let room;
+    if (roomId) room = await (0, _backEndConnectionsJs.getRoom)(roomId);
+    else room = {
+        dimensions: {
+            length: document.getElementById("rooms-dimensions-length").value * 1,
+            width: document.getElementById("rooms-dimensions-width").value * 1
+        }
+    };
+    if (document.querySelector(".row-char-column")) document.querySelector(".row-char-column").remove();
+    while(seatSelectionDiv.firstChild)seatSelectionDiv.removeChild(seatSelectionDiv.firstChild);
+    const rowNameColumn = document.createElement("div");
+    rowNameColumn.classList.add("row-char-column");
+    for(let r = 0; r < room.dimensions.length; r++){
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("seats-row");
+        const rowName = document.createElement("div");
+        rowName.innerText = rowChars.at(r);
+        rowNameColumn.appendChild(rowName);
+        for(let c = 0; c < room.dimensions.width; c++){
+            const seatPos = document.createElement("div");
+            seatPos.classList.add("seat-position", "seat-outline");
+            seatPos.addEventListener("click", (e)=>{
+                selectSeatAdmin(e.target);
+            });
+            seatPos.dataset.col = c;
+            seatPos.dataset.row = r;
+            rowDiv.appendChild(seatPos);
+        }
+        seatSelectionDiv.appendChild(rowDiv);
+    }
+    seatSelectionDiv.insertAdjacentElement("beforebegin", rowNameColumn);
+    if (roomId) room.seatPositions.forEach((pos)=>{
+        const seatEl = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+        seatEl.classList.add("seat");
+    });
+    else {
+        const allSeatPos = document.querySelectorAll(".seat-position");
+        allSeatPos.forEach((pos)=>{
+            pos.classList.add("seat");
+        });
+    }
+};
+const handleResourceFormSubmission = async (operation, resource)=>{
+    try {
+        let data;
+        switch(resource){
+            case "movies":
+                data = (0, _compileDataJs.compileMovieData)();
+                break;
+            case "cinemas":
+                data = (0, _compileDataJs.compileCinemaData)();
+                break;
+            case "rooms":
+                data = (0, _compileDataJs.compileRoomData)();
+                break;
+            case "screenings":
+                data = (0, _compileDataJs.compileScreeningData)();
+                break;
+            case "users":
+                data = (0, _compileDataJs.compileUserData)();
+                break;
+        }
+        data["id"] = operation === "edit" ? document.querySelector(".resource-list-item input:checked").value : undefined;
+        await (0, _backEndConnectionsJs.submitResource)(data, resource);
+        document.getElementById("create-edit-dialog").close();
+        (0, _alertsJs.showAlert)("success", `${operation} successful on ${resource}`);
+    } catch (error) {
+        console.log(error);
+        document.getElementById("create-edit-dialog").close();
+        (0, _alertsJs.showAlert)("error", error.message);
+    }
+};
+
+},{"./alerts.js":"TpGze","./backEndConnections.js":"erlY1","./compileData.js":"gJRPZ","@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}],"gJRPZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "compileCinemaData", ()=>compileCinemaData);
+parcelHelpers.export(exports, "compileMovieData", ()=>compileMovieData);
+parcelHelpers.export(exports, "compileScreeningData", ()=>compileScreeningData);
+parcelHelpers.export(exports, "compileUserData", ()=>compileUserData);
+parcelHelpers.export(exports, "compileRoomData", ()=>compileRoomData);
+const compileMovieData = ()=>{
+    const dataObj = {};
+    dataObj.title = document.getElementById("movies-title").value.trim();
+    dataObj.synopsis = document.getElementById("movies-synopsis").value.trim() ? document.getElementById("movies-synopsis").value.trim() : undefined;
+    dataObj.runtime = document.getElementById("movies-runtime").value * 1;
+    dataObj.releaseDate = document.getElementById("movies-releaseDate").value.trim();
+    dataObj.director = document.getElementById("movies-director").value.trim() ? document.getElementById("movies-director").value.trim() : undefined;
+    dataObj.classification = document.getElementById("movies-classification").value;
+    dataObj.cast = document.getElementById("movies-cast").value.split(",").map((el)=>el.trim());
+    dataObj.language = document.getElementById("movies-language").value.trim();
+    dataObj.thumbnail = document.getElementById("movies-thumbnail").value.trim();
+    return dataObj;
+};
+const compileCinemaData = ()=>{
+    const dataObj = {};
+    dataObj.locationName = document.getElementById("cinemas-locationName").value.trim();
+    dataObj.postcode = document.getElementById("cinemas-postcode").value.trim();
+    dataObj.address = document.getElementById("cinemas-address").value.trim();
+    dataObj.location = document.getElementById("cinemas-location").value.trim() ? document.getElementById("cinemas-location").value.trim().value.split(",").map((el)=>parseFloat(el.trim())) : undefined;
+    return dataObj;
+};
+const compileUserData = ()=>{
+    const dataObj = {};
+    dataObj.email = document.getElementById("users-email").value.trim();
+    dataObj.role = document.getElementById("users-role").value;
+    dataObj.firstName = document.getElementById("users-firstName").value.trim();
+    dataObj.lastName = document.getElementById("users-lastName").value.trim();
+    dataObj.phoneNumber = document.getElementById("users-phoneNumber").value.trim() ? document.getElementById("users-phoneNumber").value.trim() : undefined;
+    return dataObj;
+};
+const compileScreeningData = ()=>{
+    const dataObj = {};
+    dataObj.cinemaID = document.getElementById("screenings-cinemaID").value.trim();
+    dataObj.movieID = document.getElementById("screenings-movieID").value.trim();
+    dataObj.screeningRoomID = document.getElementById("screenings-screeningRoomID").value.trim();
+    dataObj.date = document.getElementById("screenings-date").value.trim();
+    dataObj.screeningType = document.getElementById("screenings-screeningType").value.trim();
+    dataObj.audioType = document.getElementById("screenings-audioType").value;
+    dataObj.audioLanguage = document.getElementById("screenings-audioLanguage").value ? document.getElementById("screenings-audioLanguage").value : undefined;
+    return dataObj;
+};
+const compileRoomData = ()=>{
+    const dataObj = {};
+    dataObj.cinemaID = document.getElementById("rooms-cinemaID").value.trim();
+    dataObj.roomNumber = document.getElementById("rooms-roomNumber").value * 1;
+    dataObj.isActive = document.getElementById("rooms-isActive").checked;
+    dataObj.dimensions = {
+        length: document.getElementById("rooms-dimensions-length").value * 1,
+        width: document.getElementById("rooms-dimensions-width").value * 1
+    };
+    const selectedSeats = document.querySelectorAll(".seat");
+    dataObj.seatPositions = [];
+    selectedSeats.forEach((seat)=>{
+        dataObj.seatPositions.push({
+            row: seat.dataset.row * 1,
+            col: seat.dataset.col * 1
+        });
+    });
+    return dataObj;
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5Birt"}]},["g61Xf","3r7Gr"], "3r7Gr", "parcelRequire0a35")
 
 //# sourceMappingURL=index.js.map

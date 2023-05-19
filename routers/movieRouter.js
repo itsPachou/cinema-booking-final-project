@@ -12,7 +12,7 @@ movieRouter
     .get(moviesController.getAllMovies)
     .post(
         authController.protect,
-        authController.restrictTo('admin'),
+        authController.restrictTo('employee', 'admin'),
         moviesController.createMovie
     )
 
@@ -21,12 +21,12 @@ movieRouter
     .get(moviesController.getMovie)
     .delete(
         authController.protect,
-        authController.restrictTo('admin'),
+        authController.restrictTo('employee', 'admin'),
         moviesController.deleteMovie
     )
     .patch(
         authController.protect,
-        authController.restrictTo('admin'),
+        authController.restrictTo('employee', 'admin'),
         moviesController.updateMovie
     )
 

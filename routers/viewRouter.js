@@ -45,4 +45,22 @@ viewRouter
     .route('/bookingSuccess/:bookingID')
     .get(authController.protect, viewsController.getBookingSuccessPage)
 
+viewRouter.route('/me').get(authController.protect, viewsController.getUserPage)
+
+viewRouter
+    .route('/console')
+    .get(
+        authController.protect,
+        authController.restrictTo('employee', 'admin'),
+        viewsController.getConsolePage
+    )
+
+viewRouter
+    .route('/console/:resource')
+    .get(
+        authController.protect,
+        authController.restrictTo('employee', 'admin'),
+        viewsController.getResourceConsolePage
+    )
+
 export default viewRouter

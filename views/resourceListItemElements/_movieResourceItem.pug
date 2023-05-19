@@ -1,0 +1,29 @@
+.resource-list-item-content
+    .resource-item-heading= itemData.title
+    .resource-item-pair 
+        span.resource-item-key ID:  
+        span.resource-item-value= itemData.id 
+    .resource-item-pair 
+        span.resource-item-key Synopsis:  
+        span.resource-item-value= itemData.synopsis 
+    .resource-item-pair 
+        span.resource-item-key Runtime:  
+        span.resource-item-value= itemData.runtime 
+    .resource-item-pair 
+        span.resource-item-key Release date:  
+        span.resource-item-value= itemData.releaseDate.toLocaleDateString()
+    .resource-item-pair 
+        span.resource-item-key Director:  
+        span.resource-item-value= itemData.director 
+    .resource-item-pair 
+        span.resource-item-key Classification:  
+        span.resource-item-value= itemData.classification 
+    .resource-item-pair 
+        span.resource-item-key Cast:  
+        span.resource-item-value= itemData.cast.join(', ') 
+    .resource-item-pair 
+        span.resource-item-key Language:  
+        span.resource-item-value= itemData.language 
+    .resource-item-pair 
+        span.resource-item-key Thumbnail location:  
+        span.resource-item-value= itemData.thumbnail 

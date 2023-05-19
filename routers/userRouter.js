@@ -24,7 +24,11 @@ userRouter
 
 userRouter
     .route('/')
-    .get(usersController.getAllUsers)
+    .get(
+        authController.protect,
+        authController.restrictTo('admin'),
+        usersController.getAllUsers
+    )
     .post(
         authController.protect,
         authController.restrictTo('admin'),
@@ -33,7 +37,11 @@ userRouter
 
 userRouter
     .route('/:id')
-    .get(usersController.getUser)
+    .get(
+        authController.protect,
+        authController.restrictTo('admin'),
+        usersController.getUser
+    )
     .delete(
         authController.protect,
         authController.restrictTo('admin'),

@@ -1,3 +1,5 @@
+'use strict'
+
 async function loadJSON(url, options) {
     try {
         const response = await fetch(url, options)
@@ -66,4 +68,60 @@ async function createCheckout(id) {
     }
 }
 
-export { loadJSON, getRoom, getScreening, postReservation, createCheckout }
+async function deleteMe() {
+    try {
+        const result = await loadJSON(
+            `${location.origin}/api/v1/users/deleteMe`,
+            {
+                method: 'DELETE',
+            }
+        )
+        return result
+    } catch (error) {
+        return error
+    }
+}
+
+async function getResource(id, resource) {
+    const result = await loadJSON(`${location.origin}/api/v1/${resource}/${id}`)
+    return result.data[resource.substring(0, resource.length - 1)]
+}
+
+async function submitResource(data, resource) {
+    if (data.id) {
+        const id = data.id
+        delete data.id
+        return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+    }
+    return await loadJSON(`${location.origin}/api/v1/${resource}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+}
+
+async function deleteResource(id, resource) {
+    return await loadJSON(`${location.origin}/api/v1/${resource}/${id}`, {
+        method: 'DELETE',
+    })
+}
+
+export {
+    loadJSON,
+    getRoom,
+    getScreening,
+    postReservation,
+    createCheckout,
+    deleteMe,
+    getResource,
+    submitResource,
+    deleteResource,
+}

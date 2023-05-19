@@ -8,6 +8,15 @@ import {
     finalizeBooking,
 } from './checkout.js'
 import { goToCheckout } from './summary.js'
+import { deleteAccount } from './userPage.js'
+import {
+    filterResourceList,
+    openNewResourceModal,
+    openEditResourceModal,
+    handleDeleteResource,
+    populateRoomLayoutAdmin,
+    handleResourceFormSubmission,
+} from './resourceConsole.js'
 
 const loginForm = document.getElementById('loginForm')
 const signupForm = document.getElementById('signupForm')
@@ -19,6 +28,58 @@ const confirmTicketsBtn = document.querySelector('.confirm-tickets-btn')
 const seatSelectionDiv = document.querySelector('.seats-selection')
 const proceedBtn = document.querySelector('.confirm-seats-btn')
 const proceedPaymentBtn = document.querySelector('.proceed-payment-btn')
+const deleteAccountLink = document.querySelector('.delete-account')
+const resourceSearchBar = document.getElementById('resource-search-bar')
+const resourceNewBtn = document.getElementById('resource-new-btn')
+const resourceEditBtn = document.getElementById('resource-edit-btn')
+const resourceDeleteBtn = document.getElementById('resource-delete-btn')
+const resourceItemRadios = document.querySelectorAll(
+    '.resource-list-item input'
+)
+const resourceFormCancelBtn = document.getElementById(
+    'resource-form-cancel-btn'
+)
+const resourceForm = document.getElementById('resource-form')
+const roomWidthInput = document.getElementById('rooms-dimensions-width')
+const roomLengthInput = document.getElementById('rooms-dimensions-length')
+const dateSelectionTilesDiv = document.querySelector('.date-selection-tiles')
+
+if (dateSelectionTilesDiv) {
+    const firstDateSelectionTile = document.querySelector(
+        '.date-selection-tile'
+    )
+    firstDateSelectionTile.classList.add('date-selection-tile-active')
+    const selectedScreeningTimes = document.querySelectorAll(
+        `.screening-time[data-date="${firstDateSelectionTile.dataset.dateSelection}"]`
+    )
+    selectedScreeningTimes.forEach((el) => {
+        el.classList.add('screening-time-shown')
+    })
+    const allDateSelectionTiles = document.querySelectorAll(
+        '.date-selection-tile'
+    )
+    allDateSelectionTiles.forEach((tile) => {
+        tile.addEventListener('click', (e) => {
+            const prevSelectedTile = document.querySelector(
+                '.date-selection-tile-active'
+            )
+            prevSelectedTile.classList.remove('date-selection-tile-active')
+            e.target.classList.add('date-selection-tile-active')
+            const prevRevealedTimes = document.querySelectorAll(
+                '.screening-time-shown'
+            )
+            prevRevealedTimes.forEach((el) => {
+                el.classList.remove('screening-time-shown')
+            })
+            const selectedScreeningTimes = document.querySelectorAll(
+                `.screening-time[data-date="${e.target.dataset.dateSelection}"]`
+            )
+            selectedScreeningTimes.forEach((el) => {
+                el.classList.add('screening-time-shown')
+            })
+        })
+    })
+}
 
 if (hamburgerBtn) {
     hamburgerBtn.addEventListener('click', function () {
@@ -84,7 +145,11 @@ if (confirmTicketsBtn) {
 }
 
 if (seatSelectionDiv) {
-    populateRoomLayout(seatSelectionDiv.dataset.roomId, seatSelectionDiv)
+    if (seatSelectionDiv.dataset.roomId) {
+        populateRoomLayout(seatSelectionDiv.dataset.roomId, seatSelectionDiv)
+    } else {
+        populateRoomLayoutAdmin(undefined, seatSelectionDiv)
+    }
 }
 
 if (proceedBtn) {
@@ -97,4 +162,70 @@ if (proceedPaymentBtn) {
     proceedPaymentBtn.addEventListener('click', (e) => {
         goToCheckout(e.target)
     })
+}
+
+if (deleteAccountLink) {
+    deleteAccountLink.addEventListener('click', (e) => deleteAccount())
+}
+
+if (resourceSearchBar) {
+    resourceSearchBar.addEventListener('input', (e) =>
+        filterResourceList(e.target)
+    )
+}
+
+if (resourceNewBtn) {
+    resourceNewBtn.addEventListener('click', (e) => openNewResourceModal())
+}
+
+if (resourceFormCancelBtn) {
+    resourceFormCancelBtn.addEventListener('click', (e) => {
+        document.getElementById('create-edit-dialog').close()
+    })
+}
+
+if (resourceItemRadios) {
+    resourceItemRadios.forEach((radio) => {
+        radio.addEventListener('change', (e) => {
+            if (resourceDeleteBtn) resourceDeleteBtn.disabled = false
+            if (resourceEditBtn) resourceEditBtn.disabled = false
+        })
+    })
+}
+
+if (resourceEditBtn) {
+    resourceEditBtn.addEventListener('click', (e) => {
+        const itemId = document.querySelector(
+            '.resource-list-item input:checked'
+        ).value
+        openEditResourceModal(itemId, e.target.dataset.resource)
+    })
+}
+
+if (resourceDeleteBtn) {
+    resourceDeleteBtn.addEventListener('click', (e) => {
+        const itemId = document.querySelector(
+            '.resource-list-item input:checked'
+        ).value
+        handleDeleteResource(itemId, e.target.dataset.resource)
+    })
+}
+
+if (resourceForm) {
+    resourceForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        handleResourceFormSubmission(
+            e.target.dataset.operation,
+            e.target.dataset.resource
+        )
+    })
+}
+
+if (roomLengthInput && roomWidthInput) {
+    roomLengthInput.addEventListener('change', (e) =>
+        populateRoomLayoutAdmin(undefined, seatSelectionDiv)
+    )
+    roomWidthInput.addEventListener('change', (e) =>
+        populateRoomLayoutAdmin(undefined, seatSelectionDiv)
+    )
 }

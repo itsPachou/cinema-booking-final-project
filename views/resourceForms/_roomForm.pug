@@ -1,0 +1,29 @@
+.resource-form-box
+    p.resource-form-id
+    h2.heading-login-form Create a new screening room 
+    form#resource-form(data-resource=name)
+        .form-group
+            label.form-label(for='rooms-cinemaID') Cinema ID *
+            input#rooms-cinemaID.form-input(type='text', placeholder='ID of the parent cinema', required)
+        .form-group
+            label.form-label(for='rooms-roomNumber') Room number *
+            input#rooms-roomNumber.form-input(type='number', placeholder='Room number' min='1' required)
+        .form-group
+            label.form-label(for='rooms-isActive') Should the room be active? *
+            input#rooms-isActive.form-input(type='checkbox' required checked)
+        .form-group
+            label.form-label(for='rooms-dimensions-length') Number of rows *
+            input#rooms-dimensions-length.form-input(type='number' min='1' value='1' required)
+        .form-group
+            label.form-label(for='rooms-dimensions-width') Number of columns *
+            input#rooms-dimensions-width.form-input(type='number' min='1' value='1' required)
+        .form-group
+            .form-label Seat positioning
+            p Select the desired room dimensions first!
+            .seat-selection-container
+                .screen-div Screen
+                #rooms-seatPositions.seats-selection
+        .form-group.resource-form-btns
+            button.btn-login#resource-form-cancel-btn(type='button') Cancel
+            button.btn-login#resource-form-submit-btn(type='submit') Confirm
+        .required-info * required fields

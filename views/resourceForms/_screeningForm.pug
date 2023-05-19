@@ -1,0 +1,33 @@
+.resource-form-box
+    p.resource-form-id
+    h2.heading-login-form Create a new screening 
+    form#resource-form(data-resource=name)
+        .form-group
+            label.form-label(for='screenings-cinemaID') Cinema ID *
+            input#screenings-cinemaID.form-input(type='text', placeholder='ID of the parent cinema', required)
+        .form-group
+            label.form-label(for='screenings-screeningRoomID') Screening Room ID *
+            input#screenings-screeningRoomID.form-input(type='text', placeholder='ID of the room where the screening takes place', required)
+        .form-group
+            label.form-label(for='screenings-movieID') Movie ID *
+            input#screenings-movieID.form-input(type='text', placeholder='ID of the movie being played' required)
+        .form-group
+            label.form-label(for='screenings-date') Date and time *
+            input#screenings-date.form-input(type='datetime-local' required)
+        .form-group
+            label.form-label(for='screenings-screeningType') Screening type *
+            input#screenings-screeningType.form-input(type='text' placeholder='The type of screening; 2D, 3D, 2D Dolby Atmos, etc.' required)
+        .form-group
+            label.form-label(for='screenings-audioType') Audio type *
+            select#screenings-audioType.form-input(required)
+                option(value="") --Please select an audio type--
+                option(value="original") Original
+                option(value="dubbing") Dubbing
+                option(value="subtitles") Subtitles
+        .form-group
+            label.form-label(for='screenings-language') Audio language
+            input#screenings-audioLanguage.form-input(type='text', placeholder='Language of subtitles/dub, leave blank if audio is original')
+        .form-group.resource-form-btns
+            button.btn-login#resource-form-cancel-btn(type='button') Cancel
+            button.btn-login#resource-form-submit-btn(type='submit') Confirm
+        .required-info * required fields
