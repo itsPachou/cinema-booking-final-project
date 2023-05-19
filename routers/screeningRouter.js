@@ -12,7 +12,7 @@ screeningRouter
     .get(screeningsController.getAllScreenings)
     .post(
         authController.protect,
-        authController.restrictTo('admin'),
+        authController.restrictTo('employee', 'admin'),
         screeningsController.setCinemaMovieRoomId,
         screeningsController.createScreening
     )
@@ -22,12 +22,12 @@ screeningRouter
     .get(screeningsController.getScreening)
     .patch(
         authController.protect,
-        authController.restrictTo('admin'),
+        authController.restrictTo('employee', 'admin'),
         screeningsController.updateScreening
     )
     .delete(
         authController.protect,
-        authController.restrictTo('admin'),
+        authController.restrictTo('employee', 'admin'),
         screeningsController.deleteScreening
     )
 
